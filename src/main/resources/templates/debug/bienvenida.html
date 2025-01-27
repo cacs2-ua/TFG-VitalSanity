@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:replace="fragments :: head (titulo='Lista de Tareas')">
+  <meta charset="UTF-8">
+</head>
+<body>
+<div th:replace="fragments::menuBar"></div>
+<h1>¡Bienvenido/a!</h1>
+<p>Has iniciado sesión correctamente.</p>
+
+<form th:action="@{/logout}" method="get">
+  <button type="submit">Cerrar sesión</button>
+</form>
+
+<div th:replace="fragments::javascript"></div>
+</body>
+</html>

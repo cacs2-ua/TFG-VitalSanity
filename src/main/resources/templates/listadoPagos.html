@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagos de todos los comercios</title>
+
+    <link rel="stylesheet" th:href="@{/css/custom/listadoPagosStyle.css}">
+    <div th:include="fragments :: head (titulo='Pagos del Comercio')"></div>
+</head>
+<body class="body-background">
+<div th:replace="fragments::menuBar"></div>
+<div class="container">
+    <h1 class="title">Pagos de todos los comercios</h1>
+
+    <form class="busqueda" th:action="@{/api/admin/pagos}" method="get">
+        <label>Id</label>
+        <label>Ticket</label>
+        <label>CIF del comercio</label>
+        <label>Estados</label>
+        <label>Fecha Desde</label>
+        <label>Fecha Hasta</label>
+        <label></label>
+
+        <input type="text" class="search-input" name="id" th:value="${idFilter}">
+        <input type="text" class="search-input" name="ticket" th:value="${ticketFilter}">
+        <input type="text" class="search-input" name="cif" th:value="${cifFilter}">
+        <select class="search-select" name="estado">
+            <option th:selected="${estadoFilter == null or estadoFilter=='Todos'}">Todos</option>
+            <option th:selected="${estadoFilter=='Aceptado'}">Aceptado</option>
+            <option th:selected="${estadoFilter=='Pendiente'}">Pendiente</option>
+            <option th:selected="${estadoFilter=='Rechazado'}">Rechazado</option>
+        </select>
+
+        <!-- IMPORTANTE: Usamos fechaDesdeStr en lugar de la Date entera -->
+        <input type="date" class="search-input" name="fechaDesde" th:value="${fechaDesdeStr}">
+        <input type="date" class="search-input" name="fechaHasta" th:value="${fechaHastaStr}">
+
+        <button type="submit">Aplicar filtros</button>
+    </form>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Ticket</th>
+                <th>Comercio</th>
+                <th>CIF</th>
+                <th>Importe</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${pagos}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.fecha}"></td>
+                <td th:text="${p.ticketExt}"></td>
+                <td th:text="${p.comercioData.nombre}"></td>
+                <td th:text="${p.comercioData.cif}"></td>
+                <td th:text="${p.importe + '€'}"></td>
+                <td th:text="${p.shownState}"
+                    th:classappend="${p.shownState == 'Aceptado' ? 'status-active' :
+                                    (p.shownState == 'Pendiente' ? 'status-pending' : 'status-inactive')}">
+                </td>
+                <td>
+                    <a th:href="@{'/api/admin/pagos/' + ${p.id}}" class="btn btn-info">Detalles</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="pagination">
+    <!-- Link "Anterior" -->
+    <a th:if="${currentPage > 0}"
+       th:href="@{/api/admin/pagos(
+         page=${currentPage - 1},
+         id=${idFilter},
+         ticket=${ticketFilter},
+         cif=${cifFilter},
+         estado=${estadoFilter},
+         fechaDesde=${fechaDesdeStr},
+         fechaHasta=${fechaHastaStr}
+       )}"
+       th:text="${currentPage}">&lsaquo; Anterior</a>
+
+    <span class="page-item active">
+        <span th:text="${currentPage + 1}"></span>
+    </span>
+
+    <!-- Link "Siguiente" -->
+    <a th:if="${currentPage < totalPages - 1}"
+       th:href="@{/api/admin/pagos(
+         page=${currentPage + 1},
+         id=${idFilter},
+         ticket=${ticketFilter},
+         cif=${cifFilter},
+         estado=${estadoFilter},
+         fechaDesde=${fechaDesdeStr},
+         fechaHasta=${fechaHastaStr}
+       )}"
+       th:text="${currentPage + 2}">
+        Siguiente &rsaquo;
+    </a>
+</div>
+
+<div th:replace="fragments::javascript"></div>
+</body>
+</html>
