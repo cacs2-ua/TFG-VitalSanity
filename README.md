@@ -1,3 +1,5 @@
+# VitalSanity v1.0.0
+
 ## 🚀 Levantar el Proyecto en Local
 
 ---
