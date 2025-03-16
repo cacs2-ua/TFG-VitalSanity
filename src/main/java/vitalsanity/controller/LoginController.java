@@ -38,10 +38,9 @@ public class LoginController {
         return "login-form"; // Plantilla adaptada con thymeleaf
     }
 
-    // Nuevo mapping para /login/certificate (fallback cuando no se selecciona certificado)
+    // Mapping para /login/certificate (fallback cuando no se selecciona certificado)
     @GetMapping("/login/certificate")
     public String certificateLoginFallback(Model model) {
-        // Puedes agregar un mensaje de error o redirigir al login normal
         model.addAttribute("error", "No se selecciono certificado. Por favor, inicie sesion manualmente.");
         model.addAttribute("loginData", new LoginData());
         return "login-form";

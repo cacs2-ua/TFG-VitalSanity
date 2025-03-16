@@ -6,7 +6,6 @@ import org.apache.tomcat.util.net.SSLHostConfig;
 import org.apache.tomcat.util.net.SSLHostConfigCertificate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.server.Ssl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -48,7 +47,12 @@ public class AdditionalHttpsConnectorConfig {
         protocol.setSSLEnabled(true);
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();
-        sslHostConfig.setCertificateVerification("required"); // Autenticación de cliente obligatoria
+        // Forzamos la verificacion de certificado de cliente
+        sslHostConfig.setCertificateVerification("required");
+
+        // Configuramos el truststore para validar los certificados de cliente
+        sslHostConfig.setTruststoreFile(trustStore);
+        sslHostConfig.setTruststorePassword(trustStorePassword);
 
         SSLHostConfigCertificate certificate = new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.Type.RSA);
         certificate.setCertificateKeystoreFile(keyStore);
