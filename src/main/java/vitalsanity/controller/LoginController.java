@@ -34,9 +34,17 @@ public class LoginController {
         if (getUsuarioLogeadoId() != null) {
             return "redirect:/api/general/home";
         }
-
         model.addAttribute("loginData", new LoginData());
         return "login-form"; // Plantilla adaptada con thymeleaf
+    }
+
+    // Nuevo mapping para /login/certificate (fallback cuando no se selecciona certificado)
+    @GetMapping("/login/certificate")
+    public String certificateLoginFallback(Model model) {
+        // Puedes agregar un mensaje de error o redirigir al login normal
+        model.addAttribute("error", "No se selecciono certificado. Por favor, inicie sesion manualmente.");
+        model.addAttribute("loginData", new LoginData());
+        return "login-form";
     }
 
     @PostMapping("/login")
@@ -62,17 +70,15 @@ public class LoginController {
             if (usuario.getTipoId() == 4){
                 return "redirect:/api/paciente/bienvenida";
             }
-            // Redirigir a la página de bienvenida
             return "redirect:/api/paciente/bienvenida";
 
         } else if (loginStatus == UsuarioService.LoginStatus.USER_DISABLED) {
-            model.addAttribute("error", "No puedes iniciar sesión. Tu usuario está deshabilitado");
+            model.addAttribute("error", "No puedes iniciar sesion. Tu usuario esta deshabilitado");
             return "login-form";
         } else {
-            model.addAttribute("error", "Ha habido algún error al iniciar sesión");
+            model.addAttribute("error", "Ha habido algun error al iniciar sesion");
             return "login-form";
         }
-
     }
 
     @GetMapping("/logout")
@@ -80,5 +86,4 @@ public class LoginController {
         managerUserSession.logout();
         return "redirect:/login";
     }
-
 }
