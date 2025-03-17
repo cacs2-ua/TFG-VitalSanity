@@ -20,5 +20,6 @@ public class ManagerUserSession {
 
     public void logout() {
         session.setAttribute("idUsuarioLogeado", null);
+        session.invalidate();
     }
 }
