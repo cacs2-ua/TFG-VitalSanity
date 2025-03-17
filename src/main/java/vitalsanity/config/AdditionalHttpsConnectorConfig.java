@@ -48,7 +48,7 @@ public class AdditionalHttpsConnectorConfig {
 
         SSLHostConfig sslHostConfig = new SSLHostConfig();
         // Forzamos la verificacion de certificado de cliente
-        sslHostConfig.setCertificateVerification("want");
+        sslHostConfig.setCertificateVerification("required");
 
         // Configuramos el truststore para validar los certificados de cliente
         sslHostConfig.setTruststoreFile(trustStore);
