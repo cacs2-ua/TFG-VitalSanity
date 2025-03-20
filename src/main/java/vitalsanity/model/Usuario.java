@@ -20,6 +20,10 @@ public class Usuario implements Serializable {
 
     @NotNull
     @Column(unique = true)
+    private String Uuid;
+
+    @NotNull
+    @Column(unique = true)
     private String email;
 
     @NotNull
@@ -79,7 +83,8 @@ public class Usuario implements Serializable {
     }
 
     //Constructor con todos los atributos
-    public Usuario(String email, String nombreCompleto, String contrasenya, boolean activado, String nifNie, String telefono, String pais, String provincia, String municipio, String codigoPostal) {
+    public Usuario(String Uuid, String email, String nombreCompleto, String contrasenya, boolean activado, String nifNie, String telefono, String pais, String provincia, String municipio, String codigoPostal) {
+        this.Uuid = Uuid;
         this.email = email;
         this.nombreCompleto = nombreCompleto;
         this.contrasenya = contrasenya;
@@ -99,6 +104,14 @@ public class Usuario implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return this.Uuid;
+    }
+
+    public void setIdentificador(String Uuid) {
+        this.Uuid = Uuid;
     }
 
     public String getEmail() {
