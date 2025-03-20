@@ -58,18 +58,18 @@ public class LoginController {
             managerUserSession.logearUsuario(usuario.getId());
 
             if (usuario.getTipoId() == 1){
-                return "redirect:/api/administrador/bienvenida";
+                return "redirect:/api/admin/check";
             }
             if (usuario.getTipoId() == 2){
-                return "redirect:/api/centro-medico/bienvenida";
+                return "redirect:/api/centro-medico/check";
             }
             if (usuario.getTipoId() == 3){
-                return "redirect:/api/profesional-medico/bienvenida";
+                return "redirect:/api/profesional-medico/check";
             }
             if (usuario.getTipoId() == 4){
-                return "redirect:/api/paciente/bienvenida";
+                return "redirect:/api/paciente/check";
             }
-            return "redirect:/api/paciente/bienvenida";
+            return "redirect:/api/auth/check";
 
         } else if (loginStatus == UsuarioService.LoginStatus.USER_DISABLED) {
             model.addAttribute("error", "No puedes iniciar sesion. Tu usuario esta deshabilitado");

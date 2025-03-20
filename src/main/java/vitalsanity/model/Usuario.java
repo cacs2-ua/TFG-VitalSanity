@@ -34,14 +34,6 @@ public class Usuario implements Serializable {
     @NotNull
     private String nifNie;
 
-    private String naf;
-
-    @NotNull
-    private String genero;
-
-    @NotNull
-    private LocalDate fechaNacimiento;
-
     @NotNull
     private String telefono;
 
@@ -87,15 +79,12 @@ public class Usuario implements Serializable {
     }
 
     //Constructor con todos los atributos
-    public Usuario(String email, String nombreCompleto, String contrasenya, boolean activado, String nifNie, String naf, String genero, LocalDate fechaNacimiento, String telefono, String pais, String provincia, String municipio, String codigoPostal) {
+    public Usuario(String email, String nombreCompleto, String contrasenya, boolean activado, String nifNie, String telefono, String pais, String provincia, String municipio, String codigoPostal) {
         this.email = email;
         this.nombreCompleto = nombreCompleto;
         this.contrasenya = contrasenya;
         this.activado = activado;
         this.nifNie = nifNie;
-        this.naf = naf;
-        this.genero = genero;
-        this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.pais = pais;
         this.provincia = provincia;
@@ -150,30 +139,6 @@ public class Usuario implements Serializable {
 
     public void setNifNie(String nifNie) {
         this.nifNie = nifNie;
-    }
-
-    public String getNaf() {
-        return naf;
-    }
-
-    public void setNaf(String naf) {
-        this.naf = naf;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getTelefono() {
