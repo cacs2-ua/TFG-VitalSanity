@@ -10,7 +10,7 @@ public class PacienteController{
     @GetMapping("/api/paciente/informes/{idInforme}")
     public String detallesInforme(@PathVariable(value="idInforme") Long idInforme,
                                   Model model) {
-        return "paciente-ver-detalles-informe";
+        return "paciente/paciente-ver-detalles-informe";
     }
 
 }
