@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesion</title>
-    <div th:include="fragments :: head (titulo='Detalles de Informe')"></div>
+    <div th:include="navbar :: head (titulo='Detalles de Informe')"></div>
     <link rel="stylesheet" th:href="@{/css/custom/login-style.css}">
 </head>
 <body>
-<div th:replace="fragments::menuBar"></div>
+<div th:replace="navbar::menuBar"></div>
 <div>
     <div class="page-container">
         <div class="login-container">
@@ -33,6 +33,6 @@
         </a>
     </div>
 </div>
-<div th:replace="fragments::javascript"></div>
+<div th:replace="navbar::javascript"></div>
 </body>
 </html>

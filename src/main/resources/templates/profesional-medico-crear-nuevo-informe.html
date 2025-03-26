@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crear nuevo informe</title>
-  <div th:include="fragments :: head (titulo='Crear nuevo Informe')"></div>
+  <div th:include="navbar :: head (titulo='Crear nuevo Informe')"></div>
   <link rel="stylesheet" th:href="@{/css/custom/profesional-medico-crear-nuevo-informe.css}">
 </head>
 <body>
-  <div th:replace="fragments::menuBar"></div>
+  <div th:replace="navbar::menuBar"></div>
   <div class="body">
   <h1 class="page-title">Crear nuevo informe</h1>
   
@@ -56,6 +56,6 @@
     <button class="submit-button">Enviar</button>
   </div>
   </div>
-  <div th:replace="fragments::javascript"></div>
+  <div th:replace="navbar::javascript"></div>
 </body>
 </html>

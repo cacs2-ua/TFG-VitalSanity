@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ProfesionalMedicoController {
 
-    @GetMapping("pacientes/{idPaciente}/informes/nuevo")
+    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/nuevo")
     public String crearNuevoInforme(@PathVariable(value="idPaciente") Long idPaciente,
                                                     Model model) {
         return "profesional-medico-crear-nuevo-informe";
