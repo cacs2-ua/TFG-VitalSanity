@@ -64,7 +64,7 @@ public class LoginController {
                 return "redirect:/api/centro-medico/check";
             }
             if (usuario.getTipoId() == 3){
-                return "redirect:/api/profesional-medico/check";
+                return "redirect:/api/profesional-medico/pacientes/1/informes/nuevo";
             }
             if (usuario.getTipoId() == 4){
                 return "redirect:/api/paciente/informes/1";
