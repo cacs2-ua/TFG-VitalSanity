@@ -13,7 +13,7 @@ public class ProfesionalMedicoController {
         return "profesional-medico/profesional-medico-crear-nuevo-informe";
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes")
+    @GetMapping("/pacientes/{idPaciente}/informes")
     public String verDetallesInformePaciente(@PathVariable(value="idPaciente") Long idPaciente,
                                                     Model model) {
         return "profesional-medico/profesional-medico-informes-del-paciente";
