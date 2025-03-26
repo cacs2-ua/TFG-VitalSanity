@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis informes</title>
+    <div th:include="navbar :: head (titulo='Mis informes')"></div>
+    <link rel="stylesheet" th:href="@{/css/custom/paciente/ver-informes-propios.css}">
+</head>
+<body>
+    <div th:replace="navbar::menuBar"></div>
+    <div class="body">
+        <div class="page-container">
+            <!-- Modified header with separate styling for label and DNI -->
+            <h2 class="header"><strong>Mis informes</strong></h2>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="input-group">
+                    <label for="input-id">Id</label>
+                    <input type="text" id="input-id" class="filter-input">
+                </div>
+                <div class="input-group">
+                    <label for="input-centro">Centro</label>
+                    <input type="text" id="input-centro" class="filter-input">
+                </div>
+                <div class="input-group">
+                    <label for="input-profesional">Profesional</label>
+                    <input type="text" id="input-profesional" class="filter-input">
+                </div>
+                <div class="input-group">
+                    <label for="input-especialidad">Especialidad</label>
+                    <input type="text" id="input-especialidad" class="filter-input">
+                </div>
+                <div class="input-group">
+                    <label for="input-fecha-desde">Fecha desde</label>
+                    <input type="date" id="input-fecha-desde" class="filter-input date-input">
+                </div>
+                <div class="input-group">
+                    <label for="input-fecha-hasta">Fecha hasta</label>
+                    <input type="date" id="input-fecha-hasta" class="filter-input date-input">
+                </div>
+                <button class="button-primary">Aplicar filtros</button>
+            </div>
+
+            <!-- Report Cards -->
+            <div class="report-card">
+                <div class="report-id"><strong>Id. informe:</strong> <span class="report-number">20939676</span></div>
+                <div class="report-detail"><strong>Título:</strong> Resonancia Magnética</div>
+                <div class="report-detail"><strong>Fecha:</strong> 17/12/2024 17:45</div>
+                <div class="report-detail"><strong>Centro médico:</strong> Vithas Alicante</div>
+                <div class="report-detail"><strong>Profesional médico:</strong> Juan Martínez Fernández</div>
+                <div class="report-detail"><strong>Especialidad médica:</strong> Traumatología</div>
+                <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
+                <div class="report-detail"><strong>Municipio:</strong> San Vicente del Raspeig</div>
+                <div class="button-container">
+                    <form th:action="@{'/api/paciente/informes/' + ${usuario.id}}" method="get">
+                        <button type="submit" class="button-view">Ver Detalles</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="report-card">
+                <div class="report-id"><strong>Id. informe:</strong> <span class="report-number">37142984</span></div>
+                <div class="report-detail"><strong>Título:</strong> Biopsia de piel</div>
+                <div class="report-detail"><strong>Fecha:</strong> 12/10/2024 16:30</div>
+                <div class="report-detail"><strong>Centro médico:</strong> Quirón Salud Alicante</div>
+                <div class="report-detail"><strong>Profesional médico:</strong> Laura Sánchez Rodríguez</div>
+                <div class="report-detail"><strong>Especialidad médica:</strong> Dermatología</div>
+                <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
+                <div class="report-detail"><strong>Municipio:</strong> Altea</div>
+                <div class="button-container">
+                    <form th:action="@{'/api/paciente/informes/' + ${usuario.id}}" method="get">
+                        <button type="submit" class="button-view">Ver Detalles</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="report-card">
+                <div class="report-id"><strong>Id. informe:</strong> <span class="report-number">75138715</span></div>
+                <div class="report-detail"><strong>Título:</strong> Cateterismo cardíaco</div>
+                <div class="report-detail"><strong>Fecha:</strong> 06/09/2024 11:15</div>
+                <div class="report-detail"><strong>Centro médico:</strong> Adeslas Ciudad Real</div>
+                <div class="report-detail"><strong>Profesional médico:</strong> Carlos Hernández Ruiz</div>
+                <div class="report-detail"><strong>Especialidad médica:</strong> Cardiología</div>
+                <div class="report-detail"><strong>Provincia:</strong> Ciudad Real</div>
+                <div class="report-detail"><strong>Municipio:</strong> Puertollano</div>
+                <div class="button-container">
+                    <form th:action="@{'/api/paciente/informes/' + ${usuario.id}}" method="get">
+                        <button type="submit" class="button-view">Ver Detalles</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="navbar::javascript"></div>
+</body>
+</html>

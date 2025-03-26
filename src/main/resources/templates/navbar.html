@@ -46,7 +46,7 @@
                 </li>
                 <!-- Patient User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
-                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Mis informes</a>
+                    <a class="custom-nav-link" th:href="@{'/api/paciente/' + ${usuario.id} + '/informes'}" onclick="highlightLink(this)">Mis informes</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
                     <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Profesionales autorizados</a>
