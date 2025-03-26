@@ -1,66 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head th:fragment="head (titulo)">
     <meta charset="UTF-8" />
-    <!-- Vista para móviles: imprescindible para que el menú hamburguesa funcione correctamente -->
+    <!-- Meta viewport for proper mobile behavior -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title th:text="${titulo}"></title>
-
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" />
+    <!-- Link to the custom navbar CSS -->
+    <link rel="stylesheet" th:href="@{/css/custom/navbar.css}" />
 </head>
-
-<body>
+<body class="navbar-body">
 <div th:fragment="menuBar">
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #8433FF;">
-        <!-- Logo o nombre de la aplicación -->
-        <a th:if="${usuario == null}" class="navbar-brand" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">VitalSanity</a>
-
-        <!-- Botón del menú hamburguesa -->
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Enlaces del menú colapsable -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
+    <nav class="custom-nav">
+        <div class="custom-nav-container">
+            <!-- Logo or application name -->
+            <a th:if="${usuario == null}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
+            <a th:if="${usuario != null and usuario.tipoId == 3}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
+            <a th:if="${usuario != null and usuario.tipoId == 4}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
+            <!-- Burger menu toggle button -->
+            <button class="custom-nav-toggler" id="customNavToggler" aria-label="Toggle navigation">
+                <span class="custom-nav-toggler-icon"></span>
+            </button>
+        </div>
+        <!-- Navigation links container -->
+        <div class="custom-nav-menu" id="customNavMenu">
+            <ul class="custom-nav-list">
                 <!-- Guest User -->
-                <li class="nav-item" th:if="${usuario == null}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Home</a>
+                <li class="custom-nav-item" th:if="${usuario == null}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Home</a>
                 </li>
-
-                <li class="nav-item" th:if="${usuario == null}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Iniciar Sesión</a>
+                <li class="custom-nav-item" th:if="${usuario == null}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Iniciar Sesion</a>
                 </li>
-
-                <li class="nav-item" th:if="${usuario == null}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Registrarse</a>
+                <li class="custom-nav-item" th:if="${usuario == null}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Registrarse</a>
                 </li>
-
-                <!-- Usuario profesional medico -->
-                <a th:if="${usuario != null and usuario.tipoId == 3}" class="navbar-brand" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">VitalSanity</a>
-                <li class="nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Pacientes registrados</a>
+                <!-- Professional User -->
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Pacientes registrados</a>
                 </li>
-                <li class="nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Pacientes que han autorizado</a>
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Pacientes autorizados</a>
                 </li>
-                <li class="nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Pacientes que han desautorizado</a>
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Pacientes desautorizados</a>
                 </li>
-
-                <!-- Usuario paciente -->
-                <a th:if="${usuario != null and usuario.tipoId == 4}" class="navbar-brand" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">VitalSanity</a>
-                <li class="nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Mis informes</a>
+                <!-- Patient User -->
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Mis informes</a>
                 </li>
-                <li class="nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Profesionales autorizados</a>
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Profesionales autorizados</a>
                 </li>
-                <li class="nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
-                    <a class="nav-link" th:href="@{/}" style="font-weight: normal; text-decoration: none;" onclick="highlightLink(this)">Notificaciones</a>
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
+                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Notificaciones</a>
                 </li>
             </ul>
         </div>
@@ -68,41 +60,35 @@
 </div>
 
 <div th:fragment="javascript">
-    <!-- Bootstrap 5 JavaScript Bundle with Popper -->
-    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
-
-    <!-- Script para resaltar el enlace seleccionado -->
     <script>
-        // Restaurar el estado de los enlaces al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
-            const activeLinkIndex = localStorage.getItem('activeLinkIndex');
+        // Wait until the DOM content is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggler = document.getElementById('customNavToggler');
+            var menu = document.getElementById('customNavMenu');
+            toggler.addEventListener('click', function() {
+                menu.classList.toggle('custom-nav-menu-active');
+                toggler.classList.toggle('custom-nav-toggler-active');
+            });
+            // Restore active link state (if any)
+            var activeLinkIndex = localStorage.getItem('activeLinkIndex');
             if (activeLinkIndex !== null) {
-                const links = document.querySelectorAll('.nav-link, .navbar-brand');
-                const activeLink = links[activeLinkIndex];
+                var links = document.querySelectorAll('.custom-nav-link, .custom-nav-brand');
+                var activeLink = links[activeLinkIndex];
                 if (activeLink) {
-                    activeLink.style.fontWeight = 'bold';
-                    activeLink.style.textDecoration = 'underline';
                     activeLink.classList.add('active');
                 }
             }
         });
 
+        // Function to highlight clicked link and store its index
         function highlightLink(element) {
-            // Restablecer estilos de todos los enlaces y el logo
-            document.querySelectorAll('.nav-link, .navbar-brand').forEach(link => {
-                link.style.fontWeight = 'normal';
-                link.style.textDecoration = 'none';
+            var links = document.querySelectorAll('.custom-nav-link, .custom-nav-brand');
+            links.forEach(function(link) {
                 link.classList.remove('active');
             });
-
-            // Aplicar estilos al elemento seleccionado
-            element.style.fontWeight = 'bold';
-            element.style.textDecoration = 'underline';
             element.classList.add('active');
-
-            // Guardar el índice del elemento seleccionado en localStorage
-            const links = Array.from(document.querySelectorAll('.nav-link, .navbar-brand'));
-            const index = links.indexOf(element);
+            var linksArray = Array.from(document.querySelectorAll('.custom-nav-link, .custom-nav-brand'));
+            var index = linksArray.indexOf(element);
             localStorage.setItem('activeLinkIndex', index);
         }
     </script>
