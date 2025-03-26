@@ -1,22 +1,16 @@
 package vitalsanity.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import vitalsanity.authentication.ManagerUserSession;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class PacienteController {
-    @Autowired
-    private ManagerUserSession managerUserSession;
+public class PacienteController{
 
-    private Long getUsuarioLogeadoId() {
-        return managerUserSession.usuarioLogeado();
+    @GetMapping("/api/paciente/informes/{idInforme}")
+    public String detallesInforme(@PathVariable(value="idInforme") Long idInforme,
+                                  Model model) {
+        return "paciente-ver-detalles-informe";
     }
 
-    @GetMapping("/api/paciente/bienvenida")
-    public String dashboardComercio(Model model) {
-        return "paciente-bienvenida";
-    }
 }

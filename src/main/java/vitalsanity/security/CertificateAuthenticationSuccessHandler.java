@@ -36,22 +36,22 @@ public class CertificateAuthenticationSuccessHandler implements AuthenticationSu
         if (usuario.getTipo() != null) {
             Long tipoId = usuario.getTipo().getId();
             if (tipoId == 1) {
-                response.sendRedirect("https://localhost:8058/vital-sanity/api/admin/check");
+                response.sendRedirect("https://192.168.147.218:8058/vital-sanity/api/admin/check");
                 return;
             }
             if (tipoId == 2) {
-                response.sendRedirect("https://localhost:8058/vital-sanity/api/centro-medico/check");
+                response.sendRedirect("https://192.168.147.218:8058/vital-sanity/api/centro-medico/check");
                 return;
             }
             if (tipoId == 3) {
-                response.sendRedirect("https://localhost:8058/vital-sanity/api/profesional-medico/check");
+                response.sendRedirect("https://192.168.147.218:8058/vital-sanity/api/profesional-medico/check");
                 return;
             }
             if (tipoId == 4) {
-                response.sendRedirect("https://localhost:8058/vital-sanity/api/paciente/check");
+                response.sendRedirect("https://192.168.147.218:8058/vital-sanity/api/paciente/check");
                 return;
             }
         }
-        response.sendRedirect("https://localhost:8058/vital-sanity/api/auth/check");
+        response.sendRedirect("https://192.168.147.218:8058/vital-sanity/api/auth/check");
     }
 }
