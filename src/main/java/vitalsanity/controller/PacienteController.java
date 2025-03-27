@@ -19,4 +19,10 @@ public class PacienteController{
         return "paciente/ver-informes-propios";
     }
 
+    @GetMapping("/api/paciente/{idPaciente}/notificaciones")
+    public String verNotificacionesDeAutorizacion(@PathVariable(value="idPaciente") Long idInforme,
+                                     Model model) {
+        return "paciente/ver-notificaciones-de-autorizacion";
+    }
+
 }
