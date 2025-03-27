@@ -34,7 +34,9 @@
         <div class="report-detail"><strong>Género:</strong> Masculino</div>
         <div class="report-detail"><strong>Edad:</strong> 21</div>
         <div class="button-container">
-          <button class="button-access-record">Acceder al historial</button>
+          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
+            <button type="submit" class="button-access-record">Acceder al historial</button>
+          </form>
         </div>
       </div>
 
@@ -44,7 +46,9 @@
         <div class="report-detail"><strong>Género:</strong> Femenino</div>
         <div class="report-detail"><strong>Edad:</strong> 27</div>
         <div class="button-container">
-          <button class="button-access-record">Acceder al historial</button>
+          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
+            <button type="submit" class="button-access-record">Acceder al historial</button>
+          </form>
         </div>
       </div>
 
@@ -54,7 +58,9 @@
         <div class="report-detail"><strong>Género:</strong> Masculino</div>
         <div class="report-detail"><strong>Edad:</strong> 25</div>
         <div class="button-container">
-          <button class="button-access-record">Acceder al historial</button>
+          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
+            <button type="submit" class="button-access-record">Acceder al historial</button>
+          </form>
         </div>
       </div>
     </div>
