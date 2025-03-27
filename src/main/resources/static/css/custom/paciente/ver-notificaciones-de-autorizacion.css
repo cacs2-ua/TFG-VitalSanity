@@ -134,7 +134,7 @@
     text-align: center;
     text-decoration: underline; /* Underline the entire "Id. informe: <number>" block */
     margin-bottom: 0.9375rem; /* Changed from 15px */
-    font-size: 1.85rem; /* Changed from 18px */
+    font-size: 1.5rem; /* Changed from 18px */
 }
 
 .report-number {

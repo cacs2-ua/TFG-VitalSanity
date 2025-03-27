@@ -25,4 +25,10 @@ public class PacienteController{
         return "paciente/ver-notificaciones-de-autorizacion";
     }
 
+    @GetMapping("/api/paciente/{idPaciente}/profesionales-autorizados")
+    public String verProfesionalesMedicosAutorizados(@PathVariable(value="idPaciente") Long idInforme,
+                                                  Model model) {
+        return "paciente/ver-profesionales-medicos-autorizados";
+    }
+
 }
