@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Informes del Paciente</title>
   <div th:include="navbar :: head (titulo='Ver informes del paciente')"></div>
-  <link rel="stylesheet" th:href="@{/css/custom/profesional-medico/informes-del-paciente.css}">
+  <link rel="stylesheet" th:href="@{/css/custom/profesional-medico/ver-informes-del-paciente.css}">
 </head>
 <body>
   <div th:replace="navbar::menuBar"></div>
@@ -66,8 +66,12 @@
         <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
         <div class="report-detail"><strong>Municipio:</strong> San Vicente del Raspeig</div>
         <div class="button-container">
-          <button class="button-edit">Editar</button>
-          <button class="button-view">Ver Detalles</button>
+          <form method="get" th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes/1/editar'}" style="display: inline;">
+            <button type="submit" class="button-edit">Editar</button>
+          </form>
+          <form method="get" action="/url/verDetalles" style="display: inline;">
+            <button type="submit" class="button-view">Ver Detalles</button>
+          </form>
         </div>
       </div>
 
@@ -81,8 +85,12 @@
         <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
         <div class="report-detail"><strong>Municipio:</strong> Altea</div>
         <div class="button-container">
-          <button class="button-edit">Editar</button>
-          <button class="button-view">Ver Detalles</button>
+          <form method="get" th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes/1/editar'}" style="display: inline;">
+            <button type="submit" class="button-edit">Editar</button>
+          </form>
+          <form method="get" action="/url/verDetalles" style="display: inline;">
+            <button type="submit" class="button-view">Ver Detalles</button>
+          </form>
         </div>
       </div>
 
@@ -96,8 +104,12 @@
         <div class="report-detail"><strong>Provincia:</strong> Ciudad Real</div>
         <div class="report-detail"><strong>Municipio:</strong> Puertollano</div>
         <div class="button-container">
-          <button class="button-edit">Editar</button>
-          <button class="button-view">Ver Detalles</button>
+          <form method="get" th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes/1/editar'}" style="display: inline;">
+            <button type="submit" class="button-edit">Editar</button>
+          </form>
+          <form method="get" action="/url/verDetalles" style="display: inline;">
+            <button type="submit" class="button-view">Ver Detalles</button>
+          </form>
         </div>
       </div>
     </div>
