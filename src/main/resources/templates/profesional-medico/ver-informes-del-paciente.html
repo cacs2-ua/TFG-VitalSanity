@@ -48,7 +48,12 @@
       </div>
 
       <!-- Create New Report Button -->
-      <button class="button-create">Crear nuevo informe</button>
+      <button class="button-create" th:onclick="|window.location.href='@{/api/profesional-medico/pacientes/{id}/informes/nuevo(id=${usuario.id})}'|">
+        Crear nuevo informe
+      </button>
+
+
+
 
       <!-- Report Cards -->
       <div class="report-card">
