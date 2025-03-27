@@ -7,6 +7,14 @@
     <title th:text="${titulo}"></title>
     <!-- Link to the custom navbar CSS -->
     <link rel="stylesheet" th:href="@{/css/custom/navbar.css}" />
+    <!-- Agregamos esta regla para desktop: -->
+    <style>
+        @media (min-width: 768px) {
+            .custom-nav-list .logout {
+                margin-left: auto;
+            }
+        }
+    </style>
 </head>
 <body class="navbar-body">
 <div th:fragment="menuBar">
@@ -36,13 +44,13 @@
                 </li>
                 <!-- Professional User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
-                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/buscar-paciente'}"  onclick="highlightLink(this)">Pacientes registrados</a>
+                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/buscar-paciente'}" onclick="highlightLink(this)">Pacientes registrados</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-autorizado'}" onclick="highlightLink(this)">Pacientes que han autorizado</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
-                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-desautorizado'}"  onclick="highlightLink(this)">Pacientes desautorizados</a>
+                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-desautorizado'}" onclick="highlightLink(this)">Pacientes desautorizados</a>
                 </li>
                 <!-- Patient User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
@@ -53,6 +61,10 @@
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
                     <a class="custom-nav-link" th:href="@{'/api/paciente/' + ${usuario.id} + '/notificaciones'}" onclick="highlightLink(this)">Notificaciones</a>
+                </li>
+                <!-- Cerrar sesión: se mostrará para cualquier usuario logueado y se posicionará a la derecha en desktop -->
+                <li class="custom-nav-item logout" th:if="${usuario != null}">
+                    <a class="custom-nav-link" th:href="@{/logout}" onclick="highlightLink(this)">Cerrar sesión</a>
                 </li>
             </ul>
         </div>
