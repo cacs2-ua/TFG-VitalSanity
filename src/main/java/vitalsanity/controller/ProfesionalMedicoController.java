@@ -25,6 +25,12 @@ public class ProfesionalMedicoController {
         return "profesional-medico/listado-pacientes-que-han-autorizado";
     }
 
+    @GetMapping("/api/profesional-medico/{idProfesionalMedico}/solicitar-autorizacion/")
+    public String solicitarAutorizacion(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
+                                               Model model) {
+        return "profesional-medico/profesional-solicitar-autorizacion";
+    }
+
 }
 
 
