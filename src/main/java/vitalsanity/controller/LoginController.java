@@ -48,6 +48,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String loginSubmit(@ModelAttribute LoginData loginData, Model model) {
+        Long idUsuario = getUsuarioLogeadoId();
         UsuarioService.LoginStatus loginStatus = usuarioService.login(
                 loginData.getEmail(),
                 loginData.getContrasenya()
@@ -67,7 +68,7 @@ public class LoginController {
                 return "redirect:/api/profesional-medico/pacientes/1/informes/nuevo";
             }
             if (usuario.getTipoId() == 4){
-                return "redirect:/api/paciente/informes/1";
+                return "redirect:/api/paciente/" + usuario.getId() + "/informes";
             }
             return "redirect:/api/auth/check";
 
