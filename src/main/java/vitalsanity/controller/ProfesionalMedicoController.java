@@ -21,9 +21,16 @@ public class ProfesionalMedicoController {
     }
 
     @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes")
-    public String verDetallesInformePaciente(@PathVariable(value="idPaciente") Long idPaciente,
-                                                    Model model) {
+    public String verInformesPaciente(@PathVariable(value="idPaciente") Long idPaciente,
+                                             Model model) {
         return "profesional-medico/ver-informes-del-paciente";
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/{idInforme}")
+    public String verDetallesInformePaciente(@PathVariable(value="idPaciente") Long idPaciente,
+                                             @PathVariable(value="idInforme") Long idInforme,
+                                                    Model model) {
+        return "profesional-medico/ver-detalles-informe";
     }
 
     @GetMapping("/api/profesional-medico/{idProfesionalMedico}/pacientes-que-han-autorizado")

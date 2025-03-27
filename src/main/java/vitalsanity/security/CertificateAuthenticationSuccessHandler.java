@@ -44,7 +44,7 @@ public class CertificateAuthenticationSuccessHandler implements AuthenticationSu
                 return;
             }
             if (tipoId == 3) {
-                response.sendRedirect("https://192.168.147.218:8058/vital-sanity/api/profesional-medico/pacientes/1/informes");
+                response.sendRedirect("https://192.168.147.218:8058/vital-sanity/api/profesional-medico/5/pacientes-que-han-autorizado");
                 return;
             }
             if (tipoId == 4) {
