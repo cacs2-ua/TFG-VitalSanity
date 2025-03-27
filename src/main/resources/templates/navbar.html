@@ -39,7 +39,7 @@
                     <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Pacientes registrados</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
-                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Pacientes autorizados</a>
+                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-autorizado'}" onclick="highlightLink(this)">Pacientes que han autorizado</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
                     <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Pacientes desautorizados</a>

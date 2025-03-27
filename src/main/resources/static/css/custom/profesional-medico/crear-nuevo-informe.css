@@ -17,7 +17,7 @@
 
 /* Typography */
 .page-title {
-    font-size: 1.85rem;
+    font-size: 1.5rem;
     margin-bottom: 1rem;
     text-align: center;
     text-decoration: underline;
@@ -76,7 +76,7 @@
 
 /* New combined ID class; the <strong> tag inside ensures bold for "Id. informe:" */
 .form-id-combined {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 /* Attachments section */

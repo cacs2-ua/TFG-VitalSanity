@@ -28,7 +28,7 @@
 .page-title {
     text-align: center;
     margin: 1rem 0;
-    font-size: 1.85rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-decoration: underline;
     margin-bottom: 1.85rem;
@@ -46,7 +46,7 @@
 /* Modified: Underline the entire "Id. informe" text */
 .report-id {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
     text-decoration: underline; /* Underlines entire text including spaces */

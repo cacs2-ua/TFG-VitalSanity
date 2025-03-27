@@ -22,7 +22,7 @@
     text-decoration: underline; /* Underlines the entire header */
     padding-top: 1.875rem; /* Changed from 30px */
     margin-bottom: 1.875rem; /* Changed from 30px */
-    font-size: 1.85rem; /* Changed from 30px approximate to 1.85rem */
+    font-size: 1.5rem; /* Changed from 30px approximate to 1.85rem */
 }
 
 /* NEW: .dni rule to ensure the DNI appears with normal font weight */
@@ -134,7 +134,7 @@
     text-align: center;
     text-decoration: underline; /* Underline the entire "Id. informe: <number>" block */
     margin-bottom: 0.9375rem; /* Changed from 15px */
-    font-size: 1.5rem; /* Changed from 18px */
+    font-size: 1.3rem; /* Changed from 18px */
 }
 
 .report-doctor-name {

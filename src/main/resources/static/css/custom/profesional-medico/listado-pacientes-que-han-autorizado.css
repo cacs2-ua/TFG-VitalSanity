@@ -103,6 +103,25 @@
     transform: scale(1.05);
 }
 
+.button-create {
+    background-color: #4643FF;
+    color: white;
+    border: none;
+    border-radius: 1.25rem; /* Changed from 20px */
+    padding: 0.625rem 1.25rem; /* Changed from 10px 20px */
+    cursor: pointer;
+    margin: 1.25rem auto; /* Changed from 20px auto */
+    display: block;
+    font-weight: bold;
+    margin-bottom: 1.875rem; /* Changed from 30px */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-create:hover {
+    background-color: #3B3BF0;
+    transform: scale(1.05);
+}
+
 .report-card {
     background-color: #F5F3FF;
     border-radius: 0.625rem; /* Changed from 10px */
@@ -111,14 +130,14 @@
     box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.1); /* Changed from 0 2px 5px */
 }
 
-.report-id {
+.report-patient {
     text-align: center;
     text-decoration: underline; /* Underline the entire "Id. informe: <number>" block */
     margin-bottom: 0.9375rem; /* Changed from 15px */
     font-size: 1.3rem; /* Changed from 18px */
 }
 
-.report-number {
+.report-patient-name {
     font-weight: normal; /* Report number appears normal */
 }
 
@@ -137,22 +156,36 @@
     margin-top: 0.9375rem; /* Changed from 15px */
 }
 
-.button-view {
-    background-color: #88A9FD;
+.button-edit {
+    background-color: #7D82EA;
     color: black;
     border: none;
-    border-radius: 1.25rem;
-    padding: 0.5rem 0.9375rem;
+    border-radius: 1.25rem; /* Changed from 20px */
+    padding: 0.5rem 0.9375rem; /* Changed from 8px 15px */
     cursor: pointer;
     width: 7rem;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    display: inline-block;       /* Para que se comporte como un bloque similar a un botón */
-    text-decoration: none;       /* Quita el subrayado propio de los enlaces */
 }
 
+.button-edit:hover {
+    background-color: #6A72D0;
+    transform: scale(1.05);
+}
 
-.button-view:hover {
+.button-access-record {
+    background-color: #88A9FD;
+    color: black;
+    border: none;
+    border-radius: 1.25rem; /* Changed from 20px */
+    padding: 0.5rem 0.9375rem; /* Changed from 8px 15px */
+    cursor: pointer;
+    width: 10rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button-access-record:hover {
     background-color: #7AA2F0;
     transform: scale(1.05);
 }
