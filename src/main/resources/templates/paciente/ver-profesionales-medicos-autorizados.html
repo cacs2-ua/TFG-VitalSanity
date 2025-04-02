@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ver profesionales médicos autorizados</title>
+  <div th:include="navbar :: head (titulo='Ver profesionales médicos autorizados')"></div>
+  <link rel="stylesheet" th:href="@{/css/custom/paciente/ver-profesionales-medicos-autorizados.css}">
+</head>
+<body>
+  <div th:replace="navbar::menuBar"></div>
+  <div class="body">
+    <div class="page-container">
+      <!-- Modified header with separate styling for label and DNI -->
+      <h2 class="header"><strong>Profesionales médicos autorizados</strong></h2>
+
+
+      <!-- Report Cards -->
+      <div class="report-card">
+        <div class="report-doctor"><strong>Profesional Médico:</strong> <span class="report-doctor-name">Alejandro López Hernández</span></div>
+        <div class="report-detail"><strong>Centro médico:</strong> Vithas Alicante</div>
+        <div class="report-detail"><strong>Especialidad del profesional:</strong> Traumatología</div>
+        <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
+        <div class="report-detail"><strong>Municipio:</strong> San Vicente del Raspeig</div>
+        <div class="button-container">
+          <button class="button-view">Ver informes</button>
+          <button class="button-deauthorize">Desautorizar</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-doctor"><strong>Profesional Médico:</strong> <span class="report-doctor-name">Diego Torres Muñoz</span></div>
+        <div class="report-detail"><strong>Centro médico:</strong> Quirón Salud Alicante</div>
+        <div class="report-detail"><strong>Especialidad del profesional:</strong> Dermatología</div>
+        <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
+        <div class="report-detail"><strong>Municipio:</strong> Altea</div>
+        <div class="button-container">
+          <button class="button-view">Ver informes</button>
+          <button class="button-deauthorize">Desautorizar</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-doctor"><strong>Profesional Médico:</strong> <span class="report-doctor-name">Sofía Ortiz Paredes</span></div>
+        <div class="report-detail"><strong>Centro médico:</strong> Centro Adeslas Ciudad Real</div>
+        <div class="report-detail"><strong>Especialidad del profesional:</strong> Cardiología</div>
+        <div class="report-detail"><strong>Provincia:</strong> Ciudad Real</div>
+        <div class="report-detail"><strong>Municipio:</strong> Puertollano</div>
+        <div class="button-container">
+          <button class="button-view">Ver informes</button>
+          <button class="button-deauthorize">Desautorizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div th:replace="navbar::javascript"></div>
+</body>
+</html>

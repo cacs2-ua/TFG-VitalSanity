@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar paciente para solicitar el acceso a su historial</title>
+  <div th:include="navbar :: head (titulo='Buscar paciente para solicitar el acceso a su historial')"></div>
+  <link rel="stylesheet" th:href="@{/css/custom/profesional-medico/buscar-paciente.css}">
+</head>
+<body>
+  <div th:replace="navbar::menuBar"></div>
+  <div class="body">
+    <div class="page-container">
+      <!-- Modified header with separate styling for label and DNI -->
+      <h2 class="header"><strong>Buscar paciente para solicitar el acceso a su historial</strong></h2>
+      <br>
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="input-group">
+          <label for="input-id">NIF/NIE del paciente al que se quiere solicitar acceso a su historial</label>
+          <input type="text" id="input-id" class="filter-input">
+        </div>
+        <button class="button-primary">Buscar</button>
+      </div>
+
+      <!-- Report Cards -->
+      <div class="report-card">
+        <div class="report-id"><strong>Nombre del paciente:</strong> <span class="report-number">Antonio Ruiz Martínez</span></div>
+        <div class="report-detail"><strong>NIF:</strong> 90817263L</div>
+        <div class="report-detail"><strong>Género:</strong> Masculino</div>
+        <div class="report-detail"><strong>Edad:</strong> 21</div>
+        <div class="button-container">
+          <form th:action="@{'/api/profesional-medico/' + ${usuario.id} + '/solicitar-autorizacion'}" method="get">
+            <button type="submit" class="button-access-record">Solicitar acceso</button>
+          </form>
+        </div>
+      </div>
+  </div>
+  </div>
+  <div th:replace="navbar::javascript"></div>
+</body>
+</html>
