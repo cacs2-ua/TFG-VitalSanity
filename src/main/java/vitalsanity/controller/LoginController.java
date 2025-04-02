@@ -38,6 +38,15 @@ public class LoginController {
         return "login-form"; // Plantilla adaptada con thymeleaf
     }
 
+    @GetMapping("/registro")
+    public String registroForm(Model model) {
+        if (getUsuarioLogeadoId() != null) {
+            return "redirect:/api/general/home";
+        }
+        model.addAttribute("loginData", new LoginData());
+        return "guest-user/registro-form"; // Plantilla adaptada con thymeleaf
+    }
+
     // Mapping para /login/certificate (fallback cuando no se selecciona certificado)
     @GetMapping("/login/certificate")
     public String certificateLoginFallback(Model model) {

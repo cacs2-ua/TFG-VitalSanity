@@ -37,10 +37,10 @@
                     <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Home</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
-                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Iniciar Sesion</a>
+                    <a class="custom-nav-link" th:href="@{/login}" onclick="highlightLink(this)">Iniciar Sesion</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
-                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Registrarse</a>
+                    <a class="custom-nav-link" th:href="@{/registro}" onclick="highlightLink(this)">Registrarse</a>
                 </li>
                 <!-- Professional User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
