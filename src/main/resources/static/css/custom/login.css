@@ -28,7 +28,7 @@
 }
 
 /* Form title */
-.login-title {
+.form-title {
     color: #FFFFFF;
     font-size: 28px;
     text-align: center;
@@ -47,6 +47,7 @@
     color: #F5F3FF;
     margin-bottom: 8px;
     font-size: 16px;
+    font-weight: bold;
 }
 
 /* Input fields */
@@ -104,7 +105,7 @@
         padding: 20px;
     }
 
-    .login-title {
+    .form-title {
         font-size: 24px;
     }
 
