@@ -31,4 +31,9 @@ public class PacienteController{
         return "paciente/ver-profesionales-medicos-autorizados";
     }
 
+    @GetMapping("/api/paciente/datos-personales")
+    public String datosPersonalesForm(Model model) {
+        return "paciente/completar-datos-personales";
+    }
+
 }
