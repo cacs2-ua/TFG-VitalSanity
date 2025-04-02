@@ -18,11 +18,11 @@
             </div>
             <form th:action="@{/login}" method="post" th:object="${loginData}">
                 <div class="form-group">
-                    <label class="form-label" for="email">Correo</label>
+                    <label class="form-label" for="email">Correo*</label>
                     <input type="email" id="email" th:field="*{email}" class="form-input" placeholder="user@gmail.com" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="password">Contrasenya</label>
+                    <label class="form-label" for="password">Contraseña*</label>
                     <input type="password" id="password" th:field="*{contrasenya}" class="form-input" placeholder="***********" required>
                 </div>
                 <button type="submit" class="submit-button">Aceptar</button>
