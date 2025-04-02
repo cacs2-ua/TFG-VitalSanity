@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solicitar autorización</title>
+  <div th:include="navbar :: head (titulo='Solicitar autorización')"></div>
+  <link rel="stylesheet" th:href="@{/css/custom/profesional-medico/profesional-crear-nuevo-informe.css}">
+</head>
+<body>
+  <div th:replace="navbar::menuBar"></div>
+  <div class="body">
+    <h1 class="page-title">Solicitar autorización</h1>
+    <div class="form-container">
+      <div class="form-section">
+        <!-- Modified: Combined the ID text into a single span -->
+        <div class="form-id">
+          <span class="form-id-combined"><strong>Datos de la autorización</strong></span>
+        </div>
+        <br>
+
+        <div class="form-field">
+          <label class="form-label required">Nombre del paciente:</label>
+          <input type="text" class="form-input" readonly value="Antonio Ruiz Martínez">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label required">NIF/NIE del paciente:</label>
+          <input type="text" class="form-input" readonly value="90817263L">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label required">Título:</label>
+          <input type="text" class="form-input" value="Diagnostico general de salud">
+        </div>
+
+
+
+        <div class="form-field">
+          <label class="form-label required">Motivo:</label>
+          <textarea class="form-textarea">Se solicita acceso al historial clínico de Antonio Ruiz Martínez para obtener información relevante que permita una correcta evaluación de su estado de salud, un diagnóstico preciso y la planificación del tratamiento adecuado.</textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="submit-container">
+      <button class="submit-button">Firmar y Enviar</button>
+    </div>
+  </div>
+  <div th:replace="navbar::javascript"></div>
+</body>
+</html>

@@ -13,18 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UsuarioNoLogeadoException.class)
-    public ModelAndView handleUsuarioNoLogeadoException(UsuarioNoLogeadoException ex) {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("redirect:/login?error=not_logged_in");
-        return mav;
-    }
-
-    @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<String> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
-    }
-
     @ExceptionHandler(NotFoundException.class)
     public ModelAndView handleNotFoundException(NotFoundException ex) {
         ModelAndView mav = new ModelAndView();

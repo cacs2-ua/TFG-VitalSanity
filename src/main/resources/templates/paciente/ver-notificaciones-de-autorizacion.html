@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informes del Paciente</title>
+  <div th:include="navbar :: head (titulo='Ver informes del paciente')"></div>
+  <link rel="stylesheet" th:href="@{/css/custom/paciente/ver-notificaciones-de-autorizacion.css}">
+</head>
+<body>
+  <div th:replace="navbar::menuBar"></div>
+  <div class="body">
+    <div class="page-container">
+      <!-- Modified header with separate styling for label and DNI -->
+      <h2 class="header"><strong>Notificaciones de autorización</strong></h2>
+
+
+      <!-- Report Cards -->
+      <div class="report-card">
+        <div class="report-id"><strong>Profesional Médico:</strong> <span class="report-number">Alejandro López Hernández</span></div>
+        <div class="report-detail"><strong>Centro médico:</strong> Vithas Alicante</div>
+        <div class="report-detail"><strong>Especialidad del profesional:</strong> Traumatología</div>
+        <div class="report-detail"><strong>Título:</strong> Acceso al historial clínico para evaluación médica de lesiones previas</div>
+        <div class="report-detail"><strong>Motivo de la autorización:</strong> Acceso solicitado para analizar antecedentes relevantes y planificar el diagnóstico y tratamiento del paciente</div>
+        <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
+        <div class="report-detail"><strong>Municipio:</strong> San Vicente del Raspeig</div>
+        <div class="button-container">
+          <button class="button-authorize">Autorizar</button>
+          <button class="button-deny">Denegar</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-id"><strong>Profesional Médico:</strong> <span class="report-number">Diego Torres Muñoz</span></div>
+        <div class="report-detail"><strong>Centro médico:</strong> Quirón Salud Alicante</div>
+        <div class="report-detail"><strong>Especialidad del profesional:</strong> Dermatología</div>
+        <div class="report-detail"><strong>Título:</strong> Evaluación de antecedentes para diagnóstico de lesiones cutáneas recurrentes.</div>
+        <div class="report-detail"><strong>Motivo de la autorización:</strong> Se solicita acceso al historial clínico para identificar posibles antecedentes de alergias, patologías autoinmunes o tratamientos previos que puedan estar relacionados con las lesiones cutáneas actuales</div>
+        <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
+        <div class="report-detail"><strong>Municipio:</strong> Altea</div>
+        <div class="button-container">
+          <button class="button-authorize">Autorizar</button>
+          <button class="button-deny">Denegar</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-id"><strong>Profesional Médico:</strong> <span class="report-number">Sofía Ortiz Paredes</span></div>
+        <div class="report-detail"><strong>Centro médico:</strong> Centro Adeslas Ciudad Real</div>
+        <div class="report-detail"><strong>Especialidad del profesional:</strong> Cardiología</div>
+        <div class="report-detail"><strong>Título:</strong> Consulta de historial cardiovascular para evaluación de hipertensión crónica</div>
+        <div class="report-detail"><strong>Motivo de la autorización:</strong> Acceso necesario para revisar antecedentes de hipertensión arterial, tratamientos farmacológicos y pruebas complementarias previas, a fin de ajustar el manejo terapéutico del paciente</div>
+        <div class="report-detail"><strong>Provincia:</strong> Ciudad Real</div>
+        <div class="report-detail"><strong>Municipio:</strong> Puertollano</div>
+        <div class="button-container">
+          <button class="button-authorize">Autorizar</button>
+          <button class="button-deny">Denegar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div th:replace="navbar::javascript"></div>
+</body>
+</html>

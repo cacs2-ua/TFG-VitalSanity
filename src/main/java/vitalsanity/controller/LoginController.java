@@ -48,6 +48,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String loginSubmit(@ModelAttribute LoginData loginData, Model model) {
+        Long idUsuario = getUsuarioLogeadoId();
         UsuarioService.LoginStatus loginStatus = usuarioService.login(
                 loginData.getEmail(),
                 loginData.getContrasenya()
@@ -58,18 +59,18 @@ public class LoginController {
             managerUserSession.logearUsuario(usuario.getId());
 
             if (usuario.getTipoId() == 1){
-                return "redirect:/api/administrador/bienvenida";
+                return "redirect:/api/admin/check";
             }
             if (usuario.getTipoId() == 2){
-                return "redirect:/api/centro-medico/bienvenida";
+                return "redirect:/api/centro-medico/check";
             }
             if (usuario.getTipoId() == 3){
-                return "redirect:/api/profesional-medico/bienvenida";
+                return "redirect:/api/profesional-medico/pacientes/1/informes/nuevo";
             }
             if (usuario.getTipoId() == 4){
-                return "redirect:/api/paciente/bienvenida";
+                return "redirect:/api/paciente/" + usuario.getId() + "/informes";
             }
-            return "redirect:/api/paciente/bienvenida";
+            return "redirect:/api/auth/check";
 
         } else if (loginStatus == UsuarioService.LoginStatus.USER_DISABLED) {
             model.addAttribute("error", "No puedes iniciar sesion. Tu usuario esta deshabilitado");

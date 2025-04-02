@@ -18,6 +18,7 @@ public class TipoUsuario implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     private String tipo;
 
     @OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
