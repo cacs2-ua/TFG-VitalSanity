@@ -33,4 +33,9 @@ public class RegistroController {
         model.addAttribute("registroData", new RegistroData());
         return "guest-user/registro-form"; // Plantilla adaptada con thymeleaf
     }
+
+    @GetMapping("/registro/codigo-confirmacion-form")
+    public String registroCodigoConfirmacionForm(Model model) {
+        return "guest-user/registro-codigo-confirmacion-form"; // Plantilla adaptada con thymeleaf
+    }
 }
