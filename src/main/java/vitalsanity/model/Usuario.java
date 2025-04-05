@@ -78,6 +78,28 @@ public class Usuario implements Serializable {
         }
     }
 
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Paciente paciente;
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        if (paciente == null) {
+            throw new IllegalArgumentException("El paciente no puede ser null.");
+        }
+        if (this.paciente != null && this.paciente != paciente) {
+            throw new IllegalStateException("El usuario ya tiene un paciente asignado. Desvincule el paciente existente antes de asignar uno nuevo.");
+        }
+        if (this.paciente == paciente) {
+            return; // No hacer nada si ya están vinculados
+        }
+        this.paciente = paciente;
+        if (paciente.getUsuario() != this) {
+            paciente.setUsuario(this);
+        }
+    }
 
     public Usuario() {
     }
