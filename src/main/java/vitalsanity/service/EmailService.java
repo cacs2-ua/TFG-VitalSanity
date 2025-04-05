@@ -14,9 +14,10 @@ public class EmailService {
     // Metodo para enviar email de confirmacion usando Mailtrap
     public void sendConfirmationEmail(String to, String confirmationCode) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("vital@sanity.es");
         message.setTo(to);
-        message.setSubject("Confirmation Code");
-        message.setText("Your confirmation code is: " + confirmationCode);
+        message.setSubject("Registration Confirmation Code");
+        message.setText("Your registration confirmation code is: " + confirmationCode);
         mailSender.send(message);
     }
 }
