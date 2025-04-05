@@ -6,7 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vitalsanity.dto.RegistroData;
 import vitalsanity.dto.UsuarioData;
+import vitalsanity.model.Paciente;
+import vitalsanity.model.TipoUsuario;
 import vitalsanity.model.Usuario;
 import vitalsanity.repository.TipoUsuarioRepository;
 import vitalsanity.repository.UsuarioRepository;
@@ -88,4 +91,45 @@ public class UsuarioService {
             return modelMapper.map(usuario, UsuarioData.class);
         }
     }
+
+    @Transactional(rollbackOn = Exception.class)
+    public UsuarioData registrarPaciente(RegistroData registroData) {
+        // Verificar que las contrasenyas sean iguales
+        if (!registroData.getContrasenya().equals(registroData.getConfirmarContrasenya())) {
+            throw new IllegalArgumentException("Las contrasenyas no coinciden");
+        }
+
+        // Crear nuevo usuario
+        Usuario usuario = new Usuario();
+        usuario.setIdentificador(java.util.UUID.randomUUID().toString());
+        usuario.setEmail(registroData.getEmail());
+        usuario.setNombreCompleto(registroData.getNombreCompleto());
+        usuario.setContrasenya(hashPassword(registroData.getContrasenya()));
+        usuario.setActivado(true);
+        usuario.setNifNie(registroData.getNifNie());
+        usuario.setTelefono(registroData.getMovil());
+        usuario.setPais(registroData.getPais());
+        // Provincia, municipio y codigoPostal se ignoran
+
+        // Asignar tipo de usuario paciente (se asume que existe un TipoUsuario con tipo "paciente")
+        TipoUsuario tipoPaciente = tipoUsuarioRepository.findByTipo("paciente")
+                .orElseThrow(() -> new IllegalStateException("Tipo de usuario 'paciente' no encontrado"));
+        usuario.setTipo(tipoPaciente);
+
+        // Crear entidad Paciente
+        Paciente paciente = new Paciente();
+        paciente.setGenero(registroData.getGenero());
+        paciente.setFechaNacimiento(registroData.getFechaNacimiento());
+        // Establecer relacion bidireccional
+        usuario.setPaciente(paciente);
+        paciente.setUsuario(usuario);
+
+        // Guardar usuario (se guardara el paciente por cascada)
+        Usuario savedUsuario = usuarioRepository.save(usuario);
+
+        // Mapear a UsuarioData y retornar
+        UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
+        return usuarioData;
+    }
+
 }
