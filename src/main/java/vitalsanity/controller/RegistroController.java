@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.LoginData;
+import vitalsanity.dto.RegistroData;
 import vitalsanity.dto.UsuarioData;
 import vitalsanity.service.UsuarioService;
 
@@ -29,7 +30,7 @@ public class RegistroController {
         if (getUsuarioLogeadoId() != null) {
             return "redirect:/api/general/home";
         }
-        model.addAttribute("loginData", new LoginData());
+        model.addAttribute("registroData", new RegistroData());
         return "guest-user/registro-form"; // Plantilla adaptada con thymeleaf
     }
 }
