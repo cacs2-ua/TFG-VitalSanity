@@ -1,3 +1,4 @@
+DELETE FROM pacientes;
 DELETE FROM usuarios;
 DELETE FROM tipos_usuario;
 
