@@ -62,6 +62,10 @@ public class LoginController {
                 return "redirect:/api/admin/registro-centro-medico";
             }
             if (usuario.getTipoId() == 2){
+                if (usuario.getPrimerAcceso()){
+                    return "redirect:/api/general/usuarios/" + usuario.getId() + "/contrasenya";
+                }
+
                 return "redirect:/api/centro-medico/check";
             }
             if (usuario.getTipoId() == 3){
