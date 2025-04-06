@@ -47,7 +47,7 @@
 
                 <!-- Medical Center User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 2 and usuario.primerAcceso == false}">
-                    <a class="custom-nav-link" th:href="@{/api/centro-medico/check}" onclick="highlightLink(this)">Registrar Profesional Médico</a>
+                    <a class="custom-nav-link" th:href="@{/api/centro-medico/profesionales-medicos}" onclick="highlightLink(this)">Registrar Profesional Médicos</a>
                 </li>
                 <!-- Professional User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
