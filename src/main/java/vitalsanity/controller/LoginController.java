@@ -59,7 +59,7 @@ public class LoginController {
             managerUserSession.logearUsuario(usuario.getId());
 
             if (usuario.getTipoId() == 1){
-                return "redirect:/api/admin/check";
+                return "redirect:/api/admin/registro-centro-medico";
             }
             if (usuario.getTipoId() == 2){
                 return "redirect:/api/centro-medico/check";
