@@ -4,8 +4,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import vitalsanity.dto.ResidenciaData;
+import vitalsanity.dto.UsuarioData;
+import vitalsanity.service.UsuarioService;
+
 @Controller
 public class PacienteController{
+
+    @Autowired
+    private UsuarioService usuarioService;
+
 
     @GetMapping("/api/paciente/informes/{idInforme}")
     public String detallesInformeMedico(@PathVariable(value="idInforme") Long idInforme,
@@ -32,8 +41,22 @@ public class PacienteController{
     }
 
     @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
-    public String datosResidenciaForm(@PathVariable(value="idPaciente") Long idInforme,
-                                      Model model) {
+    public String datosResidenciaForm(@PathVariable("idPaciente") Long idPaciente, Model model) {
+        model.addAttribute("residenciaData", new ResidenciaData());
         return "paciente/completar-datos-residencia";
     }
+
+    @PostMapping("/api/paciente/{idPaciente}/datos-residencia")
+    public String completarDatosResidencia(@PathVariable("idPaciente") Long idPaciente,
+                                           @ModelAttribute("residenciaData") ResidenciaData residenciaData,
+                                           Model model) {
+
+        UsuarioData usuario = usuarioService.findById(idPaciente);
+        // Llama a la capa de servicio para actualizar los datos de residencia y setear primerAcceso a false
+        UsuarioData updatedUsuario = usuarioService.actualizarDatosResidencia(idPaciente, residenciaData);
+        // Redirige a alguna página (por ejemplo, al dashboard del paciente)
+        return "redirect:/api/paciente/" + usuario.getId() + "/informes";
+    }
+
+
 }

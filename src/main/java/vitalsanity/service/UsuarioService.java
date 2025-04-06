@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vitalsanity.dto.ActualizarContrasenyaData;
-import vitalsanity.dto.RegistroCentroMedicoData;
-import vitalsanity.dto.RegistroData;
-import vitalsanity.dto.UsuarioData;
+import vitalsanity.dto.*;
 import vitalsanity.model.CentroMedico;
 import vitalsanity.model.Paciente;
 import vitalsanity.model.TipoUsuario;
@@ -211,5 +208,18 @@ public class UsuarioService {
         Usuario updatedUsuario = usuarioRepository.save(usuario);
         return modelMapper.map(updatedUsuario, UsuarioData.class);
     }
+
+    @Transactional(rollbackOn = Exception.class)
+    public UsuarioData actualizarDatosResidencia(Long id, ResidenciaData data) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Usuario no encontrado"));
+        usuario.setProvincia(data.getProvincia());
+        usuario.setMunicipio(data.getMunicipio());
+        usuario.setCodigoPostal(data.getCodigoPostal());
+        usuario.setPrimerAcceso(false);
+        Usuario updatedUsuario = usuarioRepository.save(usuario);
+        return modelMapper.map(updatedUsuario, UsuarioData.class);
+    }
+
 
 }

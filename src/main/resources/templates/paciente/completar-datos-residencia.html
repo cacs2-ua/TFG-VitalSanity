@@ -12,18 +12,21 @@
 <div class="page-container">
     <div class="login-container">
         <h1 class="form-title">Complete sus datos de residencia</h1>
-        <form>
+        <!-- Se establece el objeto de comando "residenciaData" y se define la acción con el id del usuario -->
+        <form th:object="${residenciaData}"
+              th:action="@{/api/paciente/{idPaciente}/datos-residencia(idPaciente=${usuario.id})}"
+              method="post">
             <div class="form-group">
                 <label class="form-label" for="provincia">Provincia*</label>
-                <input type="text" id="provincia" class="form-input" required placeholder="Alicante">
+                <input type="text" id="provincia" class="form-input" th:field="*{provincia}" required placeholder="Alicante">
             </div>
             <div class="form-group">
                 <label class="form-label" for="municipio">Municipio*</label>
-                <input type="text" id="municipio" class="form-input" required placeholder="San Vicente del Raspeig">
+                <input type="text" id="municipio" class="form-input" th:field="*{municipio}" required placeholder="San Vicente del Raspeig">
             </div>
             <div class="form-group">
-                <label class="form-label" for="codigo-postal">Código Postal*</label>
-                <input type="text" id="codigo-postal" class="form-input" required placeholder="03690">
+                <label class="form-label" for="codigoPostal">Código Postal*</label>
+                <input type="text" id="codigoPostal" class="form-input" th:field="*{codigoPostal}" required placeholder="03690">
             </div>
             <button type="submit" class="submit-button">Aceptar</button>
         </form>
