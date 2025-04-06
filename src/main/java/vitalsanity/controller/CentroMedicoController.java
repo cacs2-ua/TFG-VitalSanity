@@ -11,4 +11,10 @@ public class CentroMedicoController {
                                         Model model) {
         return "debug/centro-medico-check";
     }
+
+    @GetMapping("/api/centro-medico/profesionales-medicos")
+    public String registrarProfesionalesMedicosForm(@PathVariable(value="idInforme") Long idInforme,
+                                        Model model) {
+        return "debug/centro-medico-check";
+    }
 }
