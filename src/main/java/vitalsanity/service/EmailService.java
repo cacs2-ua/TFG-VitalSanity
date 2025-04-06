@@ -20,4 +20,16 @@ public class EmailService {
         message.setText("Your registration confirmation code is: " + confirmationCode);
         mailSender.send(message);
     }
+
+    // Metodo para enviar email al centro medico con la contrasenya generada
+    public void sendCentroMedicoPasswordEmail(String to, String password) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("vital@sanity.es");
+        message.setTo(to);
+        message.setSubject("Registro Centro Medico");
+        message.setText("Se ha registrado su centro medico. Su contrasenya de acceso es: " + password +
+                ". Cuando inicie sesion por primera vez, debera cambiarla por una nueva.");
+        mailSender.send(message);
+    }
+
 }
