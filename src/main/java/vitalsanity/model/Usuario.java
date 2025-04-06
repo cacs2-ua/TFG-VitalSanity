@@ -1,5 +1,6 @@
 package vitalsanity.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -34,6 +35,10 @@ public class Usuario implements Serializable {
 
     @NotNull
     private boolean activado = false;
+
+    @NotNull
+    private boolean primerAcceso = true;
+
 
     @NotNull
     private String nifNie;
@@ -189,6 +194,14 @@ public class Usuario implements Serializable {
 
     public void setActivado(boolean activado) {
         this.activado = activado;
+    }
+
+    public boolean getPrimerAcceso() {
+        return primerAcceso;
+    }
+
+    public void setPrimerAcceso(boolean primerAcceso) {
+        this.primerAcceso = primerAcceso;
     }
 
     public String getNifNie() {
