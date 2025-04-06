@@ -11,6 +11,17 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    // Reemplaza los metodos anteriores por el siguiente metodo unificado:
+    public void send(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("vital@sanity.es");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
+
+
     // Metodo para enviar email de confirmacion usando Mailtrap
     public void sendConfirmationEmail(String to, String confirmationCode) {
         SimpleMailMessage message = new SimpleMailMessage();

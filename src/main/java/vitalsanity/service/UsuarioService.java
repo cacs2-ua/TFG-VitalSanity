@@ -187,7 +187,9 @@ public class UsuarioService {
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         // Enviar email con la contrasenya generada
-        emailService.sendCentroMedicoPasswordEmail(data.getEmail(), generatedPassword);
+        emailService.send(data.getEmail(), "Registro Centro Medico",
+                "Se ha registrado su centro medico. Su contrasenya de acceso es: " + generatedPassword +
+                        ". Cuando inicie sesion por primera vez, debera cambiarla por una nueva.");
 
         // Mapear a UsuarioData y retornar
         UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
