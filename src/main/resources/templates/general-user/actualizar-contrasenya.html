@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Contraseña</title>
+    <div th:include="navbar :: head (titulo='Actualizar Contraseña')"></div>
+    <link rel="stylesheet" th:href="@{/css/custom/general-user/actualizar-contrasenya.css}">
+</head>
+<body>
+    <div th:replace="navbar::menuBar"></div>
+    <div class="page-container">
+        <div class="form-container">
+            <h1 class="form-title">Contraseña de acceso</h1>
+            <p class="form-description">Actualice su contraseña de acceso a la aplicación</p>
+            <form>
+                <div class="form-group">
+                    <label class="form-label" for="contrasenya">Contraseña*</label>
+                    <input type="password" id="contrasenya" class="form-input" required placeholder="***********">
+                </div>
+
+                <button type="submit" class="submit-button">Aceptar</button>
+            </form>
+        </div>
+    </div>
+    <div th:replace="navbar::javascript"></div>
+</body>
+</html>
