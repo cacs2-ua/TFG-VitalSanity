@@ -72,6 +72,10 @@ public class LoginController {
                 return "redirect:/api/profesional-medico/pacientes/1/informes/nuevo";
             }
             if (usuario.getTipoId() == 4){
+                if (usuario.getPrimerAcceso()){
+                    return "redirect:/api/paciente/" + usuario.getId() + "/datos-residencia";
+                }
+
                 return "redirect:/api/paciente/" + usuario.getId() + "/informes";
             }
             return "redirect:/api/auth/check";
