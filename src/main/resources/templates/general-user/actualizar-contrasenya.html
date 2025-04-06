@@ -13,6 +13,7 @@
     <div class="form-container">
         <h1 class="form-title">Contrasenya de acceso</h1>
         <p class="form-description">Actualice su contrasenya de acceso a la aplicacion</p>
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
         <form th:action="@{/api/general/usuarios/{id}/contrasenya(id=${usuario.id})}" th:object="${actualizarContrasenyaData}" method="post">
             <div class="form-group">
                 <label class="form-label" for="contrasenya">Contrasenya*</label>
