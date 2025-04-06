@@ -21,9 +21,7 @@
     <nav class="custom-nav">
         <div class="custom-nav-container">
             <!-- Logo or application name -->
-            <a th:if="${usuario == null}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
-            <a th:if="${usuario != null and usuario.tipoId == 3}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
-            <a th:if="${usuario != null and usuario.tipoId == 4}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
+            <a class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
             <!-- Burger menu toggle button -->
             <button class="custom-nav-toggler" id="customNavToggler" aria-label="Toggle navigation">
                 <span class="custom-nav-toggler-icon"></span>
@@ -41,6 +39,10 @@
                 </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
                     <a class="custom-nav-link" th:href="@{/registro}" onclick="highlightLink(this)">Registrarse</a>
+                </li>
+                <!-- Admin User -->
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 1}">
+                    <a class="custom-nav-link" th:href="@{/api/admin/registro-centro-medico}" onclick="highlightLink(this)">Registrar Centro Médico</a>
                 </li>
                 <!-- Professional User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
