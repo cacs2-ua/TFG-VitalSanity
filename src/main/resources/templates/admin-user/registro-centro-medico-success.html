@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro medico registrado</title>
+  <div th:include="navbar :: head (titulo='Centro medico registrado')"></div>
+  <link rel="stylesheet" th:href="@{/css/custom/admin-user/registro-centro-medico-success.css}">
+</head>
+<body>
+<div th:replace="navbar::menuBar"></div>
+<div class="page-container">
+  <div class="message-container">
+    <h1>Centro medico registrado correctamente</h1>
+    <p>Se ha enviado un email al centro medico con su contrasenya de acceso. El centro medico debera cambiarla en su primer acceso.</p>
+    <a th:href="@{/api/admin/registro-centro-medico}" class="back-link">Volver</a>
+  </div>
+</div>
+<div th:replace="navbar::javascript"></div>
+</body>
+</html>

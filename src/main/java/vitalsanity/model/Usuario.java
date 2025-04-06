@@ -1,5 +1,6 @@
 package vitalsanity.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -34,6 +35,10 @@ public class Usuario implements Serializable {
 
     @NotNull
     private boolean activado = false;
+
+    @NotNull
+    private boolean primerAcceso = true;
+
 
     @NotNull
     private String nifNie;
@@ -98,6 +103,29 @@ public class Usuario implements Serializable {
         this.paciente = paciente;
         if (paciente.getUsuario() != this) {
             paciente.setUsuario(this);
+        }
+    }
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CentroMedico centroMedico;
+
+    public CentroMedico getCentroMedico () {
+        return this.centroMedico;
+    }
+
+    public void setCentroMedico(CentroMedico centroMedico) {
+        if (centroMedico == null) {
+            throw new IllegalArgumentException("El centro médico no puede ser null.");
+        }
+        if (this.centroMedico != null && this.centroMedico != centroMedico) {
+            throw new IllegalStateException("El usuario ya tiene un centro médico asignado. Desvincule el centro médico existente antes de asignar uno nuevo.");
+        }
+        if (this.centroMedico == centroMedico) {
+            return; // No hacer nada si ya están vinculados
+        }
+        this.centroMedico = centroMedico;
+        if (centroMedico.getUsuario() != this) {
+            centroMedico.setUsuario(this);
         }
     }
 
@@ -166,6 +194,14 @@ public class Usuario implements Serializable {
 
     public void setActivado(boolean activado) {
         this.activado = activado;
+    }
+
+    public boolean getPrimerAcceso() {
+        return primerAcceso;
+    }
+
+    public void setPrimerAcceso(boolean primerAcceso) {
+        this.primerAcceso = primerAcceso;
     }
 
     public String getNifNie() {

@@ -6,8 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vitalsanity.dto.ActualizarContrasenyaData;
+import vitalsanity.dto.RegistroCentroMedicoData;
 import vitalsanity.dto.RegistroData;
 import vitalsanity.dto.UsuarioData;
+import vitalsanity.model.CentroMedico;
 import vitalsanity.model.Paciente;
 import vitalsanity.model.TipoUsuario;
 import vitalsanity.model.Usuario;
@@ -35,6 +38,9 @@ public class UsuarioService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private EmailService emailService;
 
     // Método auxiliar para convertir bytes a hexadecimal
     private String bytesToHex(byte[] bytes) {
@@ -130,6 +136,80 @@ public class UsuarioService {
         // Mapear a UsuarioData y retornar
         UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
         return usuarioData;
+    }
+
+    // Metodo privado para generar contrasenya segura
+    private String generateSecurePassword(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*!";
+        java.security.SecureRandom random = new java.security.SecureRandom();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(chars.length());
+            sb.append(chars.charAt(index));
+        }
+        return sb.toString();
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public UsuarioData registrarCentroMedico(RegistroCentroMedicoData data) {
+        // Generar contrasenya segura
+        String generatedPassword = generateSecurePassword(12);
+
+        // Crear nuevo usuario
+        Usuario usuario = new Usuario();
+        usuario.setIdentificador(java.util.UUID.randomUUID().toString());
+        usuario.setEmail(data.getEmail());
+        usuario.setNombreCompleto(data.getNombreCompleto());
+        usuario.setContrasenya(hashPassword(generatedPassword));
+        usuario.setActivado(true);
+        usuario.setPrimerAcceso(true);
+        usuario.setNifNie(data.getNifNie());
+        usuario.setTelefono(data.getMovil());
+        usuario.setPais("Espana");
+        usuario.setProvincia(data.getProvincia());
+        usuario.setMunicipio(data.getMunicipio());
+        usuario.setCodigoPostal(data.getCodigoPostal());
+
+        // Asignar tipo de usuario centro-medico
+        TipoUsuario tipoCentroMedico = tipoUsuarioRepository.findById(2L)
+                .orElseThrow(() -> new IllegalStateException("Tipo de usuario correspondiente a los Centros Médicos no encontrado"));
+        usuario.setTipo(tipoCentroMedico);
+
+        // Crear entidad CentroMedico
+        CentroMedico centroMedico = new CentroMedico();
+        centroMedico.setIban(data.getIban());
+        centroMedico.setDireccion(data.getDireccion());
+        // Establecer relacion bidireccional
+        usuario.setCentroMedico(centroMedico);
+        centroMedico.setUsuario(usuario);
+
+        // Guardar usuario (centroMedico se guarda por cascada)
+        Usuario savedUsuario = usuarioRepository.save(usuario);
+
+        // Enviar email con la contrasenya generada
+        emailService.send(data.getEmail(), "Registro Centro Medico",
+                "Se ha registrado su centro medico. Su contrasenya de acceso es: " + generatedPassword +
+                        ". Cuando inicie sesion por primera vez, debera cambiarla por una nueva.");
+
+        // Mapear a UsuarioData y retornar
+        UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
+        return usuarioData;
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public UsuarioData actualizarContrasenya(Long id, ActualizarContrasenyaData data) {
+        if (data.getContrasenya() == null || data.getContrasenya().length() < 8) {
+            throw new IllegalArgumentException("La contrasenya debe tener al menos 8 caracteres");
+        }
+        if (!data.getContrasenya().equals(data.getConfirmarContrasenya())) {
+            throw new IllegalArgumentException("Las contrasenyas no coinciden");
+        }
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Usuario no encontrado"));
+        usuario.setContrasenya(hashPassword(data.getContrasenya()));
+        usuario.setPrimerAcceso(false);
+        Usuario updatedUsuario = usuarioRepository.save(usuario);
+        return modelMapper.map(updatedUsuario, UsuarioData.class);
     }
 
 }
