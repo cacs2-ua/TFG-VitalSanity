@@ -224,7 +224,7 @@ public class UsuarioService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public List<UsuarioData> registrarProfesionalesMedicos(MultipartFile csvFile) throws Exception {
+    public List<UsuarioData> registrarProfesionalesMedicos(MultipartFile csvFile, CentroMedico centroMedico) throws Exception {
         if (csvFile.isEmpty()) {
             throw new IllegalArgumentException("El fichero CSV no puede estar vacio");
         }
@@ -232,23 +232,24 @@ public class UsuarioService {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(csvFile.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // Se asume que el fichero no tiene cabecera
+                // Se asume que el fichero no tiene cabecera y tiene 13 columnas
                 String[] columnas = line.split(",");
-                if (columnas.length < 11) {
+                if (columnas.length < 13) {
                     throw new IllegalArgumentException("Formato de fichero CSV incorrecto");
                 }
-                // Asignacion de campos de acuerdo al orden
-                String nombreCompleto = columnas[0].trim();
-                String fechaNacimiento = columnas[1].trim();
-                String genero = columnas[2].trim();
-                String nifNie = columnas[3].trim();
-                String movil = columnas[4].trim();
-                String iban = columnas[5].trim();
-                String pais = columnas[6].trim();
-                String provincia = columnas[7].trim();
-                String municipio = columnas[8].trim();
-                String codigoPostal = columnas[9].trim();
-                String email = columnas[10].trim();
+                String nombreCompleto   = columnas[0].trim();
+                String fechaNacimiento  = columnas[1].trim();
+                String genero           = columnas[2].trim();
+                String naf              = columnas[3].trim();
+                String ccc              = columnas[4].trim();
+                String nifNie           = columnas[5].trim();
+                String movil            = columnas[6].trim();
+                String iban             = columnas[7].trim();
+                String pais             = columnas[8].trim();
+                String provincia        = columnas[9].trim();
+                String municipio        = columnas[10].trim();
+                String codigoPostal     = columnas[11].trim();
+                String email            = columnas[12].trim();
 
                 // Generar contrasena segura
                 String contrasenaGenerada = generateSecurePassword(12);
@@ -273,11 +274,15 @@ public class UsuarioService {
                         .orElseThrow(() -> new IllegalStateException("Tipo de usuario 'profesional_medico' no encontrado"));
                 usuario.setTipo(tipoProfesional);
 
-                // Crear entidad ProfesionalMedico
+                // Crear entidad ProfesionalMedico y asignar campos nuevos
                 ProfesionalMedico profesionalMedico = new ProfesionalMedico();
+                profesionalMedico.setNaf(naf);
+                profesionalMedico.setCcc(ccc);
                 profesionalMedico.setIban(iban);
                 profesionalMedico.setGenero(genero);
                 profesionalMedico.setFechaNacimiento(fechaNacimiento);
+                // Asignar el centro medico recibido
+                profesionalMedico.setCentroMedico(centroMedico);
 
                 // Establecer relacion bidireccional
                 usuario.setProfesionalMedico(profesionalMedico);
@@ -291,13 +296,11 @@ public class UsuarioService {
                         "Se ha registrado como profesional medico. Su contrasena de acceso es: " + contrasenaGenerada +
                                 ". Al iniciar sesion por primera vez, debera cambiarla.");
 
-                // Mapear a UsuarioData y anadir a la lista
                 UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
                 registrados.add(usuarioData);
             }
         }
         return registrados;
     }
-
 
 }
