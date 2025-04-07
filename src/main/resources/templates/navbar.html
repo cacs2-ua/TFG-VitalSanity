@@ -50,13 +50,13 @@
                     <a class="custom-nav-link" th:href="@{/api/centro-medico/profesionales-medicos}" onclick="highlightLink(this)">Registrar Profesional Médicos</a>
                 </li>
                 <!-- Professional User -->
-                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/buscar-paciente'}" onclick="highlightLink(this)">Pacientes registrados</a>
                 </li>
-                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-autorizado'}" onclick="highlightLink(this)">Pacientes que han autorizado</a>
                 </li>
-                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-desautorizado'}" onclick="highlightLink(this)">Pacientes desautorizados</a>
                 </li>
                 <!-- Patient User -->

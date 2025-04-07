@@ -29,7 +29,7 @@ public class ProfesionalMedicoInterceptor implements HandlerInterceptor {
         }
 
         UsuarioData usuario = usuarioService.findById(userId);
-        if (usuario == null || usuario.getTipoId() != 3) {
+        if (usuario == null || usuario.getTipoId() != 3 || usuario.getPrimerAcceso()) {
             // User is not patient
             throw new NotFoundException("Página no encontrada.");
         }
