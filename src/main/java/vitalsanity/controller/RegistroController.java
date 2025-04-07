@@ -38,6 +38,11 @@ public class RegistroController {
 
     @PostMapping("/registro")
     public String registroSubmit(@ModelAttribute RegistroData registroData, HttpSession session, Model model) {
+        if (registroData.getContrasenya() == null || registroData.getContrasenya().length() < 8) {
+            model.addAttribute("error", "La contrasenya debe tener al menos 8 caracteres");
+            return "guest-user/registro-form";
+        }
+
         // Validar que las contrasenyas coincidan
         if (!registroData.getContrasenya().equals(registroData.getConfirmarContrasenya())) {
             model.addAttribute("error", "Las contrasenyas no coinciden");

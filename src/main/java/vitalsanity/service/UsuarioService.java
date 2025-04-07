@@ -99,6 +99,11 @@ public class UsuarioService {
 
     @Transactional(rollbackOn = Exception.class)
     public UsuarioData registrarPaciente(RegistroData registroData) {
+        // Verificar que la contrasenya tenga al menos 8 caracteres
+        if (registroData.getContrasenya() == null || registroData.getContrasenya().length() < 8) {
+            throw new IllegalArgumentException("La contrasenya debe tener al menos 8 caracteres");
+        }
+
         // Verificar que las contrasenyas sean iguales
         if (!registroData.getContrasenya().equals(registroData.getConfirmarContrasenya())) {
             throw new IllegalArgumentException("Las contrasenyas no coinciden");
