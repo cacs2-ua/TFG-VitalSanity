@@ -13,9 +13,7 @@
     <div class="form-container">
         <h1 class="form-title">Registro de Profesionales Medicos</h1>
         <p class="form-description">
-            Adjunte un fichero CSV con los datos de los profesionales medicos. El formato del fichero CSV es:
-            <br>
-            Nombre completo, Fecha de nacimiento, genero, naf, ccc, nifnie, movil, IBAN, pais, provincia, municipio, codigo postal, Email
+            Adjunte un fichero CSV con los datos de los profesionales medicos que desea registrar para su centro
         </p>
         <div th:if="${error}" class="error-message" th:text="${error}"></div>
         <form th:action="@{/api/centro-medico/profesionales-medicos}" th:object="${registroProfesionalesMedicosData}" method="post" enctype="multipart/form-data">
