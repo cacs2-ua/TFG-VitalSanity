@@ -26,7 +26,7 @@ public class GeneralUserController {
                                         Model model) {
         try {
             usuarioService.actualizarContrasenya(id, actualizarContrasenyaData);
-            return "redirect:/api/centro-medico/check";
+            return "redirect:/api/general/home";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             return "general-user/actualizar-contrasenya";
