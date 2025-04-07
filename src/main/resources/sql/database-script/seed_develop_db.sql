@@ -1,4 +1,5 @@
 DELETE FROM centros_medicos;
+DELETE FROM profesionales_medicos;
 DELETE FROM pacientes;
 DELETE FROM usuarios;
 DELETE FROM tipos_usuario;

@@ -18,6 +18,9 @@ public class ProfesionalMedico implements Serializable {
     private Long id;
 
     @NotNull
+    private String naf;
+
+    @NotNull
     private String iban;
 
     @NotNull
@@ -51,6 +54,30 @@ public class ProfesionalMedico implements Serializable {
         }
     }
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "centro_medico_id", nullable = false)
+    private CentroMedico centroMedico;
+
+    public CentroMedico getCentroMedico() {
+        return centroMedico;
+    }
+
+    public void setCentroMedico(CentroMedico centroMedico) {
+        if (this.centroMedico == centroMedico || centroMedico == null) {
+            return;
+        }
+
+        if (this.centroMedico != null) {
+            this.centroMedico.getProfesionalesMedicos().remove(this);
+        }
+
+        this.centroMedico = centroMedico;
+
+        if (!centroMedico.getProfesionalesMedicos().contains(this)) {
+            centroMedico.addProfesionalMedico(this);
+        }
+    }
 
     // getter y setter
 
@@ -60,6 +87,14 @@ public class ProfesionalMedico implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNaf() {
+        return naf;
+    }
+
+    public void setNaf(String naf) {
+        this.naf = naf;
     }
 
     public String getIban() {
