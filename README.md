@@ -1,8 +1,9 @@
-# VitalSanity v1.1.0
+# VitalSanity v2.0.0
 
 ## 🚀 Levantar el Proyecto en Local
 
 ---
+
 
 ### 🔥 Ejecutar la aplicación a partir del application.properties
 

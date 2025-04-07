@@ -59,15 +59,27 @@ public class LoginController {
             managerUserSession.logearUsuario(usuario.getId());
 
             if (usuario.getTipoId() == 1){
-                return "redirect:/api/admin/check";
+                return "redirect:/api/admin/registro-centro-medico";
             }
             if (usuario.getTipoId() == 2){
-                return "redirect:/api/centro-medico/check";
+                if (usuario.getPrimerAcceso()){
+                    return "redirect:/api/general/usuarios/" + usuario.getId() + "/contrasenya";
+                }
+
+                return "redirect:/api/centro-medico/profesionales-medicos";
             }
             if (usuario.getTipoId() == 3){
+                if (usuario.getPrimerAcceso()){
+                    return "redirect:/api/general/usuarios/" + usuario.getId() + "/contrasenya";
+                }
+
                 return "redirect:/api/profesional-medico/pacientes/1/informes/nuevo";
             }
             if (usuario.getTipoId() == 4){
+                if (usuario.getPrimerAcceso()){
+                    return "redirect:/api/paciente/" + usuario.getId() + "/datos-residencia";
+                }
+
                 return "redirect:/api/paciente/" + usuario.getId() + "/informes";
             }
             return "redirect:/api/auth/check";

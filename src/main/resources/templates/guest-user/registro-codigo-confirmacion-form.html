@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de registro</title>
+    <div th:include="navbar :: head (titulo='Formulario de registro')"></div>
+    <link rel="stylesheet" th:href="@{/css/custom/guest-user/registro-codigo-confirmacion-form.css}">
+</head>
+<body>
+<div th:replace="navbar::menuBar"></div>
+<div class="page-container">
+    <div class="login-container">
+        <h1 class="form-title">Codigo de confirmacion</h1>
+        <p class="form-description">Introduzca el codigo de confirmacion que se le ha enviado al email proporcionado</p>
+        <form th:action="@{/registro/codigo-confirmacion-form}" method="post">
+            <div class="form-group">
+                <label class="form-label" for="codigo">Codigo*</label>
+                <input type="text" id="codigo" name="codigo" class="form-input" required>
+            </div>
+            <button type="submit" class="submit-button">Confirmar</button>
+            <div th:if="${error != null}" class="error-message" th:text="${error}"></div>
+        </form>
+    </div>
+</div>
+<div th:replace="navbar::javascript"></div>
+</body>
+</html>

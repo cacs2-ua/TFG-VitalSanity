@@ -21,9 +21,7 @@
     <nav class="custom-nav">
         <div class="custom-nav-container">
             <!-- Logo or application name -->
-            <a th:if="${usuario == null}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
-            <a th:if="${usuario != null and usuario.tipoId == 3}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
-            <a th:if="${usuario != null and usuario.tipoId == 4}" class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
+            <a class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
             <!-- Burger menu toggle button -->
             <button class="custom-nav-toggler" id="customNavToggler" aria-label="Toggle navigation">
                 <span class="custom-nav-toggler-icon"></span>
@@ -37,19 +35,28 @@
                     <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Home</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
-                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Iniciar Sesion</a>
+                    <a class="custom-nav-link" th:href="@{/login}" onclick="highlightLink(this)">Iniciar Sesion</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
-                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Registrarse</a>
+                    <a class="custom-nav-link" th:href="@{/registro}" onclick="highlightLink(this)">Registrarse</a>
+                </li>
+                <!-- Admin User -->
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 1}">
+                    <a class="custom-nav-link" th:href="@{/api/admin/registro-centro-medico}" onclick="highlightLink(this)">Registrar Centro Médico</a>
+                </li>
+
+                <!-- Medical Center User -->
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 2 and usuario.primerAcceso == false}">
+                    <a class="custom-nav-link" th:href="@{/api/centro-medico/profesionales-medicos}" onclick="highlightLink(this)">Registrar Profesional Médicos</a>
                 </li>
                 <!-- Professional User -->
-                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/buscar-paciente'}" onclick="highlightLink(this)">Pacientes registrados</a>
                 </li>
-                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-autorizado'}" onclick="highlightLink(this)">Pacientes que han autorizado</a>
                 </li>
-                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3}">
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-desautorizado'}" onclick="highlightLink(this)">Pacientes desautorizados</a>
                 </li>
                 <!-- Patient User -->

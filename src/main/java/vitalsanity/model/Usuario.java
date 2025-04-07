@@ -1,5 +1,6 @@
 package vitalsanity.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -34,6 +35,10 @@ public class Usuario implements Serializable {
 
     @NotNull
     private boolean activado = false;
+
+    @NotNull
+    private boolean primerAcceso = true;
+
 
     @NotNull
     private String nifNie;
@@ -78,6 +83,74 @@ public class Usuario implements Serializable {
         }
     }
 
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Paciente paciente;
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        if (paciente == null) {
+            throw new IllegalArgumentException("El paciente no puede ser null.");
+        }
+        if (this.paciente != null && this.paciente != paciente) {
+            throw new IllegalStateException("El usuario ya tiene un paciente asignado. Desvincule el paciente existente antes de asignar uno nuevo.");
+        }
+        if (this.paciente == paciente) {
+            return; // No hacer nada si ya están vinculados
+        }
+        this.paciente = paciente;
+        if (paciente.getUsuario() != this) {
+            paciente.setUsuario(this);
+        }
+    }
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProfesionalMedico profesionalMedico;
+
+    public ProfesionalMedico getProfesionalMedico () {
+        return this.profesionalMedico;
+    }
+
+    public void setProfesionalMedico (ProfesionalMedico profesionalMedico) {
+        if (profesionalMedico == null) {
+            throw new IllegalArgumentException("El profesional médico no puede ser null.");
+        }
+        if (this.profesionalMedico != null && this.profesionalMedico != profesionalMedico) {
+            throw new IllegalStateException("El usuario ya tiene un profesional médico asignado. Desvincule el profesional médico existente antes de asignar uno nuevo.");
+        }
+        if (this.profesionalMedico == profesionalMedico) {
+            return; // No hacer nada si ya están vinculados
+        }
+        this.profesionalMedico = profesionalMedico;
+        if (profesionalMedico.getUsuario() != this) {
+            profesionalMedico.setUsuario(this);
+        }
+    }
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CentroMedico centroMedico;
+
+    public CentroMedico getCentroMedico () {
+        return this.centroMedico;
+    }
+
+    public void setCentroMedico(CentroMedico centroMedico) {
+        if (centroMedico == null) {
+            throw new IllegalArgumentException("El centro médico no puede ser null.");
+        }
+        if (this.centroMedico != null && this.centroMedico != centroMedico) {
+            throw new IllegalStateException("El usuario ya tiene un centro médico asignado. Desvincule el centro médico existente antes de asignar uno nuevo.");
+        }
+        if (this.centroMedico == centroMedico) {
+            return; // No hacer nada si ya están vinculados
+        }
+        this.centroMedico = centroMedico;
+        if (centroMedico.getUsuario() != this) {
+            centroMedico.setUsuario(this);
+        }
+    }
 
     public Usuario() {
     }
@@ -144,6 +217,14 @@ public class Usuario implements Serializable {
 
     public void setActivado(boolean activado) {
         this.activado = activado;
+    }
+
+    public boolean getPrimerAcceso() {
+        return primerAcceso;
+    }
+
+    public void setPrimerAcceso(boolean primerAcceso) {
+        this.primerAcceso = primerAcceso;
     }
 
     public String getNifNie() {

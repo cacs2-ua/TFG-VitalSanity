@@ -33,7 +33,7 @@
     font-size: 28px;
     text-align: center;
     margin-bottom: 30px;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 /* Form group */
@@ -73,38 +73,16 @@
     transition: background-color 0.2s;
 }
 
-.submit-button:hover {
-    background-color: #f0f0f0;
-}
-
-/* Digital certificate link */
-.certificate-link {
-    display: block;
-    text-align: center;
-    margin-top: 80px;
-    color: #1d4ed8;
-    text-decoration: none;
-    background-color: #3b82f6;
-    padding: 12px 24px;
-    border-radius: 24px;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.certificate-link:hover {
-    background-color: #2563eb;
-}
-
 .error-message {
     color: #ef5c9c;
     font-size: 16.5px;
     text-align: center;
     margin-bottom: 30px;
     font-weight: bold;
+}
+
+.submit-button:hover {
+    background-color: #f0f0f0;
 }
 
 /* Responsive adjustments */

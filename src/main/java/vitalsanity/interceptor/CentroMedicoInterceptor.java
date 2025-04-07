@@ -29,7 +29,7 @@ public class CentroMedicoInterceptor implements HandlerInterceptor {
         }
 
         UsuarioData usuario = usuarioService.findById(userId);
-        if (usuario == null || usuario.getTipoId() != 2) {
+        if (usuario == null || usuario.getTipoId() != 2 || usuario.getPrimerAcceso()) {
             // User is not patient
             throw new NotFoundException("Página no encontrada.");
         }

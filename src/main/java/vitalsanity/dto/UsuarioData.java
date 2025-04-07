@@ -10,6 +10,7 @@ public class UsuarioData {
     private String nombreCompleto;
     private String contrasenya;
     private boolean activado;
+    private boolean primerAcceso;
     private String nifNie;
     private String naf;
     private String genero;
@@ -62,6 +63,14 @@ public class UsuarioData {
 
     public void setActivado(boolean activado) {
         this.activado = activado;
+    }
+
+    public boolean getPrimerAcceso() {
+        return primerAcceso;
+    }
+
+    public void setPrimerAcceso(boolean primerAcceso) {
+        this.primerAcceso = primerAcceso;
     }
 
     public String getNifNie() {
