@@ -26,6 +26,32 @@ public class ProfesionalMedico implements Serializable {
     @NotNull
     private String fechaNacimiento;
 
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        if (usuario == null) {
+            throw new IllegalArgumentException("El usuario no puede ser null.");
+        }
+        if (this.usuario != null && this.usuario != usuario) {
+            throw new IllegalStateException("El profesional médico ya está asignado a un usuario. Desvincule el usuario existente antes de asignar uno nuevo.");
+        }
+        if (this.usuario == usuario) {
+            return; // No hacer nada si ya están vinculados
+        }
+        this.usuario = usuario;
+        if (usuario.getProfesionalMedico() != this) {
+            usuario.setProfesionalMedico(this);
+        }
+    }
+
+
     // getter y setter
 
     public Long getId() {

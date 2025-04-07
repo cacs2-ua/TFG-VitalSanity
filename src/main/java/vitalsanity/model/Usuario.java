@@ -107,6 +107,29 @@ public class Usuario implements Serializable {
     }
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProfesionalMedico profesionalMedico;
+
+    public ProfesionalMedico getProfesionalMedico () {
+        return this.profesionalMedico;
+    }
+
+    public void setProfesionalMedico (ProfesionalMedico profesionalMedico) {
+        if (profesionalMedico == null) {
+            throw new IllegalArgumentException("El profesional médico no puede ser null.");
+        }
+        if (this.profesionalMedico != null && this.profesionalMedico != profesionalMedico) {
+            throw new IllegalStateException("El usuario ya tiene un profesional médico asignado. Desvincule el profesional médico existente antes de asignar uno nuevo.");
+        }
+        if (this.profesionalMedico == profesionalMedico) {
+            return; // No hacer nada si ya están vinculados
+        }
+        this.profesionalMedico = profesionalMedico;
+        if (profesionalMedico.getUsuario() != this) {
+            profesionalMedico.setUsuario(this);
+        }
+    }
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private CentroMedico centroMedico;
 
     public CentroMedico getCentroMedico () {
