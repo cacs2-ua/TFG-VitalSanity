@@ -57,8 +57,6 @@ public class ProfesionalMedicoController {
         return "profesional-medico/solicitar-autorizacion";
     }
 
-
-
 }
 
 

@@ -49,6 +49,21 @@ public class CentroMedico implements Serializable {
         }
     }
 
+    @OneToMany(mappedBy = "centroMedico", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<ProfesionalMedico> profesionalesMedicos = new HashSet<>();
+
+    public Set<ProfesionalMedico> getProfesionalesMedicos() {
+        return profesionalesMedicos;
+    }
+
+    public void addProfesionalMedico(ProfesionalMedico profesionalMedico) {
+        if (profesionalesMedicos.contains(profesionalMedico)) return;
+        profesionalesMedicos.add(profesionalMedico);
+        if (profesionalMedico.getCentroMedico() != this) {
+            profesionalMedico.setCentroMedico(this);
+        }
+    }
+
 
     public Long getId() {
         return id;

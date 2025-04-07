@@ -99,6 +99,14 @@
     background-color: #2563eb;
 }
 
+.error-message {
+    color: #ef5c9c;
+    font-size: 16.5px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
     .login-container {
