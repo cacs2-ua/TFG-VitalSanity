@@ -21,6 +21,10 @@ public class ProfesionalMedico implements Serializable {
     private String naf;
 
     @NotNull
+    @Column(unique = true)
+    private String ccc;
+
+    @NotNull
     private String iban;
 
     @NotNull
@@ -95,6 +99,14 @@ public class ProfesionalMedico implements Serializable {
 
     public void setNaf(String naf) {
         this.naf = naf;
+    }
+
+    public String getCcc() {
+        return ccc;
+    }
+
+    public void setCcc(String ccc) {
+        this.ccc = ccc;
     }
 
     public String getIban() {
