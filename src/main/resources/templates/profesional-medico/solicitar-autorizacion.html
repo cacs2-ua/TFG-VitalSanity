@@ -4,50 +4,278 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Solicitar autorización</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    .body {
+      background-color: #DBD5FF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    /* Typography */
+    .page-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      text-decoration: underline;
+    }
+
+    /* Form container */
+    .form-container {
+      background-color: #6528BF;
+      border-radius: 0.5rem;
+      width: 100%;
+      max-width: 35rem;
+      padding: 1rem;
+      color: white;
+    }
+
+    /* Form sections */
+    .form-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-field {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .required::before {
+      content: "*";
+      color: white;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      border: none;
+      background-color: #F5F3FF;
+    }
+
+    .form-textarea {
+      min-height: 5rem;
+      resize: vertical;
+    }
+
+    /* Combined ID styles */
+    .form-id {
+      display: flex;
+      margin-bottom: 1rem;
+      justify-content: center;
+      text-decoration: underline;
+    }
+
+    .form-id-combined {
+      font-size: 1.3rem;
+    }
+
+    /* Attachments section */
+    .attachments-title {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      text-decoration: underline;
+    }
+
+    .attachment-button {
+      background-color: #c0c0c0;
+      color: black;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto 1rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .attachment-button:hover {
+      background-color: #a9a9a9;
+      transform: scale(1.05);
+    }
+
+    .attachment-icon {
+      display: inline-block;
+      margin-left: 0.25rem;
+    }
+
+    .attachments-list {
+      background-color: #F5F3FF;
+      border-radius: 0.25rem;
+      padding: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .attachment-item {
+      color: blue;
+      text-decoration: none;
+      display: block;
+      padding: 0.5rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .attachment-item:hover {
+      text-decoration: underline;
+    }
+
+    /* Submit button */
+    .submit-container {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .submit-button {
+      background-color: #4643FF;
+      color: white;
+      border: none;
+      padding: 0.5rem 2rem;
+      border-radius: 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .submit-button:hover {
+      background-color: #303f9f;
+      transform: scale(1.05);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 0.75rem;
+      }
+      .page-title {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* ===== MODAL / POP-UP STYLES (NEW) ===== */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none; /* Hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .popup-window {
+      position: relative;
+      width: 90%;
+      max-width: 50rem;
+      height: 90%;
+      max-height: 90%;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background-color: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    /* The iframe takes the full size of the popup window */
+    .popup-iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
   <div th:include="navbar :: head (titulo='Solicitar autorización')"></div>
-  <link rel="stylesheet" th:href="@{/css/custom/profesional-medico/profesional-crear-nuevo-informe.css}">
 </head>
 <body>
-  <div th:replace="navbar::menuBar"></div>
-  <div class="body">
-    <h1 class="page-title">Solicitar autorización</h1>
-    <div class="form-container">
-      <div class="form-section">
-        <!-- Modified: Combined the ID text into a single span -->
-        <div class="form-id">
-          <span class="form-id-combined"><strong>Datos de la autorización</strong></span>
-        </div>
-        <br>
-
-        <div class="form-field">
-          <label class="form-label required">Nombre del paciente:</label>
-          <input type="text" class="form-input" readonly value="Antonio Ruiz Martínez">
-        </div>
-
-        <div class="form-field">
-          <label class="form-label required">NIF/NIE del paciente:</label>
-          <input type="text" class="form-input" readonly value="90817263L">
-        </div>
-
-        <div class="form-field">
-          <label class="form-label required">Título:</label>
-          <input type="text" class="form-input" value="Diagnostico general de salud">
-        </div>
-
-
-
-        <div class="form-field">
-          <label class="form-label required">Motivo:</label>
-          <textarea class="form-textarea">Se solicita acceso al historial clínico de Antonio Ruiz Martínez para obtener información relevante que permita una correcta evaluación de su estado de salud, un diagnóstico preciso y la planificación del tratamiento adecuado.</textarea>
-        </div>
-
+<div th:replace="navbar::menuBar"></div>
+<div class="body">
+  <h1 class="page-title">Solicitar autorización</h1>
+  <div class="form-container">
+    <div class="form-section">
+      <!-- Combined ID text -->
+      <div class="form-id">
+        <span class="form-id-combined"><strong>Datos de la autorización</strong></span>
+      </div>
+      <br>
+      <div class="form-field">
+        <label class="form-label required">Nombre del paciente:</label>
+        <input type="text" class="form-input" readonly value="Antonio Ruiz Martínez">
+      </div>
+      <div class="form-field">
+        <label class="form-label required">NIF/NIE del paciente:</label>
+        <input type="text" class="form-input" readonly value="90817263L">
+      </div>
+      <div class="form-field">
+        <label class="form-label required">Título:</label>
+        <input type="text" class="form-input" value="Diagnostico general de salud">
+      </div>
+      <div class="form-field">
+        <label class="form-label required">Motivo:</label>
+        <textarea class="form-textarea">Se solicita acceso al historial clínico de Antonio Ruiz Martínez para obtener información relevante que permita una correcta evaluación de su estado de salud, un diagnóstico preciso y la planificación del tratamiento adecuado.</textarea>
       </div>
     </div>
-
-    <div class="submit-container">
-      <button class="submit-button">Firmar y Enviar</button>
-    </div>
   </div>
-  <div th:replace="navbar::javascript"></div>
+  <div class="submit-container">
+    <button class="submit-button">Aceptar</button>
+  </div>
+</div>
+
+<!-- ===== MODAL / POP-UP CONTAINER (NEW) ===== -->
+<div id="popupOverlay" class="popup-overlay">
+  <div class="popup-window">
+    <button id="popupClose" class="popup-close">X</button>
+    <!-- The iframe loads the second HTML file. NOTE: Use a dynamic URL if needed -->
+    <iframe th:src="@{/api/profesional-medico/pop-up-autofirma-autorizacion}" class="popup-iframe"></iframe>
+
+  </div>
+</div>
+
+<div th:replace="navbar::javascript"></div>
+
+<!-- ===== JAVASCRIPT FOR POP-UP (NEW) ===== -->
+<script>
+  // Open the pop-up when "Aceptar" is clicked
+  document.querySelector('.submit-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('popupOverlay').style.display = 'flex';
+  });
+
+  // Close the pop-up only when the "X" button is clicked
+  document.getElementById('popupClose').addEventListener('click', function() {
+    document.getElementById('popupOverlay').style.display = 'none';
+  });
+
+  // Prevent closing the pop-up when clicking outside the pop-up window
+  document.getElementById('popupOverlay').addEventListener('click', function(e) {
+    if(e.target === this) {
+      e.stopPropagation();
+    }
+  });
+</script>
 </body>
 </html>

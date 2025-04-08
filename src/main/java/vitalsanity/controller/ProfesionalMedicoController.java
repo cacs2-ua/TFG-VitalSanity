@@ -57,6 +57,13 @@ public class ProfesionalMedicoController {
         return "profesional-medico/solicitar-autorizacion";
     }
 
+    @GetMapping("/api/profesional-medico/pop-up-autofirma-autorizacion")
+    public String mostrarPopUpFirmaAutorizacion() {
+        return "profesional-medico/pop-up-autofirma-autorizacion";
+    }
+
+
+
 }
 
 
