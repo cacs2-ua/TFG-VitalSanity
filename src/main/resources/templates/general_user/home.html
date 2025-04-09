@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <div th:include="navbar :: head (titulo='Ver profesionales médicos autorizados')"></div>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<div th:replace="navbar::menuBar"></div>
+<h1>¡Bienvenido a VitalSanity! La web donde El Paciente es El Protagonista</h1>
+<form th:action="@{/logout}" method="get">
+</form>
+
+<div th:replace="navbar::javascript"></div>
+</body>
+</html>

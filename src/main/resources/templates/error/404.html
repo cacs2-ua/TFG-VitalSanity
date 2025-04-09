@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <title>404 - Not Found</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 404</title>
+    <div th:include="navbar :: head (titulo='Error 404')"></div>
+    <link rel="stylesheet" th:href="@{/css/custom/paciente/ver-profesionales-medicos-autorados.css}">
 </head>
 
 <body>
-<div class="container text-center mt-5">
-    <h1>404 - Página No Encontrada</h1>
-    <a th:href="@{/}" class="btn btn-primary">Volver al Inicio</a>
-</div>
+    <div th:replace="navbar::menuBar"></div>
+    <div class="container text-center mt-5">
+        <h1>404 - Página No Encontrada</h1>
+        <a th:href="@{/}" class="btn btn-primary">Volver al Inicio</a>
+    </div>
+
+    <div th:replace="navbar::javascript"></div>
 </body>
 </html>

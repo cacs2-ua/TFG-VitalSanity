@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.controller.exception.NotFoundException;
-import vitalsanity.dto.UsuarioData;
-import vitalsanity.service.UsuarioService;
+import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.service.general_user.UsuarioService;
 
 @Component
 public class ProfesionalMedicoInterceptor implements HandlerInterceptor {

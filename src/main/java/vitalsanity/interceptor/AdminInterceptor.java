@@ -2,8 +2,8 @@ package vitalsanity.interceptor;
 
 import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.controller.exception.NotFoundException;
-import vitalsanity.dto.UsuarioData;
-import vitalsanity.service.UsuarioService;
+import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.service.general_user.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
