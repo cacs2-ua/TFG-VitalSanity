@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title th:text="${titulo}"></title>
     <!-- Link to the custom navbar CSS -->
+    <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
     <link rel="stylesheet" th:href="@{/css/custom/navbar.css}" />
     <!-- Agregamos esta regla para desktop: -->
     <style>
@@ -21,7 +22,7 @@
     <nav class="custom-nav">
         <div class="custom-nav-container">
             <!-- Logo or application name -->
-            <a class="custom-nav-brand" th:href="@{/}" onclick="highlightLink(this)">VitalSanity</a>
+            <a class="custom-nav-brand" th:href="@{/api/general/home}" onclick="highlightLink(this)">VitalSanity</a>
             <!-- Burger menu toggle button -->
             <button class="custom-nav-toggler" id="customNavToggler" aria-label="Toggle navigation">
                 <span class="custom-nav-toggler-icon"></span>
@@ -32,7 +33,7 @@
             <ul class="custom-nav-list">
                 <!-- Guest User -->
                 <li class="custom-nav-item" th:if="${usuario == null}">
-                    <a class="custom-nav-link" th:href="@{/}" onclick="highlightLink(this)">Home</a>
+                    <a class="custom-nav-link" th:href="@{/api/general/home}" onclick="highlightLink(this)">Home</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
                     <a class="custom-nav-link" th:href="@{/login}" onclick="highlightLink(this)">Iniciar Sesion</a>
