@@ -1,11 +1,18 @@
 package vitalsanity.controller.profesional_medico;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import vitalsanity.dto.paciente.BuscarPacienteData;
+import vitalsanity.dto.paciente.BuscarPacienteResponse;
+import vitalsanity.service.paciente.PacienteService;
 
 @Controller
 public class ProfesionalMedicoController {
+
+    @Autowired
+    private PacienteService pacienteService;
 
     @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/nuevo")
     public String crearNuevoInforme(@PathVariable(value="idPaciente") Long idPaciente,
@@ -46,8 +53,23 @@ public class ProfesionalMedicoController {
     }
 
     @GetMapping("/api/profesional-medico/{idProfesionalMedico}/buscar-paciente")
-    public String buscarPaciente(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                        Model model) {
+    public String buscarPacienteForm(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
+                                     Model model) {
+        model.addAttribute("buscarPacienteData", new BuscarPacienteData());
+        return "profesional_medico/buscar-paciente";
+    }
+
+    @PostMapping("/api/profesional-medico/{idProfesionalMedico}/buscar-paciente")
+    public String buscarPacienteSubmit(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
+                                       @ModelAttribute("buscarPacienteData") BuscarPacienteData buscarPacienteData,
+                                       Model model) {
+        String nif = buscarPacienteData.getNifNie().trim();
+        BuscarPacienteResponse pacienteResponse = pacienteService.buscarPacientePorNifNie(nif);
+        if (pacienteResponse == null) {
+            model.addAttribute("error", "Paciente no encontrado");
+        } else {
+            model.addAttribute("paciente", pacienteResponse);
+        }
         return "profesional_medico/buscar-paciente";
     }
 
