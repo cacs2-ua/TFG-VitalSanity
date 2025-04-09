@@ -93,7 +93,10 @@ public class RegistroController {
         // Loguear usuario automaticamente
         managerUserSession.logearUsuario(usuarioData.getId());
 
-        // Redirigir a la vista de paciente
+        if (usuarioData.getPrimerAcceso()){
+            return "redirect:/api/paciente/" + usuarioData.getId() + "/datos-residencia";
+        }
+
         return "redirect:/api/paciente/" + usuarioData.getId() + "/informes";
     }
 }
