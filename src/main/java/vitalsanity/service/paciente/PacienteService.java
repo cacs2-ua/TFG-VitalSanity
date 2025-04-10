@@ -24,7 +24,10 @@ public class PacienteService {
         }
         List<Usuario> usuarios = usuarioRepository.findByNifNie(nifNie);
         for (Usuario usuario : usuarios) {
-            if (usuario.getNifNie().equalsIgnoreCase(nifNie) && usuario.getPaciente() != null) {
+            if (usuario.getNifNie().equalsIgnoreCase(nifNie)
+                    && usuario.getPaciente() != null
+                    && usuario.getTipo() != null
+                    && usuario.getTipo().getId().equals(4L)) {
                 Paciente paciente = usuario.getPaciente();
                 BuscarPacienteResponse response = new BuscarPacienteResponse();
                 response.setNombreCompleto(usuario.getNombreCompleto());
