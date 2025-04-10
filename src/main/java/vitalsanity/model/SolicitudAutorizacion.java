@@ -36,6 +36,12 @@ public class SolicitudAutorizacion implements Serializable {
     @NotNull
     private String descripcion;
 
+    @NotNull
+    private boolean firmada;
+
+    @NotNull
+    private boolean cofirmada;
+
     // constructores
 
     public SolicitudAutorizacion() {}
@@ -106,6 +112,22 @@ public class SolicitudAutorizacion implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public boolean isFirmada() {
+        return firmada;
+    }
+
+    public void setFirmada(boolean firmada) {
+        this.firmada = firmada;
+    }
+
+    public boolean isCofirmada() {
+        return cofirmada;
+    }
+
+    public void setCofirmada(boolean cofirmada) {
+        this.cofirmada = cofirmada;
     }
 
     @Override
