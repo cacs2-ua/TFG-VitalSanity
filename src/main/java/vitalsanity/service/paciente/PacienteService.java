@@ -30,6 +30,7 @@ public class PacienteService {
                     && usuario.getTipo().getId().equals(4L)) {
                 Paciente paciente = usuario.getPaciente();
                 BuscarPacienteResponse response = new BuscarPacienteResponse();
+                response.setId(usuario.getPaciente().getId());
                 response.setNombreCompleto(usuario.getNombreCompleto());
                 response.setNifNie(usuario.getNifNie());
                 response.setGenero(paciente.getGenero());
