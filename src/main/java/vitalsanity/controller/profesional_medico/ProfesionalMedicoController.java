@@ -85,12 +85,12 @@ public class ProfesionalMedicoController {
         return "profesional_medico/buscar-paciente";
     }
 
-    @GetMapping("/api/profesional-medico/{idProfesionalMedico}/solicitar-autorizacion/{idPaciente}")
-    public String solicitarAutorizacion(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                        @PathVariable(value="idPaciente") Long idPaciente,
+    @GetMapping("/api/profesional-medico/{idUsuarioProfesionalMedico}/solicitar-autorizacion/{idUsuarioPaciente}")
+    public String solicitarAutorizacion(@PathVariable(value="idUsuarioProfesionalMedico") Long idUsuarioProfesionalMedico,
+                                        @PathVariable(value="idUsuarioPaciente") Long idUsuarioPaciente,
                                         Model model) {
-        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idProfesionalMedico);
-        UsuarioData usuarioPaciente = usuarioService.findById(idPaciente);
+        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
+        UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
 
         model.addAttribute("usuarioProfesionalMedico", usuarioProfesionalMedico);
         model.addAttribute("usuarioPaciente", usuarioPaciente);
