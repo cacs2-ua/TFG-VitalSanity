@@ -13,6 +13,7 @@ import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.guest_user.RegistroData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.model.*;
+import vitalsanity.repository.PacienteRepository;
 import vitalsanity.repository.TipoUsuarioRepository;
 import vitalsanity.repository.UsuarioRepository;
 import vitalsanity.service.utils.EmailService;
@@ -30,6 +31,8 @@ import java.util.Optional;
 public class UsuarioService {
 
     Logger logger = LoggerFactory.getLogger(UsuarioService.class);
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
     public enum LoginStatus {LOGIN_OK, USER_NOT_FOUND, USER_DISABLED, ERROR_PASSWORD}
 
@@ -311,6 +314,20 @@ public class UsuarioService {
             }
         }
         return registrados;
+    }
+
+    @Transactional
+    public UsuarioData encontrarPorIdPaciente(Long pacienteId) {
+        Usuario usuario = usuarioRepository.findByPacienteId(pacienteId).orElse(null);
+        if (usuario == null) return null;
+        else return modelMapper.map(usuario, UsuarioData.class);
+    }
+
+    @Transactional
+    public UsuarioData encontrarPorIdProfesionalMedico(Long profesionalMedicoId) {
+        Usuario usuario = usuarioRepository.findByProfesionalMedicoId(profesionalMedicoId).orElse(null);
+        if (usuario == null) return null;
+        else return modelMapper.map(usuario, UsuarioData.class);
     }
 
 }

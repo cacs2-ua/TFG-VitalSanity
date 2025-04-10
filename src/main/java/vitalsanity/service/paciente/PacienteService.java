@@ -1,21 +1,31 @@
 package vitalsanity.service.paciente;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
+import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.model.Paciente;
 import vitalsanity.model.Usuario;
+import vitalsanity.repository.PacienteRepository;
 import vitalsanity.repository.UsuarioRepository;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class PacienteService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     // Metodo para buscar paciente por nifNie (ignora mayusculas/minusculas)
     public BuscarPacienteResponse buscarPacientePorNifNie(String nifNie) {
@@ -46,5 +56,12 @@ public class PacienteService {
             }
         }
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    public PacienteData encontrarPorId(Long pacienteId) {
+        Paciente paciente = pacienteRepository.findById(pacienteId).orElse(null);
+        if (paciente == null) return null;
+        else return modelMapper.map(paciente, PacienteData.class);
     }
 }
