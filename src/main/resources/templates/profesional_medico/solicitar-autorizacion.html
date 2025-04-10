@@ -55,7 +55,7 @@
   <div class="popup-window">
     <button id="popupClose" class="popup-close">X</button>
     <!-- The iframe loads the second HTML file. NOTE: Use a dynamic URL if needed -->
-    <iframe th:src="@{/api/profesional-medico/pop-up-autofirma-autorizacion}" class="popup-iframe"></iframe>
+    <iframe th:src="@{'/api/profesional-medico/' + ${usuario.id} + '/pop-up-autofirma-autorizacion/' + ${usuarioPaciente.id}}" class="popup-iframe"></iframe>
 
   </div>
 </div>
