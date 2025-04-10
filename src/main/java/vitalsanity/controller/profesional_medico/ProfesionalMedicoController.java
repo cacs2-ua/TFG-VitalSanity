@@ -4,12 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
+import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
+import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 
 @Controller
 public class ProfesionalMedicoController {
+
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private ProfesionalMedicoService profesionalMedicoService;
 
     @Autowired
     private PacienteService pacienteService;
@@ -77,6 +86,12 @@ public class ProfesionalMedicoController {
     public String solicitarAutorizacion(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
                                         @PathVariable(value="idPaciente") Long idPaciente,
                                         Model model) {
+        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idProfesionalMedico);
+        UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(idPaciente);
+
+        model.addAttribute("usuarioProfesionalMedico", usuarioProfesionalMedico);
+        model.addAttribute("usuarioPaciente", usuarioPaciente);
+
         return "profesional_medico/solicitar-autorizacion";
     }
 
