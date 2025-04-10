@@ -119,6 +119,21 @@ public class ProfesionalMedico implements Serializable {
         paciente.getProfesionalesMedicosDesautorizados().remove(this);
     }
 
+    @OneToMany(mappedBy = "profesionalMedico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<SolicitudAutorizacion> solicitudesAutorizacion = new HashSet<>();
+
+    public Set<SolicitudAutorizacion> getSolicitudesAutorizacion() {
+        return  this.solicitudesAutorizacion;
+    }
+
+    public void addSolicitudAutorizacion(SolicitudAutorizacion solicitudAutorizacion) {
+        if (solicitudesAutorizacion.contains(solicitudAutorizacion)) return;
+        solicitudesAutorizacion.add(solicitudAutorizacion);
+        if (solicitudAutorizacion.getProfesionalMedico() != this) {
+            solicitudAutorizacion.setProfesionalMedico(this);
+        }
+    }
+
     // getter y setter
 
     public Long getId() {

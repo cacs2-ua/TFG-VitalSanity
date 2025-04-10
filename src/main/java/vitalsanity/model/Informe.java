@@ -50,6 +50,11 @@ public class Informe implements Serializable {
     @NotNull
     private String municipio;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
     public Informe() {}
 
     public Informe(String Uuid, String titulo, LocalDateTime fechaCreacion, String nombreCentroMedico, String nombreProfesionalMedico,

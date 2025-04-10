@@ -71,6 +71,25 @@ public class SolicitudAutorizacion implements Serializable {
     @JoinColumn(name = "profesional_medico_id", nullable = false)
     private ProfesionalMedico profesionalMedico;
 
+    public ProfesionalMedico getProfesionalMedico() {
+        return this.profesionalMedico;
+    }
+
+    public void setProfesionalMedico(ProfesionalMedico profesionalMedico) {
+        if (this.profesionalMedico == profesionalMedico || profesionalMedico == null) {
+            return;
+        }
+
+        if (this.profesionalMedico != null) {
+            this.profesionalMedico.getSolicitudesAutorizacion().remove(this);
+        }
+
+        this.profesionalMedico = profesionalMedico;
+
+        if (!profesionalMedico.getSolicitudesAutorizacion().contains(this)) {
+            profesionalMedico.addSolicitudAutorizacion(this);
+        }
+    }
 
     // constructores
 
