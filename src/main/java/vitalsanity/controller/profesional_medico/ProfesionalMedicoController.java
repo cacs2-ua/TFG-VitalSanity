@@ -74,10 +74,13 @@ public class ProfesionalMedicoController {
                                        Model model) {
         String nif = buscarPacienteData.getNifNie().trim();
         BuscarPacienteResponse pacienteResponse = pacienteService.buscarPacientePorNifNie(nif);
+
         if (pacienteResponse == null) {
             model.addAttribute("error", "Paciente no encontrado");
         } else {
+            UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(pacienteResponse.getId());
             model.addAttribute("paciente", pacienteResponse);
+            model.addAttribute("usuarioPaciente", usuarioPaciente);
         }
         return "profesional_medico/buscar-paciente";
     }
@@ -87,7 +90,7 @@ public class ProfesionalMedicoController {
                                         @PathVariable(value="idPaciente") Long idPaciente,
                                         Model model) {
         UsuarioData usuarioProfesionalMedico = usuarioService.findById(idProfesionalMedico);
-        UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(idPaciente);
+        UsuarioData usuarioPaciente = usuarioService.findById(idPaciente);
 
         model.addAttribute("usuarioProfesionalMedico", usuarioProfesionalMedico);
         model.addAttribute("usuarioPaciente", usuarioPaciente);
