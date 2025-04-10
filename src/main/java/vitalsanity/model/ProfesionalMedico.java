@@ -90,7 +90,7 @@ public class ProfesionalMedico implements Serializable {
         return this.pacientesQueHanAutorizado;
     }
 
-    public void agregarPacienteQueHaAutorizado(Paciente paciente) {
+    public void addPacienteQueHaAutorizado(Paciente paciente) {
         this.getPacientesQueHanAutorizado().add(paciente);
         paciente.getProfesionalesMedicosAutorizados().add(this);
     }
@@ -109,7 +109,7 @@ public class ProfesionalMedico implements Serializable {
         return this.pacientesQueHanDesautorizado;
     }
 
-    public void agregarPacienteQueHaDesautorizado(Paciente paciente) {
+    public void addPacienteQueHaDesautorizado(Paciente paciente) {
         this.getPacientesQueHanDesautorizado().add(paciente);
         paciente.getProfesionalesMedicosDesautorizados().add(this);
     }
@@ -131,6 +131,23 @@ public class ProfesionalMedico implements Serializable {
         solicitudesAutorizacion.add(solicitudAutorizacion);
         if (solicitudAutorizacion.getProfesionalMedico() != this) {
             solicitudAutorizacion.setProfesionalMedico(this);
+        }
+    }
+
+
+
+    @OneToMany(mappedBy = "profesionalMedico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Informe> informes = new HashSet<>();
+
+    public Set<Informe> getInformes() {
+        return  this.informes;
+    }
+
+    public void addInforme(Informe informe) {
+        if (informes.contains(informe)) return;
+        informes.add(informe);
+        if (informe.getProfesionalMedico() != this) {
+            informe.setProfesionalMedico(this);
         }
     }
 

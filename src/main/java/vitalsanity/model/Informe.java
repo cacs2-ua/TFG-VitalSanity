@@ -55,6 +55,53 @@ public class Informe implements Serializable {
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
+    public Paciente getPaciente() {
+        return this.paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        if (this.paciente == paciente || paciente == null) {
+            return;
+        }
+
+        if (this.paciente != null) {
+            this.paciente.getInformes().remove(this);
+        }
+
+        // Asigna el nuevo tipo
+        this.paciente = paciente;
+
+        if (!paciente.getInformes().contains(this)) {
+            paciente.addInforme(this);
+        }
+    }
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "profesional_medico_id", nullable = false)
+    private ProfesionalMedico profesionalMedico;
+
+    public ProfesionalMedico getProfesionalMedico() {
+        return this.profesionalMedico;
+    }
+
+    public void setProfesionalMedico(ProfesionalMedico profesionalMedico) {
+        if (this.profesionalMedico == profesionalMedico || profesionalMedico == null) {
+            return;
+        }
+
+        if (this.profesionalMedico != null) {
+            this.profesionalMedico.getInformes().remove(this);
+        }
+
+        // Asigna el nuevo tipo
+        this.profesionalMedico = profesionalMedico;
+
+        if (!profesionalMedico.getInformes().contains(this)) {
+            profesionalMedico.addInforme(this);
+        }
+    }
+
     public Informe() {}
 
     public Informe(String Uuid, String titulo, LocalDateTime fechaCreacion, String nombreCentroMedico, String nombreProfesionalMedico,
