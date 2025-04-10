@@ -35,6 +35,60 @@ public class Documento implements Serializable {
     @NotNull
     private LocalDateTime fechaSubida;
 
+    @ManyToOne
+    @JoinColumn(name = "informe_id")
+    private Informe informe;
+
+    public Informe getInforme() {
+        return this.informe;
+    }
+
+    public void setInforme(Informe informe) {
+        if (this.informe == informe) {
+            return;
+        }
+
+        // Si ya tenía un informe asignado, se remueve la relación
+        if (this.informe != null) {
+            this.informe.getDocumentos().remove(this);
+        }
+
+        // Se asigna el nuevo informe (puede ser null para desvincular)
+        this.informe = informe;
+
+        // Si el nuevo informe no es null, se asegura la sincronización bidireccional
+        if (informe != null && !informe.getDocumentos().contains(this)) {
+            informe.addDocumento(this);
+        }
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "solicitud_autorizacion_id")
+    private SolicitudAutorizacion solicitudAutorizacion;
+
+    public SolicitudAutorizacion getSolicitudAutorizacion() {
+        return this.solicitudAutorizacion;
+    }
+
+    public void setSolicitudAutorizacion(SolicitudAutorizacion solicitudAutorizacion) {
+        if (this.solicitudAutorizacion == solicitudAutorizacion) {
+            return;
+        }
+
+        if (this.solicitudAutorizacion != null) {
+            this.solicitudAutorizacion.getDocumentos().remove(this);
+        }
+
+        this.solicitudAutorizacion = solicitudAutorizacion;
+
+        if (solicitudAutorizacion != null && !solicitudAutorizacion.getDocumentos().contains(this)) {
+            solicitudAutorizacion.addDocumento(this);
+        }
+    }
+
+
+
     // constructores
 
     public Documento() {}

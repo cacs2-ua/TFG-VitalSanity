@@ -102,6 +102,21 @@ public class Informe implements Serializable {
         }
     }
 
+    @OneToMany(mappedBy = "informe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Documento> documentos = new HashSet<>();
+
+    public Set<Documento> getDocumentos() {
+        return  this.documentos;
+    }
+
+    public void addDocumento(Documento documento) {
+        if (documentos.contains(documento)) return;
+        documentos.add(documento);
+        if (documento.getInforme() != this) {
+            documento.setInforme(this);
+        }
+    }
+
     public Informe() {}
 
     public Informe(String Uuid, String titulo, LocalDateTime fechaCreacion, String nombreCentroMedico, String nombreProfesionalMedico,

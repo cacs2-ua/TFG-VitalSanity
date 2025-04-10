@@ -91,6 +91,21 @@ public class SolicitudAutorizacion implements Serializable {
         }
     }
 
+    @OneToMany(mappedBy = "solicitudAutorizacion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Documento> documentos = new HashSet<>();
+
+    public Set<Documento> getDocumentos() {
+        return  documentos;
+    }
+
+    public void addDocumento(Documento documento) {
+        if (documentos.contains(documento)) return;
+        documentos.add(documento);
+        if (documento.getSolicitudAutorizacion() != this) {
+            documento.setSolicitudAutorizacion(this);
+        }
+    }
+
     // constructores
 
     public SolicitudAutorizacion() {}
