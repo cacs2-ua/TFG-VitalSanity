@@ -42,6 +42,36 @@ public class SolicitudAutorizacion implements Serializable {
     @NotNull
     private boolean cofirmada;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "paciente_id", nullable = false)
+    private Paciente paciente;
+
+    public Paciente getPaciente() {
+        return this.paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        if (this.paciente == paciente || paciente == null) {
+            return;
+        }
+
+        if (this.paciente != null) {
+            this.paciente.getSolicitudesAutorizacion().remove(this);
+        }
+        this.paciente = paciente;
+
+        if (!paciente.getSolicitudesAutorizacion().contains(this)) {
+            paciente.addSolicitudAutorizacion(this);
+        }
+    }
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "profesional_medico_id", nullable = false)
+    private ProfesionalMedico profesionalMedico;
+
+
     // constructores
 
     public SolicitudAutorizacion() {}

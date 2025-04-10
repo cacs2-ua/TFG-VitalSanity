@@ -71,6 +71,23 @@ public class Paciente implements Serializable {
         profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().remove(this);
     }
 
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<SolicitudAutorizacion> solicitudesAutorizacion = new HashSet<>();
+
+
+    public Set<SolicitudAutorizacion> getSolicitudesAutorizacion() {
+        return  this.solicitudesAutorizacion;
+    }
+
+    public void addSolicitudAutorizacion(SolicitudAutorizacion solicitudAutorizacion) {
+        if (solicitudesAutorizacion.contains(solicitudAutorizacion)) return;
+        solicitudesAutorizacion.add(solicitudAutorizacion);
+        if (solicitudAutorizacion.getPaciente() != this) {
+            solicitudAutorizacion.setPaciente(this);
+        }
+    }
+
+
     //getters y setters
 
     public Long getId() {
