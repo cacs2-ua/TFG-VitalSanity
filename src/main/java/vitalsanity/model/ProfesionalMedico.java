@@ -83,6 +83,42 @@ public class ProfesionalMedico implements Serializable {
         }
     }
 
+    @ManyToMany(mappedBy = "profesionalesMedicosAutorizados")
+    Set<Paciente> pacientesQueHanAutorizado = new HashSet<>();
+
+    public Set<Paciente> getPacientesQueHanAutorizado() {
+        return this.pacientesQueHanAutorizado;
+    }
+
+    public void agregarPacienteQueHaAutorizado(Paciente paciente) {
+        this.getPacientesQueHanAutorizado().add(paciente);
+        paciente.getProfesionalesMedicosAutorizados().add(this);
+    }
+
+    public  void  quitarPacienteQueHaAutorizado (Paciente paciente) {
+        this.getPacientesQueHanAutorizado().remove(paciente);
+        paciente.getProfesionalesMedicosAutorizados().remove(this);
+    }
+
+
+
+    @ManyToMany(mappedBy = "profesionalesMedicosDesautorizados")
+    Set<Paciente> pacientesQueHanDesautorizado = new HashSet<>();
+
+    public Set<Paciente> getPacientesQueHanDesautorizado() {
+        return this.pacientesQueHanDesautorizado;
+    }
+
+    public void agregarPacienteQueHaDesautorizado(Paciente paciente) {
+        this.getPacientesQueHanDesautorizado().add(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().add(this);
+    }
+
+    public  void  quitarPacienteQueHaDesautorizado (Paciente paciente) {
+        this.getPacientesQueHanDesautorizado().remove(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().remove(this);
+    }
+
     // getter y setter
 
     public Long getId() {

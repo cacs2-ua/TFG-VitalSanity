@@ -29,6 +29,48 @@ public class Paciente implements Serializable {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @ManyToMany
+    @JoinTable(name = "paciente_profesional_medico_autorizado",
+            joinColumns = { @JoinColumn(name = "fk_paciente") },
+            inverseJoinColumns = {@JoinColumn(name = "fk_profesional_medico_autorizado") })
+    Set<ProfesionalMedico> profesionalesMedicosAutorizados = new HashSet<>();
+
+    public Set<ProfesionalMedico> getProfesionalesMedicosAutorizados() {
+        return this.profesionalesMedicosAutorizados;
+    }
+
+    public void agregarProfesionalMedicoAutorizado(ProfesionalMedico profesionalMedicoAutorizado) {
+        this.getProfesionalesMedicosAutorizados().add(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanAutorizado().add(this);
+    }
+
+    public  void  quitarProfesionalMedicoAutorizado (ProfesionalMedico profesionalMedicoAutorizado) {
+        this.getProfesionalesMedicosAutorizados().remove(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanAutorizado().remove(this);
+    }
+
+
+    @ManyToMany
+    @JoinTable(name = "paciente_profesional_medico_desautorizado",
+            joinColumns = { @JoinColumn(name = "fk_paciente") },
+            inverseJoinColumns = {@JoinColumn(name = "fk_profesional_medico_desautorizado") })
+    Set<ProfesionalMedico> profesionalesMedicosDesautorizados = new HashSet<>();
+
+
+    public Set<ProfesionalMedico> getProfesionalesMedicosDesautorizados() {
+        return this.profesionalesMedicosDesautorizados;
+    }
+
+    public void agregarProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
+        this.getProfesionalesMedicosDesautorizados().add(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().add(this);
+    }
+
+    public void quitarProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
+        this.getProfesionalesMedicosDesautorizados().remove(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().remove(this);
+    }
+
     //getters y setters
 
     public Long getId() {
