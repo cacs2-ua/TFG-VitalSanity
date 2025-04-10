@@ -21,19 +21,19 @@
       <br>
       <div class="form-field">
         <label class="form-label required">Nombre del profesional:</label>
-        <input type="text" class="form-input" readonly value="Mateo Sanchez Ripoll">
+        <input type="text" class="form-input" readonly th:value="${usuarioProfesionalMedico.nombreCompleto}">
       </div>
       <div class="form-field">
         <label class="form-label required">NIF/NIE del profesional medico:</label>
-        <input type="text" class="form-input" readonly value="08136402Z">
+        <input type="text" class="form-input" readonly th:value="${usuarioProfesionalMedico.nifNie}">
       </div>
       <div class="form-field">
         <label class="form-label required">Nombre del paciente:</label>
-        <input type="text" class="form-input" readonly value="Antonio Ruiz Martínez">
+        <input type="text" class="form-input" readonly th:value="${usuarioPaciente.nombreCompleto}">
       </div>
       <div class="form-field">
         <label class="form-label required">NIF/NIE del paciente:</label>
-        <input type="text" class="form-input" readonly value="90817263L">
+        <input type="text" class="form-input" readonly th:value="${usuarioPaciente.nifNie}">
       </div>
       <div class="form-field">
         <label class="form-label required">Motivo:</label>
