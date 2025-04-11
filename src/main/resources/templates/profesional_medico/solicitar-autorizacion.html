@@ -14,35 +14,36 @@
   <h1 class="page-title">Solicitar autorización</h1>
   <div class="form-container">
     <div class="form-section">
-      <!-- Combined ID text -->
-      <div class="form-id">
-        <span class="form-id-combined"><strong>Datos de la autorización</strong></span>
-      </div>
-      <br>
-      <div class="form-field">
-        <label class="form-label required">Nombre del profesional:</label>
-        <input type="text" class="form-input" readonly th:value="${usuarioProfesionalMedico.nombreCompleto}">
-      </div>
-      <div class="form-field">
-        <label class="form-label required">NIF/NIE del profesional medico:</label>
-        <input type="text" class="form-input" readonly th:value="${usuarioProfesionalMedico.nifNie}">
-      </div>
-      <div class="form-field">
-        <label class="form-label required">Nombre del paciente:</label>
-        <input type="text" class="form-input" readonly th:value="${usuarioPaciente.nombreCompleto}">
-      </div>
-      <div class="form-field">
-        <label class="form-label required">NIF/NIE del paciente:</label>
-        <input type="text" class="form-input" readonly th:value="${usuarioPaciente.nifNie}">
-      </div>
-      <div class="form-field">
-        <label class="form-label required">Motivo:</label>
-        <input type="text" class="form-input" value="Diagnostico general de salud">
-      </div>
-      <div class="form-field">
-        <label class="form-label required">Descripcion:</label>
-        <textarea class="form-textarea">Se solicita acceso al historial clínico de Antonio Ruiz Martínez para obtener información relevante que permita una correcta evaluación de su estado de salud, un diagnóstico preciso y la planificación del tratamiento adecuado.</textarea>
-      </div>
+        <div class="form-id">
+          <span class="form-id-combined"><strong>Datos de la autorización</strong></span>
+        </div>
+        <br>
+      <form id="prueba">
+        <div class="form-field">
+          <label class="form-label required">Nombre del profesional:</label>
+          <input type="text" class="form-input" readonly th:value="${usuarioProfesionalMedico.nombreCompleto}">
+        </div>
+        <div class="form-field">
+          <label class="form-label required">NIF/NIE del profesional medico:</label>
+          <input type="text" class="form-input" readonly th:value="${usuarioProfesionalMedico.nifNie}">
+        </div>
+        <div class="form-field">
+          <label class="form-label required">Nombre del paciente:</label>
+          <input type="text" class="form-input" readonly th:value="${usuarioPaciente.nombreCompleto}">
+        </div>
+        <div class="form-field">
+          <label class="form-label required">NIF/NIE del paciente:</label>
+          <input type="text" class="form-input" readonly th:value="${usuarioPaciente.nifNie}">
+        </div>
+        <div class="form-field">
+          <label class="form-label required">Motivo:</label>
+          <input type="text" class="form-input" value="Diagnostico general de salud">
+        </div>
+        <div class="form-field">
+          <label class="form-label required">Descripcion:</label>
+          <textarea class="form-textarea">Se solicita acceso al historial clínico de Antonio Ruiz Martínez para obtener información relevante que permita una correcta evaluación de su estado de salud, un diagnóstico preciso y la planificación del tratamiento adecuado.</textarea>
+        </div>
+      </form>
     </div>
   </div>
   <div class="submit-container">

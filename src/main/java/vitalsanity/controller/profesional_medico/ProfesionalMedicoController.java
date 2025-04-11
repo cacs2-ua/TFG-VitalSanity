@@ -111,19 +111,6 @@ public class ProfesionalMedicoController {
         return "profesional_medico/solicitar-autorizacion";
     }
 
-    @PostMapping("/api/profesional-medico/{idUsuarioProfesionalMedico}/solicitar-autorizacion/{idUsuarioPaciente}")
-    public String guardarAutorizacionInicial(@PathVariable(value="idUsuarioProfesionalMedico") Long idUsuarioProfesionalMedico,
-                                        @PathVariable(value="idUsuarioPaciente") Long idUsuarioPaciente,
-                                        Model model) {
-        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
-        UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
-
-        model.addAttribute("usuarioProfesionalMedico", usuarioProfesionalMedico);
-        model.addAttribute("usuarioPaciente", usuarioPaciente);
-
-        return "profesional_medico/solicitar-autorizacion";
-    }
-    
     // LOGICA AUTOFIRMA
 
     // Repositorio en memoria para guardar PDFs (firmados o cofirmados)
