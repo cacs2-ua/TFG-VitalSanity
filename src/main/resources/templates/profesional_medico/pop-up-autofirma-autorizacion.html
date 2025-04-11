@@ -80,9 +80,9 @@
     </div>
 
     <div class="button-container">
-        <form th:action="@{'/api/profesional-medico/' + ${usuario.id} + '/solicitar-autorizacion/' + ${usuarioPaciente.id}}" method="get">
-            <button class="back-button">Firmar y Enviar</button>
-        </form>
+
+    <div class="button-container">
+        <button type="button" onclick="onClickFirmarAutorizacion()" class="back-button">Firmar y Enviar</button>
     </div>
 </div>
 </body>

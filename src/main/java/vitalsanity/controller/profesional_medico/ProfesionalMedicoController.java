@@ -1,6 +1,10 @@
 package vitalsanity.controller.profesional_medico;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +14,12 @@ import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
+import vitalsanity.service.utils.autofirma.GenerarPdf;
+
+import java.util.Base64;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
 public class ProfesionalMedicoController {
@@ -22,6 +32,9 @@ public class ProfesionalMedicoController {
 
     @Autowired
     private PacienteService pacienteService;
+
+    @Autowired
+    private GenerarPdf generarPdf;
 
     @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/nuevo")
     public String crearNuevoInforme(@PathVariable(value="idPaciente") Long idPaciente,
@@ -112,6 +125,56 @@ public class ProfesionalMedicoController {
     }
 
 
+
+
+
+    // LOGICA AUTOFIRMA
+
+    // Repositorio en memoria para guardar PDFs (firmados o cofirmados)
+    private final Map<String, byte[]> signedRepository = new ConcurrentHashMap<>();
+
+    @PostMapping("/api/profesional-medico/generar-pdf-autorizacion")
+    @ResponseBody
+    public String generatePdf(@RequestParam String nombreProfesional,
+                              @RequestParam String nifNieProfesional,
+                              @RequestParam String nombrePaciente,
+                              @RequestParam String nifNiePaciente,
+                              @RequestParam String motivo,
+                              @RequestParam String descripcion) {
+
+        byte[] pdfBytes = generarPdf.generarPdfAutorizacion(
+                nombreProfesional,
+                nifNieProfesional,
+                nombrePaciente,
+                nifNiePaciente,
+                motivo,
+                descripcion);
+        return Base64.getEncoder().encodeToString(pdfBytes);
+    }
+
+    @PostMapping("/api/profesional-medico/pdf-autorizacion-firmada")
+    @ResponseBody
+    public String saveSignedPdf(@RequestParam String signedPdfBase64) {
+        byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
+        String uuid = UUID.randomUUID().toString();
+        signedRepository.put(uuid, signedPdf);
+        return uuid;
+    }
+
+    @GetMapping("/api/profesional-medico/pdf-autorizacion/{id}")
+    public ResponseEntity<byte[]> download(@PathVariable("id") String id) {
+
+        byte[] data = signedRepository.get(id);
+        if (data == null) {
+            throw new RuntimeException("No se encontró la firma con id=" + id);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "documento-firmado.pdf");
+
+        return new ResponseEntity<>(data, headers, HttpStatus.OK);
+    }
 
 }
 
