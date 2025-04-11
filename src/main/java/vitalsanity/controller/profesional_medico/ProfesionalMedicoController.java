@@ -125,7 +125,7 @@ public class ProfesionalMedicoController {
     }
 
     @GetMapping("/api/profesional-medico/{idUsuarioProfesionalMedico}/pop-up-autofirma-autorizacion/{idUsuarioPaciente}")
-    public String mostrarPopUpFirmaAutorizacion(@PathVariable(value="idUsuarioProfesionalMedico") Long idUsuarioProfesionalMedico,
+    public String mostrarInstruccionesFirmaAutorizacion(@PathVariable(value="idUsuarioProfesionalMedico") Long idUsuarioProfesionalMedico,
                                                 @PathVariable(value="idUsuarioPaciente") Long idUsuarioPaciente,
                                                 Model model) {
         UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
@@ -134,7 +134,7 @@ public class ProfesionalMedicoController {
         model.addAttribute("usuarioProfesionalMedico", usuarioProfesionalMedico);
         model.addAttribute("usuarioPaciente", usuarioPaciente);
 
-        return "profesional_medico/pop-up-autofirma-autorizacion";
+        return "profesional_medico/autofirma-autorizacion";
     }
 
 
