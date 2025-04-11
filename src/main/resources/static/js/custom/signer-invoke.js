@@ -75,6 +75,10 @@ function subirAutorizacionFirmada(signedPdfBase64) {
             resultadoDiv.innerHTML = "";
             resultadoDiv.appendChild(link);
 
+            setTimeout(() => {
+                window.location.href = "/vital-sanity/signer/exito";
+            }, 1000);
+
         })
         .catch(err => {
             alert("Error subiendo PDF firmado: " + err);
