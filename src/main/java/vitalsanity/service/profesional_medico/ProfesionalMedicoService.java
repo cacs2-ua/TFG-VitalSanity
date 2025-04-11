@@ -1,8 +1,10 @@
 package vitalsanity.service.profesional_medico;
 
+import jakarta.validation.constraints.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
@@ -58,19 +60,21 @@ public class ProfesionalMedicoService {
 
     @Transactional
     public SolicitudAutorizacionData nuevaSolicitudAutorizacion(Long idUsuarioProfesionalMedico,
-                                                                Long idUsuarioPaciente,
+                                                                String nombreProfesional,
+                                                                String nifNieProfesional,
+                                                                String nombreCentroMedico,
+                                                                String nombrePaciente,
+                                                                String nifNiePaciente,
                                                                 String motivo,
                                                                 String descripcion) {
         try {
-            Usuario usuarioProfesionalMedico = usuarioRepository.findById(idUsuarioProfesionalMedico).orElse(null);
-            Usuario usuarioPaciente = usuarioRepository.findById(idUsuarioPaciente).orElse(null);
-
             SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
 
-            solicitudAutorizacion.setNombreProfesionalMedico(usuarioProfesionalMedico.getNombreCompleto());
-            solicitudAutorizacion.setNifNieProfesionalMedico(usuarioProfesionalMedico.getNifNie());
-            solicitudAutorizacion.setNombrePaciente(usuarioPaciente.getNombreCompleto());
-            solicitudAutorizacion.setNifNiePaciente(usuarioPaciente.getNifNie());
+            solicitudAutorizacion.setNombreProfesionalMedico(nombreProfesional);
+            solicitudAutorizacion.setNifNieProfesionalMedico(nifNieProfesional);
+            solicitudAutorizacion.setNombreCentroMedico(nombreCentroMedico);
+            solicitudAutorizacion.setNombrePaciente(nombrePaciente);
+            solicitudAutorizacion.setNifNiePaciente(nifNiePaciente);
             solicitudAutorizacion.setMotivo(motivo);
             solicitudAutorizacion.setDescripcion(descripcion);
             solicitudAutorizacion.setFirmada(false);
@@ -78,7 +82,7 @@ public class ProfesionalMedicoService {
             solicitudAutorizacion.setFechaCreacion(LocalDateTime.now());
 
             ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
-            Paciente paciente = pacienteRepository.findByUsuarioId(idUsuarioPaciente).orElse(null);
+            Paciente paciente = pacienteRepository.findByUsuarioNifNie(nifNiePaciente).orElse(null);
 
             solicitudAutorizacion.setProfesionalMedico(profesionalMedico);
             solicitudAutorizacion.setPaciente(paciente);
@@ -94,5 +98,14 @@ public class ProfesionalMedicoService {
         }
 
     }
+
+    @NotNull
+    private boolean firmada;
+
+    @NotNull
+    private boolean cofirmada;
+
+    @NotNull
+    private LocalDateTime fechaCreacion;
 
 }

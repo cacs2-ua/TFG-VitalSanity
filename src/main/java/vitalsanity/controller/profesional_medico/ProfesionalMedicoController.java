@@ -12,6 +12,7 @@ import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
+import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
@@ -136,13 +137,26 @@ public class ProfesionalMedicoController {
 
     @PostMapping("/api/profesional-medico/generar-pdf-autorizacion")
     @ResponseBody
-    public String generarPdfAutorizacionYAlmacenarSolicitudDeAutorizacionEnBaseDeDatos(@RequestParam String nombreProfesional,
+    public String generarPdfAutorizacionYAlmacenarSolicitudDeAutorizacionEnBaseDeDatos(
+                              @RequestParam String nombreProfesional,
                               @RequestParam String nifNieProfesional,
                               @RequestParam String nombreCentroMedico,
                               @RequestParam String nombrePaciente,
                               @RequestParam String nifNiePaciente,
                               @RequestParam String motivo,
                               @RequestParam String descripcion) {
+
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        profesionalMedicoService.nuevaSolicitudAutorizacion(
+                idUsuarioProfesionalMedico,
+                nombreProfesional,
+                nifNieProfesional,
+                nombreCentroMedico,
+                nombrePaciente,
+                nifNiePaciente,
+                motivo,
+                descripcion
+        );
 
         byte[] pdfBytes = generarPdf.generarPdfAutorizacion(
                 nombreProfesional,
