@@ -13,6 +13,7 @@ public class GenerarPdf {
 
     public byte[] generarPdfAutorizacion(String nombreProfesional,
                               String nifNieProfesional,
+                              String nombreCentroMedico,
                               String nombrePaciente,
                               String nifNiePaciente,
                               String motivo,
@@ -28,6 +29,7 @@ public class GenerarPdf {
             document.add(new Paragraph("DATOS DE LA AUTORIZACIÓN"));
             document.add(new Paragraph("Nombre del profesional médico: " + nombreProfesional));
             document.add(new Paragraph("NIF/NIE del profesional médico: " + nifNieProfesional));
+            document.add(new Paragraph("Centro médico desde el que se ha solicitado la autorización: " + nombreCentroMedico));
             document.add(new Paragraph("Nombre del paciente: " + nombrePaciente));
             document.add(new Paragraph("NIF/NIE del paciente: " + nifNiePaciente));
             document.add(new Paragraph("Motivo: " + motivo));

@@ -49,6 +49,13 @@ public class ProfesionalMedicoService {
         else return modelMapper.map(profesionalMedico, ProfesionalMedicoData.class);
     }
 
+    @Transactional(readOnly = true)
+    public String obtenerNombreCentroMedico(Long profesionalMedicoId) {
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(profesionalMedicoId).orElse(null);
+        if (profesionalMedico == null) return null;
+        return profesionalMedico.getCentroMedico().getUsuario().getNombreCompleto();
+    }
+
     @Transactional
     public SolicitudAutorizacionData nuevaSolicitudAutorizacion(Long idUsuarioProfesionalMedico,
                                                                 Long idUsuarioPaciente,

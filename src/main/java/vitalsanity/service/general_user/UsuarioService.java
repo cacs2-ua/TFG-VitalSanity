@@ -316,18 +316,23 @@ public class UsuarioService {
         return registrados;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UsuarioData encontrarPorIdPaciente(Long pacienteId) {
         Usuario usuario = usuarioRepository.findByPacienteId(pacienteId).orElse(null);
         if (usuario == null) return null;
         else return modelMapper.map(usuario, UsuarioData.class);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UsuarioData encontrarPorIdProfesionalMedico(Long profesionalMedicoId) {
         Usuario usuario = usuarioRepository.findByProfesionalMedicoId(profesionalMedicoId).orElse(null);
         if (usuario == null) return null;
         else return modelMapper.map(usuario, UsuarioData.class);
+    }
+
+    public Long obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        return  usuario.getProfesionalMedico().getId();
     }
 
 }

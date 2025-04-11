@@ -119,8 +119,13 @@ public class ProfesionalMedicoController {
         UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
         UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
 
+        Long idProfesionalMedico = usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico);
+
+        String nombreCentroMedico = profesionalMedicoService.obtenerNombreCentroMedico(idProfesionalMedico);
+
         model.addAttribute("usuarioProfesionalMedico", usuarioProfesionalMedico);
         model.addAttribute("usuarioPaciente", usuarioPaciente);
+        model.addAttribute("nombreCentroMedico", nombreCentroMedico);
 
         return "profesional_medico/solicitar-autorizacion";
     }
@@ -133,6 +138,7 @@ public class ProfesionalMedicoController {
     @ResponseBody
     public String generarPdfAutorizacion(@RequestParam String nombreProfesional,
                               @RequestParam String nifNieProfesional,
+                              @RequestParam String nombreCentroMedico,
                               @RequestParam String nombrePaciente,
                               @RequestParam String nifNiePaciente,
                               @RequestParam String motivo,
@@ -141,6 +147,7 @@ public class ProfesionalMedicoController {
         byte[] pdfBytes = generarPdf.generarPdfAutorizacion(
                 nombreProfesional,
                 nifNieProfesional,
+                nombreCentroMedico,
                 nombrePaciente,
                 nifNiePaciente,
                 motivo,

@@ -18,6 +18,9 @@ INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, ema
 
 INSERT INTO public.centros_medicos (id, direccion, iban, usuario_id) VALUES (1, 'Calle Pablo Iglesias', 'ES3900168167502018540968', 2);
 
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, usuario_id) VALUES (1, 'a', '2003-02-04', 'hombre', 'a', 'a', 1, 5);
+
+
 INSERT INTO public.pacientes (id, fecha_nacimiento, genero, usuario_id) VALUES (1, '2000-04-11', 'hombre', 4);
 
 

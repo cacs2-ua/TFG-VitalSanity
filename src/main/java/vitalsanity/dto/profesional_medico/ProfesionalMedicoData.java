@@ -16,6 +16,8 @@ public class ProfesionalMedicoData {
 
     private String fechaNacimiento;
 
+    private  String nombreCentroMedico;
+
     //getters y setters
 
     public String getId() {
@@ -64,6 +66,14 @@ public class ProfesionalMedicoData {
 
     public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getNombreCentroMedico() {
+        return nombreCentroMedico;
+    }
+
+    public void setNombreCentroMedico(String nombreCentroMedico) {
+        this.nombreCentroMedico = nombreCentroMedico;
     }
 
     @Override
