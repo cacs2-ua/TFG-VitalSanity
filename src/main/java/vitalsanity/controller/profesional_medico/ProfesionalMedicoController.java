@@ -170,7 +170,7 @@ public class ProfesionalMedicoController {
     }
 
     @GetMapping("/api/profesional-medico/pdf-autorizacion/{id}")
-    public ResponseEntity<byte[]> descargarPdfAutorizacionFirmadaDeAws(@PathVariable("id") String id) {
+    public ResponseEntity<byte[]> descargarPdfAutorizacionFirmadaLocal(@PathVariable("id") String id) {
 
         byte[] data = signedRepository.get(id);
         if (data == null) {
@@ -182,6 +182,11 @@ public class ProfesionalMedicoController {
         headers.setContentDispositionFormData("attachment", "documento-firmado.pdf");
 
         return new ResponseEntity<>(data, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/profesional-medico/pdf-autorizacion-firmada")
+    public String descargarPdfAutorizacionFirmadaDeAws(Model model) {
+        return "profesional_medico/descargar-pdf-autorizacion-firmada";
     }
 
 }
