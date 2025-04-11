@@ -25,6 +25,9 @@ public class SolicitudAutorizacion implements Serializable {
     private String nifNieProfesionalMedico;
 
     @NotNull
+    private String nombreCentroMedico;
+
+    @NotNull
     private String nombrePaciente;
 
     @NotNull
@@ -162,6 +165,14 @@ public class SolicitudAutorizacion implements Serializable {
 
     public void setNifNieProfesionalMedico(String nifNieProfesionalMedico) {
         this.nifNieProfesionalMedico = nifNieProfesionalMedico;
+    }
+
+    public String getNombreCentroMedico() {
+        return nombreCentroMedico;
+    }
+
+    public void setNombreCentroMedico(String nombreCentroMedico) {
+        this.nombreCentroMedico = nombreCentroMedico;
     }
 
     public String getNombrePaciente() {

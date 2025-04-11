@@ -136,7 +136,7 @@ public class ProfesionalMedicoController {
 
     @PostMapping("/api/profesional-medico/generar-pdf-autorizacion")
     @ResponseBody
-    public String generarPdfAutorizacion(@RequestParam String nombreProfesional,
+    public String generarPdfAutorizacionYAlmacenarSolicitudDeAutorizacionEnBaseDeDatos(@RequestParam String nombreProfesional,
                               @RequestParam String nifNieProfesional,
                               @RequestParam String nombreCentroMedico,
                               @RequestParam String nombrePaciente,
