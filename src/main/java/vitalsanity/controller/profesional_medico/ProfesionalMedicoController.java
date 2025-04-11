@@ -123,24 +123,7 @@ public class ProfesionalMedicoController {
 
         return "profesional_medico/solicitar-autorizacion";
     }
-
-    @GetMapping("/api/profesional-medico/{idUsuarioProfesionalMedico}/pop-up-autofirma-autorizacion/{idUsuarioPaciente}")
-    public String mostrarInstruccionesFirmaAutorizacion(@PathVariable(value="idUsuarioProfesionalMedico") Long idUsuarioProfesionalMedico,
-                                                @PathVariable(value="idUsuarioPaciente") Long idUsuarioPaciente,
-                                                Model model) {
-        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
-        UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
-
-        model.addAttribute("usuarioProfesionalMedico", usuarioProfesionalMedico);
-        model.addAttribute("usuarioPaciente", usuarioPaciente);
-
-        return "profesional_medico/autofirma-autorizacion";
-    }
-
-
-
-
-
+    
     // LOGICA AUTOFIRMA
 
     // Repositorio en memoria para guardar PDFs (firmados o cofirmados)
