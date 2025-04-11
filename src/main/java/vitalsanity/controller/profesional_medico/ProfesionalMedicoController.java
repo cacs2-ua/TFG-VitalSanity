@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
@@ -15,6 +16,7 @@ import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 import vitalsanity.service.utils.autofirma.GenerarPdf;
+import vitalsanity.service.utils.aws.S3VitalSanityService;
 
 import java.util.Base64;
 import java.util.Map;
@@ -35,6 +37,16 @@ public class ProfesionalMedicoController {
 
     @Autowired
     private GenerarPdf generarPdf;
+
+    @Autowired
+    private S3VitalSanityService s3VitalSanityService;
+
+    @Autowired
+    private ManagerUserSession managerUserSession;
+
+    private Long getUsuarioLogeadoId() {
+        return managerUserSession.usuarioLogeado();
+    }
 
     @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/nuevo")
     public String crearNuevoInforme(@PathVariable(value="idPaciente") Long idPaciente,
@@ -119,7 +131,7 @@ public class ProfesionalMedicoController {
 
     @PostMapping("/api/profesional-medico/generar-pdf-autorizacion")
     @ResponseBody
-    public String generatePdf(@RequestParam String nombreProfesional,
+    public String generarPdfAutorizacion(@RequestParam String nombreProfesional,
                               @RequestParam String nifNieProfesional,
                               @RequestParam String nombrePaciente,
                               @RequestParam String nifNiePaciente,
@@ -136,17 +148,29 @@ public class ProfesionalMedicoController {
         return Base64.getEncoder().encodeToString(pdfBytes);
     }
 
+
+
     @PostMapping("/api/profesional-medico/pdf-autorizacion-firmada")
     @ResponseBody
-    public String saveSignedPdf(@RequestParam String signedPdfBase64) {
-        byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-        String uuid = UUID.randomUUID().toString();
-        signedRepository.put(uuid, signedPdf);
-        return uuid;
+    public String subirPdfAutorizacionFirmadaEnAws(@RequestParam String signedPdfBase64) {
+        try {
+            Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+            byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
+            String key = "autorizaciones/" + idUsuarioProfesionalMedico + "_" + System.currentTimeMillis() + ".pdf";
+            s3VitalSanityService.subirFicheroBytes(key, signedPdf);
+            String uuid = UUID.randomUUID().toString();
+            signedRepository.put(uuid, signedPdf);
+            return uuid;
+        }   catch (Exception e) {
+            System.err.println("Error al subir el PDF de la autorizacion firmada a AWS: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     @GetMapping("/api/profesional-medico/pdf-autorizacion/{id}")
-    public ResponseEntity<byte[]> download(@PathVariable("id") String id) {
+    public ResponseEntity<byte[]> descargarPdfAutorizacionFirmadaDeAws(@PathVariable("id") String id) {
 
         byte[] data = signedRepository.get(id);
         if (data == null) {
