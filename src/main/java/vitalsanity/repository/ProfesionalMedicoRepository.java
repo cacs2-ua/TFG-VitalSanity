@@ -12,13 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProfesionalMedicoRepository extends JpaRepository<ProfesionalMedico, Long> {
-
     Optional<ProfesionalMedico> findByUsuarioId(Long usuarioId);
 
-    @Query(value = "SELECT * FROM solicitudes_autorizacion " +
-            "WHERE profesional_medico_id = :profesionalMedicoId " +
-            "ORDER BY id DESC LIMIT 1", nativeQuery = true)
-    Optional<SolicitudAutorizacion> findUltimaSolicitudAutorizacionByProfesionalMedicoId(@Param("profesionalMedicoId") Long profesionalMedicoId);
 }
 
 

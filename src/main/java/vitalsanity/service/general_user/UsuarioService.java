@@ -335,4 +335,11 @@ public class UsuarioService {
         return  usuario.getProfesionalMedico().getId();
     }
 
+    public UsuarioData obtenerUsuarioPacienteAPartirDeNifNie(String nifNie) {
+        List<Usuario> usuario = usuarioRepository.findByNifNie(nifNie);
+        if (usuario == null) return null;
+        Usuario usuarioPaciente = usuario.get(0);
+        return modelMapper.map(usuarioPaciente, UsuarioData.class);
+    }
+
 }

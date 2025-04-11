@@ -6,6 +6,7 @@ import java.util.Objects;
 public class UsuarioData {
 
     private Long id;
+    private String Uuid;
     private String email;
     private String nombreCompleto;
     private String contrasenya;
@@ -31,6 +32,14 @@ public class UsuarioData {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return Uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.Uuid = uuid;
     }
 
     public String getEmail() {

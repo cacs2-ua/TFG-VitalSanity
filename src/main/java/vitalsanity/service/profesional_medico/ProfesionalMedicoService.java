@@ -99,4 +99,36 @@ public class ProfesionalMedicoService {
 
     }
 
+    @Transactional
+    public SolicitudAutorizacionData obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(Long idUsuarioProfesionalMedico) {
+        try {
+            ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
+
+            SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdOrderByIdDesc(profesionalMedico.getId()).orElse(null);
+
+            return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
+
+        } catch (Exception e) {
+            // Puedes usar un logger aquí si tienes uno (recomendado)
+            System.err.println("Error al obtener la última solicitud del profesional médico: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    @Transactional
+    public  void marcarSolicitudAutorizacionComoFirmada(Long idSolicitudAutorizacion) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+        solicitudAutorizacion.setFirmada(true);
+        solicitudAutorizacionRepository.save(solicitudAutorizacion);
+    }
+
+    @Transactional
+    public ProfesionalMedicoData encontrarPorIdUsuario(Long idUsuarioProfesionalMedico) {
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
+        if (profesionalMedico == null) return null;
+        else return modelMapper.map(profesionalMedico, ProfesionalMedicoData.class);
+    }
+
 }

@@ -33,6 +33,7 @@ public class ProfesionalMedicoController {
     @Autowired
     private ProfesionalMedicoService profesionalMedicoService;
 
+
     @Autowired
     private PacienteService pacienteService;
 
@@ -176,9 +177,23 @@ public class ProfesionalMedicoController {
     public String subirPdfAutorizacionFirmadaEnAws(@RequestParam String signedPdfBase64) {
         try {
             Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+            SolicitudAutorizacionData ultimaSolicitudCreadaDelProfesionalMedico =
+                    profesionalMedicoService.obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(idUsuarioProfesionalMedico);
+            String nifNiePaciente = ultimaSolicitudCreadaDelProfesionalMedico.getNifNiePaciente();
+            UsuarioData usuarioPaciente = usuarioService.obtenerUsuarioPacienteAPartirDeNifNie(nifNiePaciente);
+            UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
+
+            String uuidUsuarioPaciente = usuarioPaciente.getUuid();
+            String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
+
             byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-            String key = "autorizaciones/" + idUsuarioProfesionalMedico + "_" + System.currentTimeMillis() + ".pdf";
+            String key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
             s3VitalSanityService.subirFicheroBytes(key, signedPdf);
+
+            Long idUltimaSolicitudCreadaDelProfesionalMedico = ultimaSolicitudCreadaDelProfesionalMedico.getId();
+
+            profesionalMedicoService.marcarSolicitudAutorizacionComoFirmada(idUltimaSolicitudCreadaDelProfesionalMedico);
+
             String uuid = UUID.randomUUID().toString();
             signedRepository.put(uuid, signedPdf);
             return uuid;

@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
+import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.model.Paciente;
+import vitalsanity.model.ProfesionalMedico;
 import vitalsanity.model.Usuario;
 import vitalsanity.repository.PacienteRepository;
 import vitalsanity.repository.UsuarioRepository;
@@ -63,5 +65,12 @@ public class PacienteService {
         Paciente paciente = pacienteRepository.findById(pacienteId).orElse(null);
         if (paciente == null) return null;
         else return modelMapper.map(paciente, PacienteData.class);
+    }
+
+    @Transactional
+    public PacienteData encontrarPorIdUsuario(Long idUsuarioPaciente) {
+        Paciente paciente = pacienteRepository.findByUsuarioId(idUsuarioPaciente).orElse(null);
+        if (paciente == null) return null;
+        return modelMapper.map(paciente, PacienteData.class);
     }
 }
