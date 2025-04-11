@@ -1,6 +1,6 @@
 package vitalsanity.service.general_user;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class UsuarioService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class, dontRollbackOn = {})
+    @Transactional
     public LoginStatus login(String email, String password) {
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
         if (!usuario.isPresent()) {
@@ -105,7 +105,7 @@ public class UsuarioService {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public UsuarioData registrarPaciente(RegistroData registroData) {
         // Verificar que la contrasenya tenga al menos 8 caracteres
         if (registroData.getContrasenya() == null || registroData.getContrasenya().length() < 8) {
@@ -162,7 +162,7 @@ public class UsuarioService {
         return sb.toString();
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public UsuarioData registrarCentroMedico(RegistroCentroMedicoData data) {
         // Generar contrasenya segura
         String generatedPassword = generateSecurePassword(12);
@@ -208,7 +208,7 @@ public class UsuarioService {
         return usuarioData;
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public UsuarioData actualizarContrasenya(Long id, ActualizarContrasenyaData data) {
         if (data.getContrasenya() == null || data.getContrasenya().length() < 8) {
             throw new IllegalArgumentException("La contrasenya debe tener al menos 8 caracteres");
@@ -224,7 +224,7 @@ public class UsuarioService {
         return modelMapper.map(updatedUsuario, UsuarioData.class);
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public UsuarioData actualizarDatosResidencia(Long id, ResidenciaData data) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Usuario no encontrado"));
@@ -236,7 +236,7 @@ public class UsuarioService {
         return modelMapper.map(updatedUsuario, UsuarioData.class);
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public List<UsuarioData> registrarProfesionalesMedicos(MultipartFile csvFile, CentroMedico centroMedico) throws Exception {
         if (csvFile.isEmpty()) {
             throw new IllegalArgumentException("El fichero CSV no puede estar vacio");
