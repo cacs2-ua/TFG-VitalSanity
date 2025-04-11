@@ -98,6 +98,8 @@ public class ProfesionalMedicoController {
         return "profesional_medico/buscar-paciente";
     }
 
+    // LOGICA AUTOFIRMA
+
     @GetMapping("/api/profesional-medico/{idUsuarioProfesionalMedico}/solicitar-autorizacion/{idUsuarioPaciente}")
     public String solicitarAutorizacion(@PathVariable(value="idUsuarioProfesionalMedico") Long idUsuarioProfesionalMedico,
                                         @PathVariable(value="idUsuarioPaciente") Long idUsuarioPaciente,
@@ -111,7 +113,6 @@ public class ProfesionalMedicoController {
         return "profesional_medico/solicitar-autorizacion";
     }
 
-    // LOGICA AUTOFIRMA
 
     // Repositorio en memoria para guardar PDFs (firmados o cofirmados)
     private final Map<String, byte[]> signedRepository = new ConcurrentHashMap<>();

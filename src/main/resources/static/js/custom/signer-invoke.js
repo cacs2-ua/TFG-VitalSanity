@@ -16,7 +16,7 @@ function onClickFirmarAutorizacion() {
     showLoading();
 
     // 1) Recogemos datos del formulario
-    const form = document.getElementById("form-autorizacion-data");
+    const form = document.getElementById("form-authorization-data");
     const formData = new FormData(form);
 
     // Llamamos por AJAX a /signer/generate-pdf para obtener un PDF base64
@@ -67,16 +67,14 @@ function subirAutorizacionFirmada(signedPdfBase64) {
             globalSignedId = uuid;
 
             // Mostramos el enlace de descarga
-            const resultadoDiv = document.getElementById("resultadoFirma");
+            const resultadoDiv = document.getElementById("signed-pdf-link");
             const link = document.createElement("a");
-            link.href = "/vital-sanity/signer/download/" + uuid;
+            link.href = "/vital-sanity/api/profesional-medico/pdf-autorizacion/" + uuid;
             link.target = "_blank";
             link.innerText = "Descargar PDF FIRMADO";
             resultadoDiv.innerHTML = "";
             resultadoDiv.appendChild(link);
 
-            // NUEVO: Mostramos el botón de COFIRMAR (ahora que ya existe un PDF firmado)
-            document.getElementById("btnCofirmar").style.display = "inline";
         })
         .catch(err => {
             alert("Error subiendo PDF firmado: " + err);
