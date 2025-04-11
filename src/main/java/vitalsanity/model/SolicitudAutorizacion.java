@@ -43,6 +43,24 @@ public class SolicitudAutorizacion implements Serializable {
     private boolean cofirmada;
 
     @NotNull
+    private LocalDateTime fechaCreacion;
+
+
+    public SolicitudAutorizacion(Long id, String nombreProfesionalMedico, String nifNieProfesionalMedico,
+                                 String nombrePaciente, String nifNiePaciente, String motivo,
+                                 String descripcion, boolean firmada, boolean cofirmada) {
+        this.id = id;
+        this.nombreProfesionalMedico = nombreProfesionalMedico;
+        this.nifNieProfesionalMedico = nifNieProfesionalMedico;
+        this.nombrePaciente = nombrePaciente;
+        this.nifNiePaciente = nifNiePaciente;
+        this.motivo = motivo;
+        this.descripcion = descripcion;
+        this.firmada = firmada;
+        this.cofirmada = cofirmada;
+    }
+
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
@@ -192,6 +210,14 @@ public class SolicitudAutorizacion implements Serializable {
 
     public void setCofirmada(boolean cofirmada) {
         this.cofirmada = cofirmada;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     @Override

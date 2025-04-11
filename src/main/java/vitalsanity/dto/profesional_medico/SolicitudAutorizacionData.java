@@ -1,5 +1,6 @@
 package vitalsanity.dto.profesional_medico;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class SolicitudAutorizacionData {
@@ -13,6 +14,7 @@ public class SolicitudAutorizacionData {
     private String descripcion;
     private boolean firmada;
     private boolean cofirmada;
+    private LocalDateTime fechaCreacion;
 
     // Getters y Setters
 
@@ -86,6 +88,14 @@ public class SolicitudAutorizacionData {
 
     public void setCofirmada(boolean cofirmada) {
         this.cofirmada = cofirmada;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
 }
