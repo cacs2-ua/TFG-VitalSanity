@@ -144,54 +144,6 @@
     transform: scale(1.05);
 }
 
-/* ===== MODAL / POP-UP STYLES (NEW) ===== */
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none; /* Hidden by default */
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.popup-window {
-    position: relative;
-    width: 90%;
-    max-width: 50rem;
-    height: 90%;
-    max-height: 90%;
-}
-
-.popup-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: transparent;
-    border: none;
-    font-size: 1.75rem;
-    font-weight: bold;
-    color: red;
-    cursor: pointer;
-    z-index: 1001;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.popup-close:hover {
-    transform: scale(1.2);
-    opacity: 0.8;
-}
-
-
-/* The iframe takes the full size of the popup window */
-.popup-iframe {
-    border: none;
-    width: 100%;
-    height: 100%;
-}
 
 /* Responsive adjustments */
 @media (max-width: 37.5rem) {
@@ -201,6 +153,23 @@
     .page-title {
         font-size: 1.25rem;
     }
+
+    .report-card {
+        padding: 1rem;
+    }
+
+    .title-v1, .files-title {
+        font-size: 1.2rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .files-section {
+        width: 100%;
+    }
+
 }
 
 /* Custom CSS styles */
@@ -232,7 +201,7 @@
 }
 
 /* Modified: Underline the entire "Id. informe" text */
-.pop-up-title-v1 {
+.title-v1 {
     text-align: center;
     font-size: 1.3rem;
     font-weight: bold;
@@ -240,13 +209,6 @@
     text-decoration: underline; /* Underlines entire text including spaces */
 }
 
-.pop-up-title-v2 {
-    text-align: center;
-    font-size: 1.15rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    text-decoration: underline; /* Underlines entire text including spaces */
-}
 
 /* New: Ensures the number appears normal */
 .report-number {
@@ -324,29 +286,5 @@
 .checkbox-container input[type="checkbox"] {
     margin-right: 0.5rem;
     cursor: pointer;
-}
-
-
-@media (max-width: 37.5rem) {
-    .report-card {
-        padding: 1rem;
-    }
-
-    .pop-up-title-v1, .files-title {
-        font-size: 1.2rem;
-    }
-
-    .page-title {
-        font-size: 1.5rem;
-    }
-
-    .pop-up-title-v2 {
-        font-size: 1.05rem;
-    }
-
-    .files-section {
-        width: 100%;
-    }
-
 }
 
