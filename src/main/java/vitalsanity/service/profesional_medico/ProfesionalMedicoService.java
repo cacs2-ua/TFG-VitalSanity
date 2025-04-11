@@ -11,6 +11,7 @@ import vitalsanity.model.ProfesionalMedico;
 import vitalsanity.model.Usuario;
 import vitalsanity.repository.PacienteRepository;
 import vitalsanity.repository.ProfesionalMedicoRepository;
+import vitalsanity.repository.SolicitudAutorizacionRepository;
 import vitalsanity.repository.UsuarioRepository;
 import java.time.LocalDate;
 import java.time.Period;
@@ -24,6 +25,9 @@ public class ProfesionalMedicoService {
 
     @Autowired
     private ProfesionalMedicoRepository profesionalMedicoRepository;
+
+    @Autowired
+    private SolicitudAutorizacionRepository solicitudAutorizacionRepository;
 
     @Autowired
     private ModelMapper modelMapper;
