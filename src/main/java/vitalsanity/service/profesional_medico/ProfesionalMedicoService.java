@@ -99,13 +99,4 @@ public class ProfesionalMedicoService {
 
     }
 
-    @NotNull
-    private boolean firmada;
-
-    @NotNull
-    private boolean cofirmada;
-
-    @NotNull
-    private LocalDateTime fechaCreacion;
-
 }
