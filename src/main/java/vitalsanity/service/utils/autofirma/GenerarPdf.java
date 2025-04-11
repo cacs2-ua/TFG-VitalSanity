@@ -25,7 +25,7 @@ public class GenerarPdf {
             Document document = new Document(pdfDoc);
 
             // Añadir contenido al PDF (texto de ejemplo)
-            document.add(new Paragraph("DATOS DEL FORMULARIO"));
+            document.add(new Paragraph("DATOS DE LA AUTORIZACIÓN"));
             document.add(new Paragraph("Nombre del profesional médico: " + nombreProfesional));
             document.add(new Paragraph("NIF/NIE del profesional médico: " + nifNieProfesional));
             document.add(new Paragraph("Nombre del paciente: " + nombrePaciente));
