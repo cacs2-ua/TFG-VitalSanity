@@ -50,7 +50,7 @@
   </div>
 </div>
 
-<div class="body">
+<div class="body" id="firmaAutorizacion" style="display:none;">
   <h1 class="page-title">Firma de la autorización</h1>
 
   <div class="report-card">
@@ -130,5 +130,29 @@
 </div>
 
 <div th:replace="navbar::javascript"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var firmaDiv = document.getElementById('firmaAutorizacion');
+    var aceptarButton = document.querySelector('.submit-container button.submit-button');
+    aceptarButton.addEventListener('click', function(e) {
+      // Selecciona todos los campos de entrada y áreas de texto del primer div que no sean de solo lectura
+      var requiredFields = document.querySelectorAll('.form-container input.form-input:not([readonly]), .form-container textarea.form-textarea');
+      var isValid = true;
+      requiredFields.forEach(function(field) {
+        if (!field.value.trim()) {
+          isValid = false;
+        }
+      });
+      if (isValid) {
+        // Se cambia de 'block' a 'flex' para respetar el layout definido en ".body"
+        firmaDiv.style.display = 'flex';
+      } else {
+        alert('Por favor, complete todos los campos del formulario.');
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
