@@ -136,7 +136,7 @@
   <div class="button-container">
 
     <div class="button-container">
-      <button type="button" onclick="onClickFirmarAutorizacion()" class="back-button">Firmar y Enviar</button>
+      <button type="button" onclick="if(document.getElementById('accept').checked){ onClickFirmarAutorizacion(); } else { alert('Debe marcar el checkbox de aceptación de la información de protección de datos.'); }" class="back-button">Firmar y Enviar</button>
     </div>
   </div>
 </div>
