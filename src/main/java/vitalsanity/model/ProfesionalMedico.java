@@ -34,6 +34,31 @@ public class ProfesionalMedico implements Serializable {
     private String fechaNacimiento;
 
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "especialidad_medica_id", nullable = false)
+    private EspecialidadMedica especialidadMedica;
+
+    public EspecialidadMedica getEspecialidadMedica() {
+        return this.especialidadMedica;
+    }
+
+    public void setEspecialidadMedica(EspecialidadMedica especialidadMedica) {
+        if (this.especialidadMedica == especialidadMedica || especialidadMedica == null) {
+            return;
+        }
+
+        if (this.especialidadMedica != null) {
+            this.especialidadMedica.getProfesionalesMedicos().remove(this);
+        }
+
+        this.especialidadMedica = especialidadMedica;
+
+        if (!especialidadMedica.getProfesionalesMedicos().contains(this)) {
+            especialidadMedica.addProfesionalMedico(this);
+        }
+    }
+
+    @NotNull
     @OneToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
