@@ -1,3 +1,4 @@
+DELETE FROM documentos;
 DELETE FROM solicitudes_autorizacion;
 DELETE FROM profesionales_medicos;
 DELETE FROM centros_medicos;
@@ -53,7 +54,7 @@ INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcio
 INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcion, fecha_creacion, firmada, motivo, nif_nie_paciente, nif_nie_profesional_medico, nombre_centro_medico, nombre_paciente, nombre_profesional_medico, paciente_id, profesional_medico_id) VALUES (5, false, true, 'b', '2004-04-12 00:44:58.839271', false, 'e', 'e', 'e', 'e', 'e', 'e', 1, 1);
 
 
-
+SELECT setval('public.documentos_id_seq', COALESCE((SELECT MAX(id) FROM public.documentos), 0) + 1, false);
 SELECT setval('public.solicitudes_autorizacion_id_seq', COALESCE((SELECT MAX(id) FROM public.solicitudes_autorizacion), 0) + 1, false);
 SELECT setval('public.profesionales_medicos_id_seq', COALESCE((SELECT MAX(id) FROM public.profesionales_medicos), 0) + 1, false);
 SELECT setval('public.centros_medicos_id_seq', COALESCE((SELECT MAX(id) FROM public.centros_medicos), 0) + 1, false);

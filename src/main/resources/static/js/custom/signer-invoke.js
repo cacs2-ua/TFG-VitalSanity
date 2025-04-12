@@ -36,7 +36,6 @@ function onClickFirmarAutorizacion() {
                     // EXITO: subimos el PDF firmado al servidor
                     subirAutorizacionFirmada(signedPdfBase64);
 
-                    hideLoading();
                 },
                 function (errorType, errorMessage) {
                     alert("ERROR en firma: " + errorType + " - " + errorMessage);
@@ -47,6 +46,7 @@ function onClickFirmarAutorizacion() {
         })
         .catch(err => {
             alert("Error generando el PDF: " + err);
+            hideLoading();
         });
 }
 
@@ -54,6 +54,7 @@ function onClickFirmarAutorizacion() {
  * Subimos el PDF firmado (Base64) al servidor y mostramos enlace descarga.
  */
 function subirAutorizacionFirmada(signedPdfBase64) {
+
     const formData = new FormData();
     formData.append("signedPdfBase64", signedPdfBase64);
 
@@ -75,18 +76,17 @@ function subirAutorizacionFirmada(signedPdfBase64) {
             resultadoDiv.innerHTML = "";
             resultadoDiv.appendChild(link);
 
-            window.location.href = "/vital-sanity/api/profesional-medico/pdf-autorizacion-firmada";
+            hideLoading();
 
-            /*
             setTimeout(() => {
                 window.location.href = "/vital-sanity/api/profesional-medico/pdf-autorizacion-firmada";
             }, 250);
-            */
 
 
         })
         .catch(err => {
             alert("Error subiendo PDF firmado: " + err);
+            hideLoading();
         });
 }
 
