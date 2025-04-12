@@ -19,6 +19,7 @@ import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 import vitalsanity.service.utils.autofirma.GenerarPdf;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
@@ -170,8 +171,6 @@ public class ProfesionalMedicoController {
         return Base64.getEncoder().encodeToString(pdfBytes);
     }
 
-
-
     @PostMapping("/api/profesional-medico/pdf-autorizacion-firmada")
     @ResponseBody
     public String subirPdfAutorizacionFirmadaEnAws(@RequestParam String signedPdfBase64) {
@@ -179,6 +178,11 @@ public class ProfesionalMedicoController {
             Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
             SolicitudAutorizacionData ultimaSolicitudCreadaDelProfesionalMedico =
                     profesionalMedicoService.obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(idUsuarioProfesionalMedico);
+
+            Long idUltimaSolicitudCreadaDelProfesionalMedico = ultimaSolicitudCreadaDelProfesionalMedico.getId();
+            profesionalMedicoService.marcarSolicitudAutorizacionComoFirmada(idUltimaSolicitudCreadaDelProfesionalMedico);
+
+
             String nifNiePaciente = ultimaSolicitudCreadaDelProfesionalMedico.getNifNiePaciente();
             UsuarioData usuarioPaciente = usuarioService.obtenerUsuarioPacienteAPartirDeNifNie(nifNiePaciente);
             UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
@@ -190,9 +194,20 @@ public class ProfesionalMedicoController {
             String key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
             s3VitalSanityService.subirFicheroBytes(key, signedPdf);
 
-            Long idUltimaSolicitudCreadaDelProfesionalMedico = ultimaSolicitudCreadaDelProfesionalMedico.getId();
+            String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+            String s3_key = key;
+            String tipoArchivo = "application/pdf";
+            Long tamano = (long) signedPdf.length;
+            LocalDateTime fechaSubida = LocalDateTime.now();
 
-            profesionalMedicoService.marcarSolicitudAutorizacionComoFirmada(idUltimaSolicitudCreadaDelProfesionalMedico);
+            profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
+                    idUltimaSolicitudCreadaDelProfesionalMedico,
+                    nombreArchivo,
+                    s3_key,
+                    tipoArchivo,
+                    tamano,
+                    fechaSubida
+            );
 
             String uuid = UUID.randomUUID().toString();
             signedRepository.put(uuid, signedPdf);

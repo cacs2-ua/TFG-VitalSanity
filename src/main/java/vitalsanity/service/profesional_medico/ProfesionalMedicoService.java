@@ -8,16 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
+import vitalsanity.dto.profesional_medico.DocumentoData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
-import vitalsanity.model.Paciente;
-import vitalsanity.model.ProfesionalMedico;
-import vitalsanity.model.SolicitudAutorizacion;
-import vitalsanity.model.Usuario;
-import vitalsanity.repository.PacienteRepository;
-import vitalsanity.repository.ProfesionalMedicoRepository;
-import vitalsanity.repository.SolicitudAutorizacionRepository;
-import vitalsanity.repository.UsuarioRepository;
+import vitalsanity.model.*;
+import vitalsanity.repository.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -34,6 +30,9 @@ public class ProfesionalMedicoService {
 
     @Autowired
     private SolicitudAutorizacionRepository solicitudAutorizacionRepository;
+
+    @Autowired
+    private DocumentoRepository documentoRepository;
 
     @Autowired
     private  UsuarioRepository usuarioRepository;
@@ -129,6 +128,33 @@ public class ProfesionalMedicoService {
         ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
         if (profesionalMedico == null) return null;
         else return modelMapper.map(profesionalMedico, ProfesionalMedicoData.class);
+    }
+
+    @Transactional
+    public DocumentoData guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
+            Long idSolicitudAutorizacion,
+            String nombre,
+            String s3_key,
+            String tipo_archivo,
+            Long tamanyo,
+            LocalDateTime fechaSubida) {
+
+        Documento documento = new Documento();
+
+        documento.setNombre(nombre);
+        documento.setS3_key(s3_key);
+        documento.setTipo_archivo(tipo_archivo);
+        documento.setTamanyo(tamanyo);
+        documento.setFechaSubida(fechaSubida);
+
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+
+        documento.setSolicitudAutorizacion(solicitudAutorizacion);
+
+        documentoRepository.save(documento);
+
+        return modelMapper.map(documento, DocumentoData.class);
+
     }
 
 }
