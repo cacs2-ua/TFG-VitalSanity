@@ -34,6 +34,31 @@ public class ProfesionalMedico implements Serializable {
     private String fechaNacimiento;
 
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "especialidad_medica_id", nullable = false)
+    private EspecialidadMedica especialidadMedica;
+
+    public EspecialidadMedica getEspecialidadMedica() {
+        return this.especialidadMedica;
+    }
+
+    public void setEspecialidadMedica(EspecialidadMedica especialidadMedica) {
+        if (this.especialidadMedica == especialidadMedica || especialidadMedica == null) {
+            return;
+        }
+
+        if (this.especialidadMedica != null) {
+            this.especialidadMedica.getProfesionalesMedicos().remove(this);
+        }
+
+        this.especialidadMedica = especialidadMedica;
+
+        if (!especialidadMedica.getProfesionalesMedicos().contains(this)) {
+            especialidadMedica.addProfesionalMedico(this);
+        }
+    }
+
+    @NotNull
     @OneToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
@@ -80,6 +105,74 @@ public class ProfesionalMedico implements Serializable {
 
         if (!centroMedico.getProfesionalesMedicos().contains(this)) {
             centroMedico.addProfesionalMedico(this);
+        }
+    }
+
+    @ManyToMany(mappedBy = "profesionalesMedicosAutorizados")
+    Set<Paciente> pacientesQueHanAutorizado = new HashSet<>();
+
+    public Set<Paciente> getPacientesQueHanAutorizado() {
+        return this.pacientesQueHanAutorizado;
+    }
+
+    public void addPacienteQueHaAutorizado(Paciente paciente) {
+        this.getPacientesQueHanAutorizado().add(paciente);
+        paciente.getProfesionalesMedicosAutorizados().add(this);
+    }
+
+    public  void  quitarPacienteQueHaAutorizado (Paciente paciente) {
+        this.getPacientesQueHanAutorizado().remove(paciente);
+        paciente.getProfesionalesMedicosAutorizados().remove(this);
+    }
+
+
+
+    @ManyToMany(mappedBy = "profesionalesMedicosDesautorizados")
+    Set<Paciente> pacientesQueHanDesautorizado = new HashSet<>();
+
+    public Set<Paciente> getPacientesQueHanDesautorizado() {
+        return this.pacientesQueHanDesautorizado;
+    }
+
+    public void addPacienteQueHaDesautorizado(Paciente paciente) {
+        this.getPacientesQueHanDesautorizado().add(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().add(this);
+    }
+
+    public  void  quitarPacienteQueHaDesautorizado (Paciente paciente) {
+        this.getPacientesQueHanDesautorizado().remove(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().remove(this);
+    }
+
+    @OneToMany(mappedBy = "profesionalMedico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<SolicitudAutorizacion> solicitudesAutorizacion = new HashSet<>();
+
+    public Set<SolicitudAutorizacion> getSolicitudesAutorizacion() {
+        return  this.solicitudesAutorizacion;
+    }
+
+    public void addSolicitudAutorizacion(SolicitudAutorizacion solicitudAutorizacion) {
+        if (solicitudesAutorizacion.contains(solicitudAutorizacion)) return;
+        solicitudesAutorizacion.add(solicitudAutorizacion);
+        if (solicitudAutorizacion.getProfesionalMedico() != this) {
+            solicitudAutorizacion.setProfesionalMedico(this);
+        }
+    }
+
+
+
+    @OneToMany(mappedBy = "profesionalMedico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Informe> informes = new HashSet<>();
+
+    public Set<Informe> getInformes() {
+        return  this.informes;
+    }
+
+    public void addInforme(Informe informe) {
+        if (informes.contains(informe)) return;
+        informes.add(informe);
+        if (informe.getProfesionalMedico() != this) {
+            informe.setProfesionalMedico(this);
         }
     }
 

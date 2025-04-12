@@ -1,10 +1,10 @@
-# VitalSanity v2.0.0
+# VitalSanity v2.1.1
 
 ## 🚀 Levantar el Proyecto en Local
 
 ---
 
-
+ 
 ### 🔥 Ejecutar la aplicación a partir del application.properties
 
 
@@ -13,7 +13,7 @@ mvn spring-boot:run
 ```
 
 ### 🔥 Ejecutar la aplicación a partir de los contenedores de docker
-
+ 
 1. Para levantar la base de datos de `PostgreSQL` en un contenedor de `Docker`, ejecutar el siguiente comando:
 
 ```sh
