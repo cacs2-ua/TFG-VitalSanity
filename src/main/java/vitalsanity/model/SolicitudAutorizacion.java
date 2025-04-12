@@ -48,7 +48,7 @@ public class SolicitudAutorizacion implements Serializable {
     @NotNull
     private LocalDateTime fechaCreacion;
 
-    @Column(nullable = true)
+    @NotNull
     private  boolean denegada;
 
     public SolicitudAutorizacion(Long id, String nombreProfesionalMedico, String nifNieProfesionalMedico,
