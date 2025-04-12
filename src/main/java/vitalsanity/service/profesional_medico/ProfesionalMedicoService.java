@@ -157,4 +157,17 @@ public class ProfesionalMedicoService {
 
     }
 
+    @Transactional
+    public DocumentoData obtenerDocumentoAsociadoALaSolicitudDeAutorizacion(long idSolicitudDeAutorizacion) {
+
+        List<Documento> documentos = documentoRepository.findAllBySolicitudAutorizacionId(idSolicitudDeAutorizacion);
+
+        if (documentos == null) {
+            System.out.println("No se han encontrado documentos asociados a la solicitud de autorización con ID: " + idSolicitudDeAutorizacion);
+            return null;
+        }
+        Documento documentoAsociado = documentos.get(0);
+        return modelMapper.map(documentoAsociado, DocumentoData.class);
+    }
+
 }

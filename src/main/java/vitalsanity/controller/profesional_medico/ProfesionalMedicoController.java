@@ -12,6 +12,7 @@ import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
+import vitalsanity.dto.profesional_medico.DocumentoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
@@ -19,6 +20,7 @@ import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 import vitalsanity.service.utils.autofirma.GenerarPdf;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Map;
@@ -237,6 +239,20 @@ public class ProfesionalMedicoController {
 
     @GetMapping("/api/profesional-medico/pdf-autorizacion-firmada")
     public String descargarPdfAutorizacionFirmadaDeAws(Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        SolicitudAutorizacionData ultimaSolicitudCreadaDelProfesionalMedico =
+                profesionalMedicoService.obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(idUsuarioProfesionalMedico);
+
+        Long idSolicitudAutorizacion = ultimaSolicitudCreadaDelProfesionalMedico.getId();
+
+        DocumentoData documentoData = profesionalMedicoService.obtenerDocumentoAsociadoALaSolicitudDeAutorizacion(idSolicitudAutorizacion);
+
+        String s3Key = documentoData.getS3_key();
+
+        String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
+                s3Key,
+                Duration.ofMinutes(5));
+        model.addAttribute("urlPrefirmada", urlPrefirmada);
         return "profesional_medico/descargar-pdf-autorizacion-firmada";
     }
 

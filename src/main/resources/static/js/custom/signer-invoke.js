@@ -75,16 +75,9 @@ function subirAutorizacionFirmada(signedPdfBase64) {
             resultadoDiv.innerHTML = "";
             resultadoDiv.appendChild(link);
 
-            /*
-
-
             setTimeout(() => {
                 window.location.href = "/vital-sanity/api/profesional-medico/pdf-autorizacion-firmada";
             }, 1000);
-
-             */
-
-
 
         })
         .catch(err => {
