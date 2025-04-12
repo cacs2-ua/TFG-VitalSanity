@@ -48,6 +48,8 @@ public class SolicitudAutorizacion implements Serializable {
     @NotNull
     private LocalDateTime fechaCreacion;
 
+    @Column(nullable = true)
+    private  boolean denegada;
 
     public SolicitudAutorizacion(Long id, String nombreProfesionalMedico, String nifNieProfesionalMedico,
                                  String nombrePaciente, String nifNiePaciente, String motivo,
@@ -229,6 +231,14 @@ public class SolicitudAutorizacion implements Serializable {
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public boolean isDenegada() {
+        return denegada;
+    }
+
+    public void setDenegada(boolean denegada) {
+        this.denegada = denegada;
     }
 
     @Override
