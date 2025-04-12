@@ -95,16 +95,14 @@ public class ProfesionalMedicoController {
         return "profesional_medico/listado-pacientes-que-han-desautorizado";
     }
 
-    @GetMapping("/api/profesional-medico/{idProfesionalMedico}/buscar-paciente")
-    public String buscarPacienteForm(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                     Model model) {
+    @GetMapping("/api/profesional-medico/buscar-paciente")
+    public String buscarPacienteForm(Model model) {
         model.addAttribute("buscarPacienteData", new BuscarPacienteData());
         return "profesional_medico/buscar-paciente";
     }
 
-    @PostMapping("/api/profesional-medico/{idProfesionalMedico}/buscar-paciente")
-    public String buscarPacienteSubmit(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                       @ModelAttribute("buscarPacienteData") BuscarPacienteData buscarPacienteData,
+    @PostMapping("/api/profesional-medico/buscar-paciente")
+    public String buscarPacienteSubmit(@ModelAttribute("buscarPacienteData") BuscarPacienteData buscarPacienteData,
                                        Model model) {
         String nif = buscarPacienteData.getNifNie().trim();
         BuscarPacienteResponse pacienteResponse = pacienteService.buscarPacientePorNifNie(nif);
@@ -121,10 +119,10 @@ public class ProfesionalMedicoController {
 
     // LOGICA AUTOFIRMA
 
-    @GetMapping("/api/profesional-medico/{idUsuarioProfesionalMedico}/solicitar-autorizacion/{idUsuarioPaciente}")
-    public String solicitarAutorizacion(@PathVariable(value="idUsuarioProfesionalMedico") Long idUsuarioProfesionalMedico,
-                                        @PathVariable(value="idUsuarioPaciente") Long idUsuarioPaciente,
+    @GetMapping("/api/profesional-medico/solicitar-autorizacion/{idUsuarioPaciente}")
+    public String solicitarAutorizacion(@PathVariable(value="idUsuarioPaciente") Long idUsuarioPaciente,
                                         Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
         UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
         UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
 

@@ -14,8 +14,9 @@
   <div class="page-container">
     <h2 class="header"><strong>Buscar paciente para solicitar el acceso a su historial</strong></h2>
     <br>
+
     <!-- Formulario de busqueda con binding thymeleaf -->
-    <form th:action="@{'/api/profesional-medico/' + ${usuario.id} + '/buscar-paciente'}" method="post" th:object="${buscarPacienteData}">
+    <form th:action="@{'/api/profesional-medico/buscar-paciente'}" method="post" th:object="${buscarPacienteData}">
       <div class="filter-section">
         <div class="input-group">
           <label for="input-id">NIF/NIE del paciente al que se quiere solicitar acceso a su historial</label>
@@ -49,7 +50,7 @@
         <span th:text="${paciente.edad}"></span>
       </div>
       <div class="button-container">
-        <form th:action="@{'/api/profesional-medico/' + ${usuario.id} + '/solicitar-autorizacion/' + ${usuarioPaciente.id}}" method="get">
+        <form th:action="@{'/api/profesional-medico/solicitar-autorizacion/' + ${usuarioPaciente.id}}" method="get">
           <button type="submit" class="button-access-record">Solicitar acceso</button>
         </form>
       </div>

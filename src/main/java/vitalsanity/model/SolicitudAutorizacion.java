@@ -33,9 +33,12 @@ public class SolicitudAutorizacion implements Serializable {
     @NotNull
     private String nifNiePaciente;
 
+    @Column(length = 500)
     @NotNull
     private String motivo;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     @NotNull
     private String descripcion;
 

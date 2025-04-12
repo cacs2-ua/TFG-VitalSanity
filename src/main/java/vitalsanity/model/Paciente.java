@@ -30,7 +30,7 @@ public class Paciente implements Serializable {
     private Usuario usuario;
 
     @ManyToMany
-    @JoinTable(name = "paciente_profesional_medico_autorizado",
+    @JoinTable(name = "pacientes_profesionales_medicos_autorizados",
             joinColumns = { @JoinColumn(name = "fk_paciente") },
             inverseJoinColumns = {@JoinColumn(name = "fk_profesional_medico_autorizado") })
     Set<ProfesionalMedico> profesionalesMedicosAutorizados = new HashSet<>();
@@ -51,7 +51,7 @@ public class Paciente implements Serializable {
 
 
     @ManyToMany
-    @JoinTable(name = "paciente_profesional_medico_desautorizado",
+    @JoinTable(name = "pacientes_profesionales_medicos_desautorizados",
             joinColumns = { @JoinColumn(name = "fk_paciente") },
             inverseJoinColumns = {@JoinColumn(name = "fk_profesional_medico_desautorizado") })
     Set<ProfesionalMedico> profesionalesMedicosDesautorizados = new HashSet<>();
