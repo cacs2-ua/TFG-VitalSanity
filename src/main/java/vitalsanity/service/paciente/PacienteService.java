@@ -8,8 +8,10 @@ import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.model.Paciente;
 import vitalsanity.model.ProfesionalMedico;
+import vitalsanity.model.SolicitudAutorizacion;
 import vitalsanity.model.Usuario;
 import vitalsanity.repository.PacienteRepository;
+import vitalsanity.repository.SolicitudAutorizacionRepository;
 import vitalsanity.repository.UsuarioRepository;
 import java.time.LocalDate;
 import java.time.Period;
@@ -28,6 +30,9 @@ public class PacienteService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private SolicitudAutorizacionRepository solicitudAutorizacionRepository;
 
     // Metodo para buscar paciente por nifNie (ignora mayusculas/minusculas)
     public BuscarPacienteResponse buscarPacientePorNifNie(String nifNie) {
@@ -72,5 +77,12 @@ public class PacienteService {
         Paciente paciente = pacienteRepository.findByUsuarioId(idUsuarioPaciente).orElse(null);
         if (paciente == null) return null;
         return modelMapper.map(paciente, PacienteData.class);
+    }
+
+    @Transactional
+    public  void marcarSolicitudAutorizacionComoDenegada(Long idSolicitudAutorizacion) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+        solicitudAutorizacion.setDenegada(true);
+        solicitudAutorizacionRepository.save(solicitudAutorizacion);
     }
 }
