@@ -79,6 +79,7 @@ public class ProfesionalMedicoService {
             solicitudAutorizacion.setFirmada(false);
             solicitudAutorizacion.setCofirmada(false);
             solicitudAutorizacion.setFechaCreacion(LocalDateTime.now());
+            solicitudAutorizacion.setDenegada(false);
 
             ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
             Paciente paciente = pacienteRepository.findByUsuarioNifNie(nifNiePaciente).orElse(null);

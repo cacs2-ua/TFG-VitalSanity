@@ -46,13 +46,8 @@ INSERT INTO public.pacientes (id, fecha_nacimiento, genero, usuario_id) VALUES (
 INSERT INTO public.pacientes (id, fecha_nacimiento, genero, usuario_id) VALUES (2, '2001-07-21', 'mujer', 14);
 
 
-INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcion, fecha_creacion, firmada, motivo, nif_nie_paciente, nif_nie_profesional_medico, nombre_centro_medico, nombre_paciente, nombre_profesional_medico, paciente_id, profesional_medico_id) VALUES (2, false, true, 'b', '2001-04-12 00:44:58.839271', false, 'b', 'b', 'b', 'b', 'b', 'b', 1, 1);
-INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcion, fecha_creacion, firmada, motivo, nif_nie_paciente, nif_nie_profesional_medico, nombre_centro_medico, nombre_paciente, nombre_profesional_medico, paciente_id, profesional_medico_id) VALUES (6, false, true, 'b', '2005-04-12 00:44:58.839271', false, 'f', 'f', 'f', 'f', 'f', 'f', 1, 1);
-INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcion, fecha_creacion, firmada, motivo, nif_nie_paciente, nif_nie_profesional_medico, nombre_centro_medico, nombre_paciente, nombre_profesional_medico, paciente_id, profesional_medico_id) VALUES (3, false, true, 'c', '2002-04-12 00:44:58.839271', false, 'c', 'c', 'c', 'c', 'c', 'c', 1, 1);
-INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcion, fecha_creacion, firmada, motivo, nif_nie_paciente, nif_nie_profesional_medico, nombre_centro_medico, nombre_paciente, nombre_profesional_medico, paciente_id, profesional_medico_id) VALUES (1, false, true, 'a', '2000-04-12 00:44:10.115206', false, 'a', 'a', 'a', 'a', 'a', 'a', 1, 1);
-INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcion, fecha_creacion, firmada, motivo, nif_nie_paciente, nif_nie_profesional_medico, nombre_centro_medico, nombre_paciente, nombre_profesional_medico, paciente_id, profesional_medico_id) VALUES (4, false, true, 'b', '2003-04-12 00:44:58.839271', false, 'd', 'd', 'd', 'd', 'd', 'd', 1, 1);
-INSERT INTO public.solicitudes_autorizacion (id, cofirmada, denegada, descripcion, fecha_creacion, firmada, motivo, nif_nie_paciente, nif_nie_profesional_medico, nombre_centro_medico, nombre_paciente, nombre_profesional_medico, paciente_id, profesional_medico_id) VALUES (5, false, true, 'b', '2004-04-12 00:44:58.839271', false, 'e', 'e', 'e', 'e', 'e', 'e', 1, 1);
 
+/* Autorizaciones */
 
 SELECT setval('public.documentos_id_seq', COALESCE((SELECT MAX(id) FROM public.documentos), 0) + 1, false);
 SELECT setval('public.solicitudes_autorizacion_id_seq', COALESCE((SELECT MAX(id) FROM public.solicitudes_autorizacion), 0) + 1, false);

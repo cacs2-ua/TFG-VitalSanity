@@ -15,6 +15,7 @@ public class SolicitudAutorizacionData {
     private boolean firmada;
     private boolean cofirmada;
     private LocalDateTime fechaCreacion;
+    private boolean denegada;
 
     // Getters y Setters
 
@@ -92,6 +93,14 @@ public class SolicitudAutorizacionData {
 
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
+    }
+
+    public boolean isDenegada() {
+        return denegada;
+    }
+
+    public void setDenegada(boolean denegada) {
+        this.denegada = denegada;
     }
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
