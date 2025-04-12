@@ -157,7 +157,7 @@ public class ProfesionalMedicoService {
 
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public DocumentoData obtenerDocumentoAsociadoALaSolicitudDeAutorizacion(long idSolicitudDeAutorizacion) {
 
         List<Documento> documentos = documentoRepository.findAllBySolicitudAutorizacionId(idSolicitudDeAutorizacion);
@@ -169,5 +169,14 @@ public class ProfesionalMedicoService {
         Documento documentoAsociado = documentos.get(0);
         return modelMapper.map(documentoAsociado, DocumentoData.class);
     }
+    @Transactional(readOnly = true)
+    public SolicitudAutorizacionData obtenerNombreCentroMedicoAPartirDeIdSolicitudAutorizaciond(Long idSolicitudAutorizaciond) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizaciond).orElse(null);
+        if (solicitudAutorizacion == null) return null;
+        else return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
+    }
+
+
+
 
 }

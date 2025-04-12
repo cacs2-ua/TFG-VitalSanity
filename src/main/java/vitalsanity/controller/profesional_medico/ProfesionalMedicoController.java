@@ -17,6 +17,7 @@ import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
+import vitalsanity.service.utils.EmailService;
 import vitalsanity.service.utils.autofirma.GenerarPdf;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
@@ -39,6 +40,9 @@ public class ProfesionalMedicoController {
 
     @Autowired
     private PacienteService pacienteService;
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     private GenerarPdf generarPdf;
@@ -210,6 +214,30 @@ public class ProfesionalMedicoController {
                     tamano,
                     fechaSubida
             );
+
+            String emailPaciente = usuarioPaciente.getEmail();
+
+            String nombrePaciente = usuarioPaciente.getNombreCompleto();
+
+
+            String nifNieProfesionalMedico = usuarioProfesionalMedico.getNifNie();
+            String nombreProfesionalMedico = usuarioProfesionalMedico.getNombreCompleto();
+
+            Long idProfesionalMedico = usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico);
+
+            String nombreCentroMedico = profesionalMedicoService.obtenerNombreCentroMedico(idProfesionalMedico);
+
+            String subject = "Solicitud de autorización por parte del profesional médico: " + nombreProfesionalMedico;
+
+            String text = "El profesional médico: " + nombreProfesionalMedico + " con NIF/NIE: "
+                    + nifNieProfesionalMedico + " le ha solicitado autorización para acceder a su historial clínico desde el centro médico: "
+                    + nombreCentroMedico + " . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
+                    + " Una vez haya revisado la solicitud, usted podrá autorizar o denegar el acceso a su historial médico. "
+                    + "Si usted autoriza el acceso al profesional médico, dicho profesional médico podrá acceder a su historial clínico centralizado, "
+                    + "lo cual podría ayudar a agilizar el proceso de diagnóstico y tratamiento, mejorando así su atención médica y la calidad de su servicio. "
+                    + "Le recordamos que cualquier tratamiento de datos está sujeto a la ley de protección de datos vigente. ";
+
+            emailService.send(emailPaciente, subject, text);
 
             String uuid = UUID.randomUUID().toString();
             signedRepository.put(uuid, signedPdf);

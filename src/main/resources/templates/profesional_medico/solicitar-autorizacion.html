@@ -48,11 +48,11 @@
         </div>
         <div class="form-field">
           <label class="form-label required">Motivo:</label>
-          <input type="text" name="motivo" id="motivo" class="form-input" value="Diagnostico general de salud">
+          <input type="text" name="motivo" id="motivo" class="form-input">
         </div>
         <div class="form-field">
           <label class="form-label required">Descripcion:</label>
-          <textarea name="descripcion" id="descripcion" class="form-textarea">Se solicita acceso al historial clínico de Antonio Ruiz Martínez para obtener información relevante que permita una correcta evaluación de su estado de salud, un diagnóstico preciso y la planificación del tratamiento adecuado.</textarea>
+          <textarea name="descripcion" id="descripcion" class="form-textarea"></textarea>
         </div>
       </form>
     </div>
@@ -113,19 +113,10 @@
 
         <hr>
 
-
-
         <div class="checkbox-container">
           <input type="checkbox" id="accept" name="accept">
-          <label for="accept">He leído y comprendido  la información expuesta en materia de protección de datos.</label>
+          <label for="accept">He leído y comprendido toda la información expuesta en materia de protección de datos.</label>
         </div>
-
-        <div class="checkbox-container">
-          <input type="checkbox" id="remember-me" name="accept">
-          <label for="remember-me">No volver a mostrar este mensaje.</label>
-        </div>
-
-
 
       </div>
     </div>
@@ -136,7 +127,7 @@
   <div class="button-container">
 
     <div class="button-container">
-      <button type="button" onclick="if(document.getElementById('accept').checked){ onClickFirmarAutorizacion(); } else { alert('Debe marcar el checkbox de aceptación de la información de protección de datos.'); }" class="back-button">Firmar y Enviar</button>
+      <button type="button" onclick="if(document.getElementById('accept').checked){ onClickFirmarAutorizacion(); } else { alert('Debe de marcar la casilla asociada a lo expuesto en materia de protección de datos.'); }" class="back-button">Firmar y Enviar</button>
     </div>
   </div>
 </div>
@@ -169,7 +160,7 @@
         // Se cambia de 'block' a 'flex' para respetar el layout definido en ".body"
         firmaDiv.style.display = 'flex';
       } else {
-        alert('Por favor, complete todos los campos del formulario.');
+        alert('Por favor, complete todos los campos del formulario de la solicitud de autorización.');
       }
     });
   });
