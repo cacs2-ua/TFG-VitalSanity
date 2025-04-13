@@ -55,9 +55,12 @@ public class PacienteController{
     }
 
     @GetMapping("/api/paciente/pop-up-autofirma-autorizacion")
-    public String cofirmarAutorizacionForm(Model model) {
+    public String cofirmarAutorizacionForm(@RequestParam("solicitudId") Long solicitudId, Model model) {
+        SolicitudAutorizacionData solicitud = pacienteService.obtenerSolicitudPorId(solicitudId);
+        model.addAttribute("solicitud", solicitud);
         return "paciente/pop-up-autofirma-autorizacion";
     }
+
 
     @GetMapping("/api/paciente/{idPaciente}/profesionales-autorizados")
     public String verProfesionalesMedicosAutorizados(@PathVariable(value="idPaciente") Long idInforme,

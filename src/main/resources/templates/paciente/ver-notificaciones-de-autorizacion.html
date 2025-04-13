@@ -23,7 +23,9 @@
         <div class="report-detail"><strong>Motivo: </strong> <span th:text="${solicitudAutorizacion.motivo}"> </span> </div>
         <div class="report-detail"><strong>Descripción:</strong> <span th:text="${solicitudAutorizacion.descripcion}"></span> </div>
         <div class="button-container">
-          <button class="button-authorize">Autorizar</button>
+          <button class="button-authorize" th:attr="data-solicitud-id=${solicitudAutorizacion.id}">
+            Autorizar
+          </button>
           <button class="button-deny">Denegar</button>
         </div>
       </div>
@@ -36,22 +38,36 @@
     <div class="popup-window">
       <button id="popupClose" class="popup-close">X</button>
       <!-- The iframe loads the second HTML file. NOTE: Use a dynamic URL if needed -->
-      <iframe th:src="@{'/api/paciente/pop-up-autofirma-autorizacion'}" class="popup-iframe"></iframe>
+      <iframe class="popup-iframe"></iframe>
+
 
     </div>
   </div>
 
   <div th:replace="navbar::javascript"></div>
 
+  <script>
+    // Calcula el context path a partir de la URL actual
+    var pathParts = window.location.pathname.split('/');
+    var contextPath = '/' + (pathParts.length > 1 ? pathParts[1] : '');
+  </script>
+
+
+
   <!-- ===== JAVASCRIPT FOR POP-UP (NEW) ===== -->
   <script>
     document.querySelectorAll('.button-authorize').forEach(button => {
       button.addEventListener('click', function(e) {
         e.preventDefault();
+        const solicitudId = this.getAttribute('data-solicitud-id');
+        const urlPopUp = contextPath + '/api/paciente/pop-up-autofirma-autorizacion?solicitudId=' + solicitudId;
+        document.querySelector('.popup-iframe').setAttribute('src', urlPopUp);
         document.getElementById('popupOverlay').style.display = 'flex';
       });
     });
 
+
+    // Listener para cerrar el pop-up
     document.getElementById('popupClose').addEventListener('click', function() {
       document.getElementById('popupOverlay').style.display = 'none';
     });
@@ -62,6 +78,7 @@
       }
     });
   </script>
+
 
 
 </body>

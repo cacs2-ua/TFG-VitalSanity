@@ -178,6 +178,10 @@
         <div class="pop-up-title-v1"><strong>Instrucciones</strong></div>
 
         <div class="report-section">
+            <p><strong>ID de la autorización:</strong> <span th:text="${solicitud.id}"></span></p>
+        </div>
+
+        <div class="report-section">
             <div class="report-value">
                 A continuación se va a proceder a la firma de la autorización. Para ello, es necesario tener instalado el programa de AutoFirma. Cuando haya leído toda la información, pulse sobre el botón de "Firmar y enviar".
                 Tras haber pulsado sobre dicho botón se abrirá en el navegador el programa de AutoFirma, el cual le solicitará elegir el certificado con el cual desea usted firmar la autorización. Una vez elegido el certificado, se realizará de forma
@@ -234,7 +238,7 @@
     </div>
 
     <div class="button-container">
-        <form th:action="@{'#'}" method="get">
+        <form th:action="@{'/api/paciente/1/datos-residencia'}" method="get">
             <button class="back-button">Firmar y Enviar</button>
         </form>
     </div>
