@@ -5,15 +5,30 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import vitalsanity.authentication.ManagerUserSession;
+import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
+import vitalsanity.service.paciente.PacienteService;
+
+import java.util.List;
 
 @Controller
 public class PacienteController{
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private ManagerUserSession managerUserSession;
+    @Autowired
+    private PacienteService pacienteService;
+
+    private Long getUsuarioLogeadoId() {
+        return managerUserSession.usuarioLogeado();
+    }
 
 
     @GetMapping("/api/paciente/informes/{idInforme}")
@@ -28,9 +43,14 @@ public class PacienteController{
         return "paciente/ver-informes-propios";
     }
 
-    @GetMapping("/api/paciente/{idPaciente}/notificaciones")
-    public String verNotificacionesDeAutorizacion(@PathVariable(value="idPaciente") Long idInforme,
-                                     Model model) {
+    @GetMapping("/api/paciente/notificaciones")
+    public String verNotificacionesDeAutorizacion(Model model) {
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+
+        PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
+
+        List<SolicitudAutorizacionData> solicitudesAutorizacion = pacienteService.obtenerTodasLasSolicitudesValidas(pacienteData.getId());
+        model.addAttribute("solicitudesAutorizacion", solicitudesAutorizacion);
         return "paciente/ver-notificaciones-de-autorizacion";
     }
 

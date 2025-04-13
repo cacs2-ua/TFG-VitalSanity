@@ -8,6 +8,7 @@ public class SolicitudAutorizacionData {
     private Long id;
     private String nombreProfesionalMedico;
     private String nifNieProfesionalMedico;
+    private  String nombreCentroMedico;
     private String nombrePaciente;
     private String nifNiePaciente;
     private String motivo;
@@ -33,6 +34,14 @@ public class SolicitudAutorizacionData {
 
     public void setNombreProfesionalMedico(String nombreProfesionalMedico) {
         this.nombreProfesionalMedico = nombreProfesionalMedico;
+    }
+
+    public String getNombreCentroMedico() {
+        return nombreCentroMedico;
+    }
+
+    public void setNombreCentroMedico(String nombreCentroMedico) {
+        this.nombreCentroMedico = nombreCentroMedico;
     }
 
     public String getNifNieProfesionalMedico() {

@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -90,5 +92,18 @@ public class PacienteService {
         solicitudAutorizacion.setDenegada(true);
         solicitudAutorizacionRepository.save(solicitudAutorizacion);
     }
+
+    @Transactional(readOnly = true)
+    public List<SolicitudAutorizacionData> obtenerTodasLasSolicitudesValidas(Long pacienteId) {
+        List<SolicitudAutorizacion> solicitudesAutorizacion =
+                solicitudAutorizacionRepository.findByPacienteIdAndDenegadaFalse(pacienteId);
+
+        List<SolicitudAutorizacionData> solicitudesAutorizacionData = solicitudesAutorizacion.stream()
+                .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
+                .collect(Collectors.toList());
+
+        return solicitudesAutorizacionData;
+    }
+
 
 }
