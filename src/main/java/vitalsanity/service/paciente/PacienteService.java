@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
+import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.Paciente;
 import vitalsanity.model.ProfesionalMedico;
 import vitalsanity.model.SolicitudAutorizacion;
 import vitalsanity.model.Usuario;
 import vitalsanity.repository.PacienteRepository;
+import vitalsanity.repository.ProfesionalMedicoRepository;
 import vitalsanity.repository.SolicitudAutorizacionRepository;
 import vitalsanity.repository.UsuarioRepository;
 import java.time.LocalDate;
@@ -33,6 +35,9 @@ public class PacienteService {
 
     @Autowired
     private SolicitudAutorizacionRepository solicitudAutorizacionRepository;
+
+    @Autowired
+    private ProfesionalMedicoRepository profesionalMedicoRepository;
 
     // Metodo para buscar paciente por nifNie (ignora mayusculas/minusculas)
     public BuscarPacienteResponse buscarPacientePorNifNie(String nifNie) {
@@ -85,4 +90,5 @@ public class PacienteService {
         solicitudAutorizacion.setDenegada(true);
         solicitudAutorizacionRepository.save(solicitudAutorizacion);
     }
+
 }

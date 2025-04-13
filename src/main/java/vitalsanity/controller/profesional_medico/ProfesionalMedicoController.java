@@ -14,6 +14,7 @@ import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.profesional_medico.DocumentoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
+import vitalsanity.model.SolicitudAutorizacion;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
@@ -104,6 +105,7 @@ public class ProfesionalMedicoController {
     @PostMapping("/api/profesional-medico/buscar-paciente")
     public String buscarPacienteSubmit(@ModelAttribute("buscarPacienteData") BuscarPacienteData buscarPacienteData,
                                        Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
         String nif = buscarPacienteData.getNifNie().trim();
         BuscarPacienteResponse pacienteResponse = pacienteService.buscarPacientePorNifNie(nif);
 
@@ -111,8 +113,17 @@ public class ProfesionalMedicoController {
             model.addAttribute("error", "Paciente no encontrado");
         } else {
             UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(pacienteResponse.getId());
+            SolicitudAutorizacionData solicitudAutorizacion = profesionalMedicoService.obtenerUltimaAutorizacionAsociadaAUnProfesionalMedicoYAUnPaciente(
+                    idUsuarioProfesionalMedico, pacienteResponse.getId());
+
+            boolean denegada = true;
+            if (solicitudAutorizacion != null) {
+                denegada = solicitudAutorizacion.isDenegada();
+            }
+            boolean solicitada = !denegada;
             model.addAttribute("paciente", pacienteResponse);
             model.addAttribute("usuarioPaciente", usuarioPaciente);
+            model.addAttribute("solicitada", solicitada);
         }
         return "profesional_medico/buscar-paciente";
     }

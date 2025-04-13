@@ -7,4 +7,7 @@ import java.util.Optional;
 
 public interface SolicitudAutorizacionRepository extends JpaRepository<SolicitudAutorizacion, Long> {
     Optional<SolicitudAutorizacion> findTopByProfesionalMedicoIdOrderByIdDesc(Long profesionalMedicoId);
+
+    Optional<SolicitudAutorizacion> findTopByProfesionalMedicoIdAndPacienteIdOrderByIdDesc(Long profesionalMedicoId, Long pacienteId);
+
 }

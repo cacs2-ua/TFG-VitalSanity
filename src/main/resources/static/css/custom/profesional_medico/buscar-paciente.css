@@ -191,6 +191,14 @@
     font-weight: bold;
 }
 
+.already-requested-message {
+    color: #35cf70;
+    font-size: 16.5px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
 /* Responsive styles */
 @media (max-width: 48rem) {
     .filter-section {

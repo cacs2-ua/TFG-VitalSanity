@@ -177,7 +177,18 @@ public class ProfesionalMedicoService {
         else return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
     }
 
+    @Transactional(readOnly = true)
+    public SolicitudAutorizacionData obtenerUltimaAutorizacionAsociadaAUnProfesionalMedicoYAUnPaciente(Long idUsuarioProfesionalMedico, Long idUsuarioPaciente) {
+        try {
+            SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdAndPacienteIdOrderByIdDesc(idUsuarioProfesionalMedico, idUsuarioPaciente).orElse(null);
+            return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
 
-
+        } catch (Exception e) {
+            // Puedes usar un logger aquí si tienes uno (recomendado)
+            System.err.println("Error al obtener la última solicitud asociada al profesional médico y al paciente: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
