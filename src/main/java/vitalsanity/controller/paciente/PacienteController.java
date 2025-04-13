@@ -54,6 +54,11 @@ public class PacienteController{
         return "paciente/ver-notificaciones-de-autorizacion";
     }
 
+    @GetMapping("/api/paciente/pop-up-autofirma-autorizacion")
+    public String cofirmarAutorizacionForm(Model model) {
+        return "paciente/pop-up-autofirma-autorizacion";
+    }
+
     @GetMapping("/api/paciente/{idPaciente}/profesionales-autorizados")
     public String verProfesionalesMedicosAutorizados(@PathVariable(value="idPaciente") Long idInforme,
                                                   Model model) {

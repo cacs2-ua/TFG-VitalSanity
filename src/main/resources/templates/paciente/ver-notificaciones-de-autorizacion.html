@@ -30,6 +30,39 @@
 
     </div>
   </div>
+
+  <!-- ===== MODAL / POP-UP CONTAINER (NEW) ===== -->
+  <div id="popupOverlay" class="popup-overlay">
+    <div class="popup-window">
+      <button id="popupClose" class="popup-close">X</button>
+      <!-- The iframe loads the second HTML file. NOTE: Use a dynamic URL if needed -->
+      <iframe th:src="@{'/api/paciente/pop-up-autofirma-autorizacion'}" class="popup-iframe"></iframe>
+
+    </div>
+  </div>
+
   <div th:replace="navbar::javascript"></div>
+
+  <!-- ===== JAVASCRIPT FOR POP-UP (NEW) ===== -->
+  <script>
+    document.querySelectorAll('.button-authorize').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('popupOverlay').style.display = 'flex';
+      });
+    });
+
+    document.getElementById('popupClose').addEventListener('click', function() {
+      document.getElementById('popupOverlay').style.display = 'none';
+    });
+
+    document.getElementById('popupOverlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        e.stopPropagation();
+      }
+    });
+  </script>
+
+
 </body>
 </html>
