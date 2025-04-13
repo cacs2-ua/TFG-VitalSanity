@@ -1,7 +1,11 @@
 package vitalsanity.dto.profesional_medico;
 
+import vitalsanity.model.Documento;
+
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class SolicitudAutorizacionData {
 
@@ -17,6 +21,8 @@ public class SolicitudAutorizacionData {
     private boolean cofirmada;
     private LocalDateTime fechaCreacion;
     private boolean denegada;
+
+    Set<Documento> documentos = new HashSet<>();
 
     // Getters y Setters
 
@@ -115,6 +121,15 @@ public class SolicitudAutorizacionData {
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
+
+    public Set<Documento> getDocumentos() {
+        return documentos;
+    }
+
+    public void setDocumentos(Set<Documento> documentos) {
+        this.documentos = documentos;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

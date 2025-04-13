@@ -12,7 +12,9 @@ import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
+import vitalsanity.service.utils.aws.S3VitalSanityService;
 
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -25,6 +27,9 @@ public class PacienteController{
     private ManagerUserSession managerUserSession;
     @Autowired
     private PacienteService pacienteService;
+
+    @Autowired
+    private S3VitalSanityService s3VitalSanityService;
 
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
@@ -86,18 +91,28 @@ public class PacienteController{
         return "redirect:/api/paciente/" + usuario.getId() + "/informes";
     }
 
-
     // LÓGICA COFIRMA
-
 
     //Este método se encarga de obtener la solicitud de autorización firmada anteriormene para poder cofirmarla
     @PostMapping("/api/paciente/solicitud-autorizacion-firmada")
     @ResponseBody
     public String obtenerSolicitudAutorizacionFirmada(@RequestParam Long idSolicitudAutorizacion) {
-        System.out.println("Iniciando el proceso de obtención de la solicitud de autorización firmada");
-        System.out.println("Mensaje de debug");
-        return "hola";
+        try {
+            System.out.println("Iniciando el proceso de obtención de la solicitud de autorización firmada");
+            SolicitudAutorizacionData solicitudAutorizacionData = pacienteService.obtenerSolicitudPorId(idSolicitudAutorizacion);
+            String s3Key = solicitudAutorizacionData.getDocumentos().iterator().next().getS3_key();
+            byte[] pdfFirmado = s3VitalSanityService.obtenerBytesFicheroAPartirDeS3Key(s3Key);
+
+            return Base64.getEncoder().encodeToString(pdfFirmado);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+
     }
+
+
 
 
 }

@@ -62,6 +62,17 @@ public class S3VitalSanityService {
         s3Client.putObject(putRequest, RequestBody.fromBytes(fileContent));
     }
 
+    public byte[] obtenerBytesFicheroAPartirDeS3Key(String s3Key) throws IOException {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(s3Key)
+                .build();
+
+        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(getObjectRequest);
+        return objectBytes.asByteArray();
+    }
+
+
     // Generar una URL pre-firmada para descargar el archivo
     public String generarUrlPrefirmada(String s3Key, Duration duration) {
         // Creamos un S3Presigner (se autogestiona con DefaultCredentialsProvider)
