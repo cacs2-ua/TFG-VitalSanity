@@ -145,6 +145,70 @@
             cursor: pointer;
         }
 
+        /* ESTILOS DE LA ANIMACIÓN DE AUTOFIRMA */
+
+
+        /* Overlay que cubre la ventana completa */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 1rem; /* Opcional, para que el contenido no quede pegado a los bordes en pantallas pequeñas */
+            box-sizing: border-box;
+        }
+
+        /* Spinner central (puedes personalizarlo según tu gusto) */
+        .spinner {
+            border: 0.5rem solid #f3f3f3; /* 8px => 0.5rem */
+            border-top: 0.5rem solid #3498db; /* 8px => 0.5rem */
+            border-radius: 50%;
+            width: 3.75rem;  /* 60px => 3.75rem */
+            height: 3.75rem; /* 60px => 3.75rem */
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.25rem;  /* 20px => 1.25rem */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Estilos RESPONSIVE */
+        /* Para pantallas medianas */
+        @media (max-width: 768px) {
+            .overlay {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+            .spinner {
+                width: 3rem;  /* Se reduce el tamaño del spinner */
+                height: 3rem;
+                border-width: 0.4rem;
+            }
+        }
+
+        /* Para pantallas pequeñas */
+        @media (max-width: 480px) {
+            .overlay {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+            .spinner {
+                width: 2.5rem;
+                height: 2.5rem;
+                border-width: 0.35rem;
+            }
+        }
+
 
         @media (max-width: 37.5rem) {
             .report-card {
@@ -169,6 +233,17 @@
 
         }
     </style>
+
+    <script>
+        const base = window.location.pathname.split("/")[1];
+        const contextPath = base && base !== "api" ? "/" + base : "";
+    </script>
+
+    <!-- Cargamos autoscript.js (JavaScript de despliegue de @firma) -->
+    <script th:src="@{/js/vendor/autoscript.js}"></script>
+    <!-- Nuestro JS específico de la invocación a la firma -->
+    <script th:src="@{/js/custom/signer-invoke.js}"></script>
+
 </head>
 <body>
 <div class="body">
@@ -177,13 +252,13 @@
     <div class="report-card">
         <div class="pop-up-title-v1"><strong>Instrucciones</strong></div>
 
-        <div class="report-section">
-            <p><strong>ID de la autorización:</strong> <span th:text="${solicitud.id}"></span></p>
+        <div class="report-section" style="display:none;">
+            <p><span th:text="${solicitud.id}" id="id-solicitud-autorizacion"></span></p>
         </div>
 
         <div class="report-section">
             <div class="report-value">
-                A continuación se va a proceder a la firma de la autorización. Para ello, es necesario tener instalado el programa de AutoFirma. Cuando haya leído toda la información, pulse sobre el botón de "Firmar y enviar".
+                A continuación se va a proceder a la firma de la autorización. Para ello, es necesario tener instalado el programa de AutoFirma. Cuando haya leído toda la información, pulse sobre el botón de "Aceptar y firmar".
                 Tras haber pulsado sobre dicho botón se abrirá en el navegador el programa de AutoFirma, el cual le solicitará elegir el certificado con el cual desea usted firmar la autorización. Una vez elegido el certificado, se realizará de forma
                 automática con el proceso de firma. Cuando este proceso haya finalizado, usted podrá descargarse una copia de la autorización firmada.
             </div>
@@ -238,10 +313,13 @@
     </div>
 
     <div class="button-container">
-        <form th:action="@{'/api/paciente/1/datos-residencia'}" method="get">
-            <button class="back-button">Firmar y Enviar</button>
-        </form>
+        <button type="button" onclick="onClickPacienteCofirmarAutorizacion()" class="back-button">Aceptar y firmar</button>
     </div>
+</div>
+
+<div id="loading-overlay" class="overlay" style="display: none;">
+    <div class="spinner"></div>
+    <p>Procesando, por favor espere...</p>
 </div>
 </body>
 </html>

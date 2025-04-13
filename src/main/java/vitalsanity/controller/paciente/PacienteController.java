@@ -87,4 +87,17 @@ public class PacienteController{
     }
 
 
+    // LÓGICA COFIRMA
+
+
+    //Este método se encarga de obtener la solicitud de autorización firmada anteriormene para poder cofirmarla
+    @PostMapping("/api/paciente/solicitud-autorizacion-firmada")
+    @ResponseBody
+    public String obtenerSolicitudAutorizacionFirmada(@RequestParam Long idSolicitudAutorizacion) {
+        System.out.println("Iniciando el proceso de obtención de la solicitud de autorización firmada");
+        System.out.println("Mensaje de debug");
+        return "hola";
+    }
+
+
 }
