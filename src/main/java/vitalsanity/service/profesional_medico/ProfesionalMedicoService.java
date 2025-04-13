@@ -1,6 +1,7 @@
 package vitalsanity.service.profesional_medico;
 
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,21 +60,32 @@ public class ProfesionalMedicoService {
 
     @Transactional
     public SolicitudAutorizacionData nuevaSolicitudAutorizacion(Long idUsuarioProfesionalMedico,
-                                                                String nombreProfesional,
-                                                                String nifNieProfesional,
-                                                                String nombreCentroMedico,
-                                                                String nombrePaciente,
-                                                                String nifNiePaciente,
+                                                                Long idUsuarioPaciente,
                                                                 String motivo,
                                                                 String descripcion) {
-        try {
             SolicitudAutorizacion solicitudAutorizacion = new SolicitudAutorizacion();
 
-            solicitudAutorizacion.setNombreProfesionalMedico(nombreProfesional);
-            solicitudAutorizacion.setNifNieProfesionalMedico(nifNieProfesional);
-            solicitudAutorizacion.setNombreCentroMedico(nombreCentroMedico);
-            solicitudAutorizacion.setNombrePaciente(nombrePaciente);
-            solicitudAutorizacion.setNifNiePaciente(nifNiePaciente);
+            Usuario usuarioProfesionalMedico = usuarioRepository.findById(idUsuarioProfesionalMedico).orElse(null);
+            Usuario usuarioPaciente = usuarioRepository.findById(idUsuarioPaciente).orElse(null);
+
+            ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
+            Paciente paciente = pacienteRepository.findByUsuarioId(idUsuarioPaciente).orElse(null);
+
+            CentroMedico centro = profesionalMedico.getCentroMedico();
+
+            Hibernate.initialize(centro);
+            Hibernate.initialize(centro.getUsuario());
+
+            solicitudAutorizacion.setNombreProfesionalMedico(usuarioProfesionalMedico.getNombreCompleto());
+            solicitudAutorizacion.setNifNieProfesionalMedico(usuarioProfesionalMedico.getNifNie());
+            solicitudAutorizacion.setEspecialidadProfesionalMedico(profesionalMedico.getEspecialidadMedica().getNombre());
+
+            solicitudAutorizacion.setNifCentroMedico(centro.getUsuario().getNifNie());
+            solicitudAutorizacion.setNombreCentroMedico(centro.getUsuario().getNombreCompleto());
+
+            solicitudAutorizacion.setNombrePaciente(usuarioPaciente.getNombreCompleto());
+            solicitudAutorizacion.setNifNiePaciente(usuarioPaciente.getNifNie());
+
             solicitudAutorizacion.setMotivo(motivo);
             solicitudAutorizacion.setDescripcion(descripcion);
             solicitudAutorizacion.setFirmada(false);
@@ -81,46 +93,31 @@ public class ProfesionalMedicoService {
             solicitudAutorizacion.setFechaCreacion(LocalDateTime.now());
             solicitudAutorizacion.setDenegada(false);
 
-            ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
-            Paciente paciente = pacienteRepository.findByUsuarioNifNie(nifNiePaciente).orElse(null);
-
             solicitudAutorizacion.setProfesionalMedico(profesionalMedico);
             solicitudAutorizacion.setPaciente(paciente);
 
             solicitudAutorizacionRepository.save(solicitudAutorizacion);
             return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
-
-        } catch (Exception e) {
-            // Puedes usar un logger aquí si tienes uno (recomendado)
-            System.err.println("Error al crear nueva solicitud de autorización: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-
     }
 
     @Transactional
     public SolicitudAutorizacionData obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(Long idUsuarioProfesionalMedico) {
-        try {
-            ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
-
-            SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdOrderByIdDesc(profesionalMedico.getId()).orElse(null);
-
-            return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
-
-        } catch (Exception e) {
-            // Puedes usar un logger aquí si tienes uno (recomendado)
-            System.err.println("Error al obtener la última solicitud del profesional médico: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findByUsuarioId(idUsuarioProfesionalMedico).orElse(null);
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdOrderByIdDesc(profesionalMedico.getId()).orElse(null);
+        return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
     }
 
     @Transactional
     public  void marcarSolicitudAutorizacionComoFirmada(Long idSolicitudAutorizacion) {
         SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
         solicitudAutorizacion.setFirmada(true);
+        solicitudAutorizacionRepository.save(solicitudAutorizacion);
+    }
+
+    @Transactional
+    public  void establecerFechaFirmaAutorizacion(Long idSolicitudAutorizacion, LocalDateTime fechaFirma) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+        solicitudAutorizacion.setFechaFirma(fechaFirma);
         solicitudAutorizacionRepository.save(solicitudAutorizacion);
     }
 
@@ -179,16 +176,9 @@ public class ProfesionalMedicoService {
 
     @Transactional(readOnly = true)
     public SolicitudAutorizacionData obtenerUltimaAutorizacionAsociadaAUnProfesionalMedicoYAUnPaciente(Long idUsuarioProfesionalMedico, Long idUsuarioPaciente) {
-        try {
-            SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdAndPacienteIdOrderByIdDesc(idUsuarioProfesionalMedico, idUsuarioPaciente).orElse(null);
-            return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
-
-        } catch (Exception e) {
-            // Puedes usar un logger aquí si tienes uno (recomendado)
-            System.err.println("Error al obtener la última solicitud asociada al profesional médico y al paciente: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdAndPacienteIdOrderByIdDesc(idUsuarioProfesionalMedico, idUsuarioPaciente).orElse(null);
+        if (solicitudAutorizacion == null) return null;
+        return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
     }
 
 }

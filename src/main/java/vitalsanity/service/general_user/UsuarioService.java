@@ -91,7 +91,7 @@ public class UsuarioService {
         }
     }
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public UsuarioData findByEmail(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
         if (usuario == null) return null;
@@ -100,7 +100,7 @@ public class UsuarioService {
         }
     }
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public UsuarioData findById(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         if (usuario == null) return null;
@@ -242,105 +242,98 @@ public class UsuarioService {
 
     @Transactional
     public List<UsuarioData> registrarProfesionalesMedicos(MultipartFile csvFile, CentroMedico centroMedico) throws Exception {
-        try {
-            if (csvFile.isEmpty()) {
-                throw new IllegalArgumentException("El fichero CSV no puede estar vacio");
-            }
-            List<UsuarioData> registrados = new ArrayList<>();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(csvFile.getInputStream(), StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    // Se asume que el fichero no tiene cabecera y tiene 14 columnas
-                    String[] columnas = line.split(",");
-                    if (columnas.length < 14) {
-                        throw new IllegalArgumentException("Formato de fichero CSV incorrecto");
-                    }
-                    String nombreCompleto   = columnas[0].trim();
-                    String especialidadMedica = columnas[1].trim();
-                    String fechaNacimiento  = columnas[2].trim();
-                    String genero           = columnas[3].trim();
-                    String naf              = columnas[4].trim();
-                    String ccc              = columnas[5].trim();
-                    String nifNie           = columnas[6].trim();
-                    String movil            = columnas[7].trim();
-                    String iban             = columnas[8].trim();
-                    String pais             = columnas[9].trim();
-                    String provincia        = columnas[10].trim();
-                    String municipio        = columnas[11].trim();
-                    String codigoPostal     = columnas[12].trim();
-                    String email            = columnas[13].trim();
-
-                    // Generar contrasena segura
-                    String contrasenaGenerada = generateSecurePassword(12);
-
-                    // Asignar tipo de usuario profesional medico (se asume que existe un TipoUsuario con id 3)
-                    TipoUsuario tipoProfesional = tipoUsuarioRepository.findById(3L)
-                            .orElseThrow(() -> new IllegalStateException("Tipo de usuario 'profesional_medico' no encontrado"));
-
-                    // Establecer relacion bidireccional
-                    EspecialidadMedica especialidadMedicaParaAsignar = especialidadMedicaRepository.findByNombre(especialidadMedica)
-                            .orElse(null);
-
-                    // Crear nuevo usuario
-                    Usuario usuario = new Usuario();
-                    usuario.setIdentificador(java.util.UUID.randomUUID().toString());
-                    usuario.setEmail(email);
-                    usuario.setNombreCompleto(nombreCompleto);
-                    usuario.setContrasenya(hashPassword(contrasenaGenerada));
-                    usuario.setActivado(true);
-                    usuario.setPrimerAcceso(true);
-                    usuario.setNifNie(nifNie);
-                    usuario.setTelefono(movil);
-                    usuario.setPais(pais);
-                    usuario.setProvincia(provincia);
-                    usuario.setMunicipio(municipio);
-                    usuario.setCodigoPostal(codigoPostal);
-
-                    usuario.setTipo(tipoProfesional);
-
-                    // Crear entidad ProfesionalMedico y asignar campos nuevos
-                    ProfesionalMedico profesionalMedico = new ProfesionalMedico();
-                    profesionalMedico.setNaf(naf);
-                    profesionalMedico.setCcc(ccc);
-                    profesionalMedico.setIban(iban);
-                    profesionalMedico.setGenero(genero);
-                    profesionalMedico.setFechaNacimiento(fechaNacimiento);
-                    // Asignar el centro medico recibido
-                    profesionalMedico.setCentroMedico(centroMedico);
-
-                    usuario.setProfesionalMedico(profesionalMedico);
-                    profesionalMedico.setUsuario(usuario);
-
-                    if (especialidadMedicaParaAsignar == null) {
-                        especialidadMedicaParaAsignar = new EspecialidadMedica();
-                        especialidadMedicaParaAsignar.setNombre(especialidadMedica);
-                        especialidadMedicaRepository.save(especialidadMedicaParaAsignar);
-                        profesionalMedico.setEspecialidadMedica(especialidadMedicaParaAsignar);
-                    }
-
-                    else {
-                        profesionalMedico.setEspecialidadMedica(especialidadMedicaParaAsignar);
-                    }
-
-                    // Guardar usuario (se guarda el profesionalMedico por cascada)
-                    Usuario savedUsuario = usuarioRepository.save(usuario);
-
-                    // Enviar email con la contrasena generada
-                    emailService.send(email, "Registro Profesional Medico",
-                            "Se ha registrado como profesional medico. Su contrasena de acceso es: " + contrasenaGenerada +
-                                    ". Al iniciar sesion por primera vez, debera cambiarla.");
-
-                    UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
-                    registrados.add(usuarioData);
-                }
-            }
-            return registrados;
-        } catch (Exception e) {
-            // Puedes usar un logger aquí si tienes uno (recomendado)
-            System.err.println("Error al registrar los profesionales médicos: " + e.getMessage());
-            e.printStackTrace();
-            return null;
+        if (csvFile.isEmpty()) {
+            throw new IllegalArgumentException("El fichero CSV no puede estar vacio");
         }
+        List<UsuarioData> registrados = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(csvFile.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // Se asume que el fichero no tiene cabecera y tiene 14 columnas
+                String[] columnas = line.split(",");
+                if (columnas.length < 14) {
+                    throw new IllegalArgumentException("Formato de fichero CSV incorrecto");
+                }
+                String nombreCompleto   = columnas[0].trim();
+                String especialidadMedica = columnas[1].trim();
+                String fechaNacimiento  = columnas[2].trim();
+                String genero           = columnas[3].trim();
+                String naf              = columnas[4].trim();
+                String ccc              = columnas[5].trim();
+                String nifNie           = columnas[6].trim();
+                String movil            = columnas[7].trim();
+                String iban             = columnas[8].trim();
+                String pais             = columnas[9].trim();
+                String provincia        = columnas[10].trim();
+                String municipio        = columnas[11].trim();
+                String codigoPostal     = columnas[12].trim();
+                String email            = columnas[13].trim();
+
+                // Generar contrasena segura
+                String contrasenaGenerada = generateSecurePassword(12);
+
+                // Asignar tipo de usuario profesional medico (se asume que existe un TipoUsuario con id 3)
+                TipoUsuario tipoProfesional = tipoUsuarioRepository.findById(3L)
+                        .orElseThrow(() -> new IllegalStateException("Tipo de usuario 'profesional_medico' no encontrado"));
+
+                // Establecer relacion bidireccional
+                EspecialidadMedica especialidadMedicaParaAsignar = especialidadMedicaRepository.findByNombre(especialidadMedica)
+                        .orElse(null);
+
+                // Crear nuevo usuario
+                Usuario usuario = new Usuario();
+                usuario.setIdentificador(java.util.UUID.randomUUID().toString());
+                usuario.setEmail(email);
+                usuario.setNombreCompleto(nombreCompleto);
+                usuario.setContrasenya(hashPassword(contrasenaGenerada));
+                usuario.setActivado(true);
+                usuario.setPrimerAcceso(true);
+                usuario.setNifNie(nifNie);
+                usuario.setTelefono(movil);
+                usuario.setPais(pais);
+                usuario.setProvincia(provincia);
+                usuario.setMunicipio(municipio);
+                usuario.setCodigoPostal(codigoPostal);
+
+                usuario.setTipo(tipoProfesional);
+
+                // Crear entidad ProfesionalMedico y asignar campos nuevos
+                ProfesionalMedico profesionalMedico = new ProfesionalMedico();
+                profesionalMedico.setNaf(naf);
+                profesionalMedico.setCcc(ccc);
+                profesionalMedico.setIban(iban);
+                profesionalMedico.setGenero(genero);
+                profesionalMedico.setFechaNacimiento(fechaNacimiento);
+                // Asignar el centro medico recibido
+                profesionalMedico.setCentroMedico(centroMedico);
+
+                usuario.setProfesionalMedico(profesionalMedico);
+                profesionalMedico.setUsuario(usuario);
+
+                if (especialidadMedicaParaAsignar == null) {
+                    especialidadMedicaParaAsignar = new EspecialidadMedica();
+                    especialidadMedicaParaAsignar.setNombre(especialidadMedica);
+                    especialidadMedicaRepository.save(especialidadMedicaParaAsignar);
+                    profesionalMedico.setEspecialidadMedica(especialidadMedicaParaAsignar);
+                }
+
+                else {
+                    profesionalMedico.setEspecialidadMedica(especialidadMedicaParaAsignar);
+                }
+
+                // Guardar usuario (se guarda el profesionalMedico por cascada)
+                Usuario savedUsuario = usuarioRepository.save(usuario);
+
+                // Enviar email con la contrasena generada
+                emailService.send(email, "Registro Profesional Medico",
+                        "Se ha registrado como profesional medico. Su contrasena de acceso es: " + contrasenaGenerada +
+                                ". Al iniciar sesion por primera vez, debera cambiarla.");
+
+                UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
+                registrados.add(usuarioData);
+            }
+        }
+        return registrados;
 
     }
 

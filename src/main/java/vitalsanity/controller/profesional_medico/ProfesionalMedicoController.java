@@ -22,6 +22,7 @@ import vitalsanity.service.utils.EmailService;
 import vitalsanity.service.utils.autofirma.GenerarPdf;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -112,9 +113,12 @@ public class ProfesionalMedicoController {
         if (pacienteResponse == null) {
             model.addAttribute("error", "Paciente no encontrado");
         } else {
+
+            Long idProfesional = Long.parseLong(profesionalMedicoService.encontrarPorIdUsuario(idUsuarioProfesionalMedico).getId());
+            Long idPaciente = pacienteResponse.getId();
             UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(pacienteResponse.getId());
             SolicitudAutorizacionData solicitudAutorizacion = profesionalMedicoService.obtenerUltimaAutorizacionAsociadaAUnProfesionalMedicoYAUnPaciente(
-                    idUsuarioProfesionalMedico, pacienteResponse.getId());
+                    idProfesional, idPaciente);
 
             boolean denegada = true;
             if (solicitudAutorizacion != null) {
@@ -164,23 +168,17 @@ public class ProfesionalMedicoController {
                               @RequestParam String descripcion) {
 
         Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        Long idUsuarioPaciente = usuarioService.obtenerUsuarioPacienteAPartirDeNifNie(nifNiePaciente).getId();
         profesionalMedicoService.nuevaSolicitudAutorizacion(
                 idUsuarioProfesionalMedico,
-                nombreProfesional,
-                nifNieProfesional,
-                nombreCentroMedico,
-                nombrePaciente,
-                nifNiePaciente,
+                idUsuarioPaciente,
                 motivo,
                 descripcion
         );
 
         byte[] pdfBytes = generarPdf.generarPdfAutorizacion(
-                nombreProfesional,
-                nifNieProfesional,
-                nombreCentroMedico,
-                nombrePaciente,
-                nifNiePaciente,
+                idUsuarioProfesionalMedico,
+                idUsuarioPaciente,
                 motivo,
                 descripcion);
         return Base64.getEncoder().encodeToString(pdfBytes);
@@ -188,15 +186,14 @@ public class ProfesionalMedicoController {
 
     @PostMapping("/api/profesional-medico/pdf-autorizacion-firmada")
     @ResponseBody
-    public String subirPdfAutorizacionFirmadaEnAws(@RequestParam String signedPdfBase64) {
-        try {
+    public String subirPdfAutorizacionFirmadaEnAws(@RequestParam String signedPdfBase64) throws IOException {
             Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
             SolicitudAutorizacionData ultimaSolicitudCreadaDelProfesionalMedico =
                     profesionalMedicoService.obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(idUsuarioProfesionalMedico);
 
             Long idUltimaSolicitudCreadaDelProfesionalMedico = ultimaSolicitudCreadaDelProfesionalMedico.getId();
+            profesionalMedicoService.establecerFechaFirmaAutorizacion(idUltimaSolicitudCreadaDelProfesionalMedico, LocalDateTime.now());
             profesionalMedicoService.marcarSolicitudAutorizacionComoFirmada(idUltimaSolicitudCreadaDelProfesionalMedico);
-
 
             String nifNiePaciente = ultimaSolicitudCreadaDelProfesionalMedico.getNifNiePaciente();
             UsuarioData usuarioPaciente = usuarioService.obtenerUsuarioPacienteAPartirDeNifNie(nifNiePaciente);
@@ -251,12 +248,6 @@ public class ProfesionalMedicoController {
             String uuid = UUID.randomUUID().toString();
             signedRepository.put(uuid, signedPdf);
             return uuid;
-        }   catch (Exception e) {
-            System.err.println("Error al subir el PDF de la autorizacion firmada a AWS: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-
     }
 
     @GetMapping("/api/profesional-medico/pdf-autorizacion/{id}")

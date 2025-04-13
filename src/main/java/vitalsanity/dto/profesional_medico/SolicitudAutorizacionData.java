@@ -12,6 +12,8 @@ public class SolicitudAutorizacionData {
     private Long id;
     private String nombreProfesionalMedico;
     private String nifNieProfesionalMedico;
+    private String especialidadProfesionalMedico;
+    private String nifCentroMedico;
     private  String nombreCentroMedico;
     private String nombrePaciente;
     private String nifNiePaciente;
@@ -20,6 +22,8 @@ public class SolicitudAutorizacionData {
     private boolean firmada;
     private boolean cofirmada;
     private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaFirma;
+    private LocalDateTime fechaCofirma;
     private boolean denegada;
 
     Set<Documento> documentos = new HashSet<>();
@@ -42,20 +46,36 @@ public class SolicitudAutorizacionData {
         this.nombreProfesionalMedico = nombreProfesionalMedico;
     }
 
-    public String getNombreCentroMedico() {
-        return nombreCentroMedico;
-    }
-
-    public void setNombreCentroMedico(String nombreCentroMedico) {
-        this.nombreCentroMedico = nombreCentroMedico;
-    }
-
     public String getNifNieProfesionalMedico() {
         return nifNieProfesionalMedico;
     }
 
     public void setNifNieProfesionalMedico(String nifNieProfesionalMedico) {
         this.nifNieProfesionalMedico = nifNieProfesionalMedico;
+    }
+
+    public String getEspecialidadProfesionalMedico() {
+        return especialidadProfesionalMedico;
+    }
+
+    public void setEspecialidadProfesionalMedico(String especialidadProfesionalMedico) {
+        this.especialidadProfesionalMedico = especialidadProfesionalMedico;
+    }
+
+    public String getNifCentroMedico() {
+        return nifCentroMedico;
+    }
+
+    public void setNifCentroMedico(String nifCentroMedico) {
+        this.nifCentroMedico = nifCentroMedico;
+    }
+
+    public String getNombreCentroMedico() {
+        return nombreCentroMedico;
+    }
+
+    public void setNombreCentroMedico(String nombreCentroMedico) {
+        this.nombreCentroMedico = nombreCentroMedico;
     }
 
     public String getNombrePaciente() {
@@ -110,16 +130,32 @@ public class SolicitudAutorizacionData {
         return fechaCreacion;
     }
 
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDateTime getFechaFirma() {
+        return fechaFirma;
+    }
+
+    public void setFechaFirma(LocalDateTime fechaFirma) {
+        this.fechaFirma = fechaFirma;
+    }
+
+    public LocalDateTime getFechaCofirma() {
+        return fechaCofirma;
+    }
+
+    public void setFechaCofirma(LocalDateTime fechaCofirma) {
+        this.fechaCofirma = fechaCofirma;
+    }
+
     public boolean isDenegada() {
         return denegada;
     }
 
     public void setDenegada(boolean denegada) {
         this.denegada = denegada;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
     }
 
     public Set<Documento> getDocumentos() {
@@ -141,6 +177,5 @@ public class SolicitudAutorizacionData {
     public int hashCode() {
         return Objects.hash(getId());
     }
-
 
 }

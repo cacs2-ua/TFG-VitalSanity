@@ -24,6 +24,10 @@ public class SolicitudAutorizacion implements Serializable {
     @NotNull
     private String nifNieProfesionalMedico;
 
+    private String especialidadProfesionalMedico;
+
+    private String nifCentroMedico;
+
     @NotNull
     private String nombreCentroMedico;
 
@@ -37,7 +41,6 @@ public class SolicitudAutorizacion implements Serializable {
     @NotNull
     private String motivo;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     @NotNull
     private String descripcion;
@@ -50,6 +53,10 @@ public class SolicitudAutorizacion implements Serializable {
 
     @NotNull
     private LocalDateTime fechaCreacion;
+
+    private LocalDateTime fechaFirma;
+
+    private LocalDateTime fechaCofirma;
 
     @Column(nullable = true)
     private  boolean denegada;
@@ -172,6 +179,22 @@ public class SolicitudAutorizacion implements Serializable {
         this.nifNieProfesionalMedico = nifNieProfesionalMedico;
     }
 
+    public String getEspecialidadProfesionalMedico() {
+        return especialidadProfesionalMedico;
+    }
+
+    public void setEspecialidadProfesionalMedico(String especialidadProfesionalMedico) {
+        this.especialidadProfesionalMedico = especialidadProfesionalMedico;
+    }
+
+    public String getNifCentroMedico() {
+        return nifCentroMedico;
+    }
+
+    public void setNifCentroMedico(String nifCentroMedico) {
+        this.nifCentroMedico = nifCentroMedico;
+    }
+
     public String getNombreCentroMedico() {
         return nombreCentroMedico;
     }
@@ -234,6 +257,22 @@ public class SolicitudAutorizacion implements Serializable {
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDateTime getFechaFirma() {
+        return fechaFirma;
+    }
+
+    public void setFechaFirma(LocalDateTime fechaFirma) {
+        this.fechaFirma = fechaFirma;
+    }
+
+    public LocalDateTime getFechaCofirma() {
+        return fechaCofirma;
+    }
+
+    public void setFechaCofirma(LocalDateTime fechaCofirma) {
+        this.fechaCofirma = fechaCofirma;
     }
 
     public boolean isDenegada() {
