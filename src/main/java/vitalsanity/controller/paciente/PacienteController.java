@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import vitalsanity.authentication.ManagerUserSession;
+import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.dto.general_user.UsuarioData;
@@ -96,23 +97,21 @@ public class PacienteController{
     //Este método se encarga de obtener la solicitud de autorización firmada anteriormene para poder cofirmarla
     @PostMapping("/api/paciente/solicitud-autorizacion-firmada")
     @ResponseBody
-    public String obtenerSolicitudAutorizacionFirmada(@RequestParam Long idSolicitudAutorizacion) {
+    public AutorizacionFirmadaResponse  obtenerSolicitudAutorizacionFirmada(@RequestParam Long idSolicitudAutorizacion) {
         try {
             System.out.println("Iniciando el proceso de obtención de la solicitud de autorización firmada");
             SolicitudAutorizacionData solicitudAutorizacionData = pacienteService.obtenerSolicitudPorId(idSolicitudAutorizacion);
             String s3Key = solicitudAutorizacionData.getDocumentos().iterator().next().getS3_key();
             byte[] pdfFirmado = s3VitalSanityService.obtenerBytesFicheroAPartirDeS3Key(s3Key);
 
-            return Base64.getEncoder().encodeToString(pdfFirmado);
+            String pdfFirmadoBase64 = Base64.getEncoder().encodeToString(pdfFirmado);
+
+            return new AutorizacionFirmadaResponse(pdfFirmadoBase64, idSolicitudAutorizacion);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
-
     }
-
-
-
 
 }
