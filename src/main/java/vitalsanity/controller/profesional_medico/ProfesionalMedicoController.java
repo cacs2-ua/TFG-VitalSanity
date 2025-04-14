@@ -203,7 +203,7 @@ public class ProfesionalMedicoController {
             String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
 
             byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-            String key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+            String key = "debug/autorizaciones/firmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
             s3VitalSanityService.subirFicheroBytes(key, signedPdf);
 
             String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
@@ -235,15 +235,15 @@ public class ProfesionalMedicoController {
 
             String subject = "Solicitud de autorización por parte del profesional médico: " + nombreProfesionalMedico;
 
-            String text = "El profesional médico: " + nombreProfesionalMedico + " con NIF/NIE: "
-                    + nifNieProfesionalMedico + " le ha solicitado autorización para acceder a su historial clínico desde el centro médico: "
-                    + nombreCentroMedico + " . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
+            String text = "El profesional médico: '" + nombreProfesionalMedico + "' con NIF/NIE: '"
+                    + nifNieProfesionalMedico + "' le ha solicitado autorización para acceder a su historial clínico desde el centro médico: '"
+                    + nombreCentroMedico + "' . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
                     + " Una vez haya revisado la solicitud, usted podrá autorizar o denegar el acceso a su historial médico. "
                     + "Si usted autoriza el acceso al profesional médico, dicho profesional médico podrá acceder a su historial clínico centralizado, "
                     + "lo cual podría ayudar a agilizar el proceso de diagnóstico y tratamiento, mejorando así su atención médica y la calidad de su servicio. "
                     + "Le recordamos que cualquier tratamiento de datos está sujeto a la ley de protección de datos vigente. ";
 
-            emailService.send(emailPaciente, subject, text);
+            // emailService.send(emailPaciente, subject, text);
 
             String uuid = UUID.randomUUID().toString();
             signedRepository.put(uuid, signedPdf);

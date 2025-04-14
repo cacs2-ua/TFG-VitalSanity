@@ -15,10 +15,12 @@ import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
+import vitalsanity.service.utils.EmailService;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -39,6 +41,9 @@ public class PacienteController{
 
     @Autowired
     private S3VitalSanityService s3VitalSanityService;
+
+    @Autowired
+    private EmailService emailService;
 
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
@@ -132,30 +137,61 @@ public class PacienteController{
                                                      @RequestParam String cosignedPdfBase64
                                                      ) throws IOException {
         Long idProfesionalMedico = Long.parseLong(profesionalMedicoService.encontrarProfesionalMedicoAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId());
-        String uuidUsuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(idProfesionalMedico).getUuid();
+        UsuarioData usuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(idProfesionalMedico);
+        String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
 
         Long idUsuarioPaciente = getUsuarioLogeadoId();
-        String uuidUsuarioPaciente = usuarioService.findById(idUsuarioPaciente).getUuid();
+        UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
+        String uuidUsuarioPaciente = usuarioPaciente.getUuid();
 
-        String s3Key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+        String s3Key = "debug/autorizaciones/cofirmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
 
-        byte[] cosignedPdf = Base64.getDecoder().decode(cosignedPdfBase64);
-        s3VitalSanityService.subirFicheroBytes(s3Key, cosignedPdf);
+        byte[] cosignedPdfBytes = Base64.getDecoder().decode(cosignedPdfBase64);
+        s3VitalSanityService.subirFicheroBytes(s3Key, cosignedPdfBytes);
 
-        return  "ok";
+
+
+
+
+        // Actualizar Información de la Solicitud de Autorización en la base de datos
+
+        pacienteService.marcarSolicitudAutorizacionComoCofirmada(idSolicitudAutorizacion);
+        pacienteService.establecerFechaCofirmaAutorizacion(idSolicitudAutorizacion, LocalDateTime.now());
+
+
+
+
+        // Guardar en la base de datos la información del documento asociado a la solicitud de autorización
+
+        String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+        String tipoArchivo = "application/pdf";
+
+        Long tamano = (long) cosignedPdfBytes.length;
+        LocalDateTime fechaSubida = LocalDateTime.now();
+
+        profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
+                idSolicitudAutorizacion,
+                nombreArchivo,
+                s3Key,
+                tipoArchivo,
+                tamano,
+                fechaSubida
+        );
+
+        String subject = "Acceso autorizado al historial médico del paciente: '" + usuarioPaciente.getNombreCompleto() + "'";
+
+        String text = "El paciente: '" + usuarioPaciente.getNombreCompleto() + "' con NIF/NIE: '"
+                + usuarioPaciente.getNifNie() + "' le ha autorizado el acceso para acceder a su historial médico centralizado. "
+                + "A partir de ahora podrá acceder al historial médico del paciente desde la pestaña 'Pacientes que han autorizado'.  ";
+
+        // emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
+
+        return s3Key;
     }
 
     @GetMapping("/api/paciente/pdf-autorizacion-cofirmada")
-    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam Long idSolicitudAutorizacion,
+    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String s3Key,
                                                          Model model) {
-
-        Long idProfesionalMedico = Long.parseLong(profesionalMedicoService.encontrarProfesionalMedicoAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId());
-        String uuidUsuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(idProfesionalMedico).getUuid();
-
-        Long idUsuarioPaciente = getUsuarioLogeadoId();
-        String uuidUsuarioPaciente = usuarioService.findById(idUsuarioPaciente).getUuid();
-
-        String s3Key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
 
         String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
                 s3Key,

@@ -16,6 +16,7 @@ import vitalsanity.repository.ProfesionalMedicoRepository;
 import vitalsanity.repository.SolicitudAutorizacionRepository;
 import vitalsanity.repository.UsuarioRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -110,6 +111,20 @@ public class PacienteService {
         SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(solicitudId).orElse(null);
         if (solicitudAutorizacion == null) return null;
         return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
+    }
+
+    @Transactional
+    public  void marcarSolicitudAutorizacionComoCofirmada(Long idSolicitudAutorizacion) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+        solicitudAutorizacion.setCofirmada(true);
+        solicitudAutorizacionRepository.save(solicitudAutorizacion);
+    }
+
+    @Transactional
+    public  void establecerFechaCofirmaAutorizacion(Long idSolicitudAutorizacion, LocalDateTime fechaCofirma) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+        solicitudAutorizacion.setFechaCofirma(fechaCofirma);
+        solicitudAutorizacionRepository.save(solicitudAutorizacion);
     }
 
 

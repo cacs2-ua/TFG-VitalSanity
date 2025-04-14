@@ -169,14 +169,13 @@ function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
         body: formData
     })
         .then(response => response.text())
-        .then(uuid => {
+        .then(s3Key => {
 
             hideLoading();
 
             setTimeout(() => {
-                window.parent.location.href = `/vital-sanity/api/paciente/pdf-autorizacion-cofirmada?idSolicitudAutorizacion=${idSolicitud}`;
+                window.parent.location.href = `/vital-sanity/api/paciente/pdf-autorizacion-cofirmada?s3Key=${s3Key}`;
             }, 250);
-
 
         })
         .catch(err => {

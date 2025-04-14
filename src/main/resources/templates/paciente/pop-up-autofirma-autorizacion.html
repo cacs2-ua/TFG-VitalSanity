@@ -85,7 +85,7 @@
     </div>
 
     <div class="button-container">
-        <button type="button" onclick="onClickPacienteCofirmarAutorizacion()" class="back-button">Aceptar y firmar</button>
+        <button type="button" onclick="if(document.getElementById('accept').checked){ onClickPacienteCofirmarAutorizacion(); } else { alert('Debe de marcar la casilla asociada a lo expuesto en materia de protección de datos.'); }" class="back-button">Aceptar y Firmar</button>
     </div>
 </div>
 
