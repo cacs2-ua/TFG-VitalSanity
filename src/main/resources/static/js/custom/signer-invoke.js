@@ -123,11 +123,33 @@ function onClickPacienteCofirmarAutorizacion() {
             if (!response.ok) {
                 throw new Error("Error en la solicitud al servidor.");
             }
-            return response.text();
+            return response.json();
         })
         .then(data => {
-            console.log("Respuesta del servidor:", data);
-            // Aquí puedes continuar con la lógica, por ejemplo, mostrar el PDF firmado.
+            const signedPdfBase64 = data.pdfBase64;
+            const idSolicitud = data.idSolicitud;
+            // console.log("Base64 recibido para cofirma:", signedPdfBase64);
+
+
+            AutoScript.cosign(
+                signedPdfBase64,          // firma ya existente en base64
+                "SHA512withRSA",          // algoritmo
+                "PAdES",                  // formato (PAdES)
+                null,                     // params
+                function (cosignedPdfBase64, signerCert, extraInfo) {
+                    // EXITO: subimos la cofirma al servidor
+                    //uploadCosignedPdf(cosignedPdfBase64);
+
+                    console.log("✔ Cofirma realizada correctamente. Resultado (Base64):", cosignedPdfBase64);
+
+                    hideLoading();
+                },
+                function (errorType, errorMessage) {
+                    alert("ERROR en cofirma: " + errorType + " - " + errorMessage);
+
+                    hideLoading();
+                }
+            );
         })
         .catch(error => {
             console.error("Error al confirmar la autorización:", error);
