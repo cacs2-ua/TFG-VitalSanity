@@ -5,6 +5,7 @@ import java.util.Objects;
 public class CentroMedicoData {
 
     private Long id;
+    private String ccc;
     private String iban;
     private String direccion;
 
@@ -16,6 +17,14 @@ public class CentroMedicoData {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCcc() {
+        return ccc;
+    }
+
+    public void setCcc(String ccc) {
+        this.ccc = ccc;
     }
 
     public String getIban() {

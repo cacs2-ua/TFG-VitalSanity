@@ -19,6 +19,7 @@ INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, ema
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (5, 'b8eb426c-46b3-427e-882b-eb03f186563b', true, '03690', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'cacs2@alu.ua.es', 'San Vicente del Raspeig', '05988721G', 'Cristian Andrés Córdoba Silvestre', 'España', false, 'Alicante', '691996241', 3);
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (6, '9b704e4b-0c85-4de8-a1aa-3562e49cbb20', true, '13500', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'second-paciente-default@gmail.com', 'Puertollano', '87952828T', 'second-paciente-default', 'España', false, 'Ciudad Real', '681965234', 4);
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (7, 'd2289317-ecaa-43f9-b9c5-d75cc3dbdc7f', true, '03764', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'adeslas@example.com', 'Alicante', '23938402W', 'Centro Medico Adeslas', 'Espana', false, 'Alicante', '+34 952137683', 2);
+
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (8, '1ddfed57-6ce1-4d95-96ec-23c9b88c2ccb', true, '28001', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'juan.perez@example.com', 'Madrid', '63297648S', 'Juan Perez', 'Espana', false, 'Madrid', '600111222', 3);
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (9, '048a8262-e330-49b2-a8d6-0ff1ec915203', true, '08001', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'maria.lopez@example.com', 'Barcelona', '87654321X', 'Maria Lopez', 'Espana', false, 'Barcelona', '600333444', 3);
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (10, '4f9fffd9-05de-41e9-83ff-9491777062bc', true, '41001', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'carlos.garcia@example.com', 'Sevilla', '11223344Y', 'Carlos Garcia', 'Espana', false, 'Sevilla', '600555666', 3);
@@ -26,12 +27,12 @@ INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, ema
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (12, 'b75174dd-bba0-456f-9506-8c2d40db41bc', true, '076514', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'manuel.gimenez@example.com', 'Alicante', 'X0655490J', 'Manuel Gimenez Rivilla', 'Espana', false, 'Alicante', '714523481', 3);
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (13, 'bfe5a48e-7a60-4378-8e98-40e326a32f2c', true, '62009', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'laura.hernandez@example.com', 'Granada', '48733805W', 'Laura Hernandez Diaz', 'Espana', false, 'Granada', '648798176', 3);
 INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (14, '63cfd087-10d5-4c34-b01c-3192e98505d3', true, '87476', 'f1cfdca558ac0c00464ca0f3e265ec6fb32c57caeb106fbfed9f174f6b814642', 'pablo.rodriguez@example.com', 'Murcia', '45908922W', 'Pablo Rodriguez Carrion', 'Espana', false, 'Murcia', '751438909', 3);
-INSERT INTO public.usuarios (id, uuid, activado, codigo_postal, contrasenya, email, municipio, nif_nie, nombre_completo, pais, primer_acceso, provincia, telefono, tipo_id) VALUES (15, 'a8801c7d-3f0d-4c46-8b5d-2896ccc26aad', true, 'a', '82105df9168605b105a2a5b5bc2d19698b9be31fab9cad10c26dc186e9e0af03', 'b@gmail.com', 'a', '60704841K', 'a', 'a', false, 'aa', 'a', 4);
 
 
 
-INSERT INTO public.centros_medicos (id, direccion, iban, usuario_id) VALUES (1, 'Calle Pablo Iglesias', 'ES3900168167502018540968', 2);
-INSERT INTO public.centros_medicos (id, direccion, iban, usuario_id) VALUES (2, 'Calle Pablo Iglesias Nº27', 'ES1630177794343116396906', 7);
+INSERT INTO public.centros_medicos (id, ccc, direccion, iban, usuario_id) VALUES (1, '13/999888777', 'Calle Manolo Sanchez Nº 34', 'ES3900168167502018540968', 2);
+INSERT INTO public.centros_medicos (id, ccc, direccion, iban, usuario_id) VALUES (2, '03/987654321', 'Calle Pablo Iglesias Nº27', 'ES1630177794343116396906', 7);
+
 
 
 INSERT INTO public.especialidades_medicas (id, nombre) VALUES (1, 'Psicologia');
@@ -45,15 +46,14 @@ INSERT INTO public.especialidades_medicas (id, nombre) VALUES (8, 'Traumatologia
 
 
 
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (1, 'a', '2003-02-04', 'hombre', 'a', 'a', 1, 1, 5);
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (2, 'CCC001', '1980-05-15', 'Masculino', 'ES7620770024003102575766', 'NAF123456', 1, 2, 8);
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (3, 'CCC002', '1985-08-22', 'Femenino', 'ES9121000418450200051332', 'NAF654321', 1, 3, 9);
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (4, 'CCC003', '1975-12-05', 'Masculino', 'ES7921000813610123456789', 'NAF987654', 1, 4, 10);
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (5, 'CCC004', '1983-04-19', 'Femenino', 'ES1702370421294954610030', 'NAF871468', 2, 5, 11);
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (6, 'CCC005', '1990-03-12', 'Masculino', 'ES4000563849819906926808', 'NAF381905', 2, 2, 12);
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (7, 'CCC006', '1972-11-04', 'Femenino', 'ES4001902194314053342469', 'NAF976142', 2, 6, 13);
-INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (8, 'CCC007', '1970-08-09', 'Masculino', 'ES8430242743684355262412', 'NAF471570', 2, 7, 14);
-
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (1, '13/999888777', '2003-02-04', 'hombre', 'a', 'a', 1, 1, 5);
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (2, '13/999888777', '1980-05-15', 'Masculino', 'ES7620770024003102575766', 'NAF123456', 1, 2, 8);
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (3, '13/999888777', '1985-08-22', 'Femenino', 'ES9121000418450200051332', 'NAF654321', 1, 3, 9);
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (4, '13/999888777', '1975-12-05', 'Masculino', 'ES7921000813610123456789', 'NAF987654', 1, 4, 10);
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (5, '03/987654321', '1983-04-19', 'Femenino', 'ES1702370421294954610030', 'NAF871468', 2, 5, 11);
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (6, '03/987654321', '1990-03-12', 'Masculino', 'ES4000563849819906926808', 'NAF381905', 2, 2, 12);
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (7, '03/987654321', '1972-11-04', 'Femenino', 'ES4001902194314053342469', 'NAF976142', 2, 6, 13);
+INSERT INTO public.profesionales_medicos (id, ccc, fecha_nacimiento, genero, iban, naf, centro_medico_id, especialidad_medica_id, usuario_id) VALUES (8, '03/987654321', '1970-08-09', 'Masculino', 'ES8430242743684355262412', 'NAF471570', 2, 7, 14);
 
 
 

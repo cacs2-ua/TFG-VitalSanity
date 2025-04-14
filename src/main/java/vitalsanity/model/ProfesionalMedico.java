@@ -10,7 +10,12 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "profesionales_medicos")
+@Table(
+        name = "profesionales_medicos",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"naf", "ccc"})
+        }
+)
 public class ProfesionalMedico implements Serializable {
 
     @Id
@@ -21,7 +26,6 @@ public class ProfesionalMedico implements Serializable {
     private String naf;
 
     @NotNull
-    @Column(unique = true)
     private String ccc;
 
     @NotNull
@@ -102,6 +106,7 @@ public class ProfesionalMedico implements Serializable {
         }
 
         this.centroMedico = centroMedico;
+        this.ccc = centroMedico.getCcc();
 
         if (!centroMedico.getProfesionalesMedicos().contains(this)) {
             centroMedico.addProfesionalMedico(this);

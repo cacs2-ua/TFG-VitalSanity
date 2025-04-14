@@ -193,6 +193,7 @@ public class UsuarioService {
 
         // Crear entidad CentroMedico
         CentroMedico centroMedico = new CentroMedico();
+        centroMedico.setCcc(data.getCcc());
         centroMedico.setIban(data.getIban());
         centroMedico.setDireccion(data.getDireccion());
         // Establecer relacion bidireccional
