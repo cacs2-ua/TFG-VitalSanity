@@ -50,29 +50,6 @@ public class PacienteController{
         return "paciente/ver-informes-propios";
     }
 
-    @GetMapping("/api/paciente/notificaciones")
-    public String verNotificacionesDeAutorizacion(Model model) {
-        Long idUsuarioPaciente = getUsuarioLogeadoId();
-
-        PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
-
-        List<SolicitudAutorizacionData> solicitudesAutorizacion = pacienteService.obtenerTodasLasSolicitudesValidas(pacienteData.getId());
-        model.addAttribute("solicitudesAutorizacion", solicitudesAutorizacion);
-        return "paciente/ver-notificaciones-de-autorizacion";
-    }
-
-    @GetMapping("/api/paciente/pop-up-autofirma-autorizacion")
-    public String cofirmarAutorizacionForm(@RequestParam("solicitudId") Long solicitudId,
-                                           Model model,
-                                           HttpServletRequest request) {
-        SolicitudAutorizacionData solicitud = pacienteService.obtenerSolicitudPorId(solicitudId);
-        model.addAttribute("solicitud", solicitud);
-        model.addAttribute("contextPath", request.getContextPath()); // 👈 Añadido
-        return "paciente/pop-up-autofirma-autorizacion";
-    }
-
-
-
     @GetMapping("/api/paciente/{idPaciente}/profesionales-autorizados")
     public String verProfesionalesMedicosAutorizados(@PathVariable(value="idPaciente") Long idInforme,
                                                   Model model) {
@@ -98,6 +75,29 @@ public class PacienteController{
     }
 
     // LÓGICA COFIRMA
+
+    @GetMapping("/api/paciente/notificaciones")
+    public String verNotificacionesDeAutorizacion(Model model,
+                                                  HttpServletRequest request) {
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+
+        PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
+
+        List<SolicitudAutorizacionData> solicitudesAutorizacion = pacienteService.obtenerTodasLasSolicitudesValidas(pacienteData.getId());
+        model.addAttribute("solicitudesAutorizacion", solicitudesAutorizacion);
+        model.addAttribute("contextPath", request.getContextPath());
+        return "paciente/ver-notificaciones-de-autorizacion";
+    }
+
+    @GetMapping("/api/paciente/pop-up-autofirma-autorizacion")
+    public String cofirmarAutorizacionForm(@RequestParam("solicitudId") Long solicitudId,
+                                           Model model,
+                                           HttpServletRequest request) {
+        SolicitudAutorizacionData solicitud = pacienteService.obtenerSolicitudPorId(solicitudId);
+        model.addAttribute("solicitud", solicitud);
+        model.addAttribute("contextPath", request.getContextPath());
+        return "paciente/pop-up-autofirma-autorizacion";
+    }
 
     //Este método se encarga de obtener la solicitud de autorización firmada anteriormene para poder cofirmarla
     @PostMapping("/api/paciente/solicitud-autorizacion-firmada")
