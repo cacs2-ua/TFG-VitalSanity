@@ -97,7 +97,7 @@ public class PacienteService {
     @Transactional(readOnly = true)
     public List<SolicitudAutorizacionData> obtenerTodasLasSolicitudesValidas(Long pacienteId) {
         List<SolicitudAutorizacion> solicitudesAutorizacion =
-                solicitudAutorizacionRepository.findByPacienteIdAndDenegadaFalse(pacienteId);
+                solicitudAutorizacionRepository.findByPacienteIdAndDenegadaFalseAndFirmadaTrueAndCofirmadaFalse(pacienteId);
 
         List<SolicitudAutorizacionData> solicitudesAutorizacionData = solicitudesAutorizacion.stream()
                 .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
