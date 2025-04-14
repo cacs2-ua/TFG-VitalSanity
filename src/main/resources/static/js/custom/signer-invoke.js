@@ -82,7 +82,6 @@ function subirAutorizacionFirmada(signedPdfBase64) {
                 window.location.href = "/vital-sanity/api/profesional-medico/pdf-autorizacion-firmada";
             }, 250);
 
-
         })
         .catch(err => {
             alert("Error subiendo PDF firmado: " + err);
@@ -141,8 +140,6 @@ function onClickPacienteCofirmarAutorizacion() {
                     subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64);
 
                     console.log("✔ Cofirma realizada correctamente. Resultado (Base64):", cosignedPdfBase64);
-
-                    hideLoading();
                 },
                 function (errorType, errorMessage) {
                     alert("ERROR en cofirma: " + errorType + " - " + errorMessage);
@@ -150,13 +147,10 @@ function onClickPacienteCofirmarAutorizacion() {
                     hideLoading();
                 }
             );
-        })
-        .catch(error => {
+        }) .catch(error => {
             console.error("Error al confirmar la autorización:", error);
-        })
-        .finally(() => {
             hideLoading();
-        });
+        })
 }
 
 
@@ -176,12 +170,12 @@ function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
     })
         .then(response => response.text())
         .then(uuid => {
+
             hideLoading();
 
             setTimeout(() => {
-                window.parent.location.href = "/vital-sanity/api/paciente/notificaciones";
+                window.parent.location.href = "/vital-sanity/api/paciente/pdf-autorizacion-cofirmada";
             }, 250);
-
 
         })
         .catch(err => {
