@@ -166,7 +166,9 @@ function onClickPacienteCofirmarAutorizacion() {
 function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
 
     const formData = new FormData();
+    formData.append("idSolicitudAutorizacion", idSolicitud);
     formData.append("cosignedPdfBase64", cosignedPdfBase64);
+
 
     fetch("/vital-sanity/api/paciente/aws-pdf-autorizacion-cofirmada", {
         method: "POST",
@@ -177,7 +179,7 @@ function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
             hideLoading();
 
             setTimeout(() => {
-                window.location.href = "/vital-sanity/api/paciente/notificaciones";
+                window.parent.location.href = "/vital-sanity/api/paciente/notificaciones";
             }, 250);
 
 

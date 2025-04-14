@@ -122,7 +122,9 @@ public class PacienteController{
 
     @PostMapping("/api/paciente/aws-pdf-autorizacion-cofirmada")
     @ResponseBody
-    public String subirPdfAutorizacionCofirmadaEnAws(@RequestParam String cosignedPdfBase64) throws IOException {
+    public String subirPdfAutorizacionCofirmadaEnAws(@RequestParam Long idSolicitudAutorizacion,
+                                                     @RequestParam String cosignedPdfBase64
+                                                     ) throws IOException {
         byte[] cosignedPdf = Base64.getDecoder().decode(cosignedPdfBase64);
         String key = "debug/autorizaciones/" + "_" + System.currentTimeMillis() + ".pdf";
         s3VitalSanityService.subirFicheroBytes(key, cosignedPdf);
