@@ -76,6 +76,8 @@
         e.preventDefault();
         const solicitudId = this.parentElement.querySelector('.button-authorize').getAttribute('data-solicitud-id');
         const urlPopUp = contextPath + '/api/paciente/denegar-solicitud-autorizacion?idSolicitudAutorizacion=' + solicitudId;
+        const popupWindow = document.querySelector('.popup-window');
+        popupWindow.classList.add('denegar');
         document.querySelector('.popup-iframe').setAttribute('src', urlPopUp);
         document.getElementById('popupOverlay').style.display = 'flex';
       });
@@ -85,6 +87,7 @@
 
     // Listener para cerrar el pop-up
     document.getElementById('popupClose').addEventListener('click', function() {
+      document.querySelector('.popup-window').classList.remove('denegar');
       document.getElementById('popupOverlay').style.display = 'none';
     });
 
