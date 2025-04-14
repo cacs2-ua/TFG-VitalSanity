@@ -212,10 +212,18 @@ public class PacienteController{
     }
 
     @GetMapping("/api/paciente/denegar-solicitud-autorizacion")
-    public String denegarSolicitudAutorizacion(@RequestParam Long idSolicitudAutorizacion,
+    public String denegarSolicitudAutorizacionForm(@RequestParam Long idSolicitudAutorizacion,
                                                          Model model) {
 
+        model.addAttribute("idSolicitudAutorizacion", idSolicitudAutorizacion);
         return "paciente/pop-up-denegar-solicitud-autorizacion";
+    }
+
+    @PostMapping("/api/paciente/denegar-solicitud-autorizacion")
+    public String denegarSolicitudAutorizacion(@RequestParam Long idSolicitudAutorizacion,
+                                                   Model model) {
+        System.out.println("Iniciando el proceso de denegación de la solicitud de autorización");
+        return "paciente/ver-notificaciones-de-autorizacion";
     }
 
 

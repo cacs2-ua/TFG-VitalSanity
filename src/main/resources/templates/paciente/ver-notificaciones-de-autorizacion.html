@@ -68,11 +68,14 @@
       });
     });
 
+
+
+
     document.querySelectorAll('.button-deny').forEach(button => {
       button.addEventListener('click', function(e) {
         e.preventDefault();
         const solicitudId = this.parentElement.querySelector('.button-authorize').getAttribute('data-solicitud-id');
-        const urlPopUp = contextPath + '/api/paciente/pop-up-autofirma-autorizacion?solicitudId=' + solicitudId;
+        const urlPopUp = contextPath + '/api/paciente/denegar-solicitud-autorizacion?idSolicitudAutorizacion=' + solicitudId;
         document.querySelector('.popup-iframe').setAttribute('src', urlPopUp);
         document.getElementById('popupOverlay').style.display = 'flex';
       });
