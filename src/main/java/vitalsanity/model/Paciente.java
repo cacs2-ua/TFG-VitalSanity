@@ -42,11 +42,19 @@ public class Paciente implements Serializable {
     public void addProfesionalMedicoAutorizado(ProfesionalMedico profesionalMedicoAutorizado) {
         this.getProfesionalesMedicosAutorizados().add(profesionalMedicoAutorizado);
         profesionalMedicoAutorizado.getPacientesQueHanAutorizado().add(this);
+
+        this.getProfesionalesMedicosDesautorizados().remove(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanDesautorizado().remove(this);
+
+
     }
 
     public  void  quitarProfesionalMedicoAutorizado (ProfesionalMedico profesionalMedicoAutorizado) {
         this.getProfesionalesMedicosAutorizados().remove(profesionalMedicoAutorizado);
         profesionalMedicoAutorizado.getPacientesQueHanAutorizado().remove(this);
+
+        this.getProfesionalesMedicosDesautorizados().add(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanDesautorizado().add(this);
     }
 
 

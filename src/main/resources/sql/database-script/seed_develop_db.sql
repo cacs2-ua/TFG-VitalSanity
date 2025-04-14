@@ -1,5 +1,7 @@
 DELETE FROM documentos;
 DELETE FROM solicitudes_autorizacion;
+DELETE FROM pacientes_profesionales_medicos_autorizados;
+DELETE FROM pacientes_profesionales_medicos_desautorizados;
 DELETE FROM profesionales_medicos;
 DELETE FROM especialidades_medicas;
 DELETE FROM centros_medicos;

@@ -139,6 +139,7 @@ public class PacienteService {
         Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
         ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
         paciente.addProfesionalMedicoAutorizado(profesionalMedico);
+        paciente.quitarProfesionalMedicoDesautorizado(profesionalMedico);
     }
 
     @Transactional

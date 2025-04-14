@@ -11,6 +11,7 @@ import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
@@ -223,7 +224,13 @@ public class PacienteController{
     public String denegarSolicitudAutorizacion(@RequestParam Long idSolicitudAutorizacion,
                                                    Model model) {
         System.out.println("Iniciando el proceso de denegación de la solicitud de autorización");
-        return "paciente/ver-notificaciones-de-autorizacion";
+        Long pacienteId = pacienteService.encontrarPacienteAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId();
+        Long profesionalMedicoId = Long.parseLong(profesionalMedicoService.encontrarProfesionalMedicoAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId());
+        pacienteService.agregarProfesionalMedicoDesautorizado(pacienteId, profesionalMedicoId);
+
+        pacienteService.marcarSolicitudAutorizacionComoDenegada(idSolicitudAutorizacion);
+
+        return "paciente/denegacion-exitosa";
     }
 
 
