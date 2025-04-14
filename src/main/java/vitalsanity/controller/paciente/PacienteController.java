@@ -16,6 +16,7 @@ import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
@@ -117,6 +118,16 @@ public class PacienteController{
             e.printStackTrace();
             return null;
         }
+    }
+
+    @PostMapping("/api/paciente/aws-pdf-autorizacion-cofirmada")
+    @ResponseBody
+    public String subirPdfAutorizacionCofirmadaEnAws(@RequestParam String cosignedPdfBase64) throws IOException {
+        byte[] cosignedPdf = Base64.getDecoder().decode(cosignedPdfBase64);
+        String key = "debug/autorizaciones/" + "_" + System.currentTimeMillis() + ".pdf";
+        s3VitalSanityService.subirFicheroBytes(key, cosignedPdf);
+
+        return  "ok";
     }
 
 }

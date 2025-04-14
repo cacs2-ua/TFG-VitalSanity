@@ -126,8 +126,8 @@ function onClickPacienteCofirmarAutorizacion() {
             return response.json();
         })
         .then(data => {
-            const signedPdfBase64 = data.pdfBase64;
             const idSolicitud = data.idSolicitud;
+            const signedPdfBase64 = data.pdfBase64;
             // console.log("Base64 recibido para cofirma:", signedPdfBase64);
 
 
@@ -138,7 +138,7 @@ function onClickPacienteCofirmarAutorizacion() {
                 null,                     // params
                 function (cosignedPdfBase64, signerCert, extraInfo) {
                     // EXITO: subimos la cofirma al servidor
-                    //uploadCosignedPdf(cosignedPdfBase64);
+                    subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64);
 
                     console.log("✔ Cofirma realizada correctamente. Resultado (Base64):", cosignedPdfBase64);
 
@@ -155,6 +155,35 @@ function onClickPacienteCofirmarAutorizacion() {
             console.error("Error al confirmar la autorización:", error);
         })
         .finally(() => {
+            hideLoading();
+        });
+}
+
+
+/**
+ * Subimos el PDF de la autorizacion cofirmado (Base64) al servidor y mostramos enlace descarga.
+ */
+function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
+
+    const formData = new FormData();
+    formData.append("cosignedPdfBase64", cosignedPdfBase64);
+
+    fetch("/vital-sanity/api/paciente/aws-pdf-autorizacion-cofirmada", {
+        method: "POST",
+        body: formData
+    })
+        .then(response => response.text())
+        .then(uuid => {
+            hideLoading();
+
+            setTimeout(() => {
+                window.location.href = "/vital-sanity/api/paciente/notificaciones";
+            }, 250);
+
+
+        })
+        .catch(err => {
+            alert("Error subiendo PDF cofirmado: " + err);
             hideLoading();
         });
 }
