@@ -127,5 +127,25 @@ public class PacienteService {
         solicitudAutorizacionRepository.save(solicitudAutorizacion);
     }
 
+    @Transactional(readOnly = true)
+    public PacienteData encontrarPacienteAPartirDeIdSolicitudAutorizacion(Long solicitudId) {
+        Paciente paciente = pacienteRepository.findBySolicitudesAutorizacion_Id(solicitudId).orElse(null);
+        if (paciente == null) return null;
+        return modelMapper.map(paciente, PacienteData.class);
+    }
+
+    @Transactional
+    public void agregarProfesionalMedicoAutorizado(Long idPaciente, Long idProfesionalMedico) {
+        Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
+        paciente.addProfesionalMedicoAutorizado(profesionalMedico);
+    }
+
+    @Transactional
+    public void agregarProfesionalMedicoDesautorizado(Long idPaciente, Long idProfesionalMedico) {
+        Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
+        paciente.addProfesionalMedicoDesautorizado(profesionalMedico);
+    }
 
 }

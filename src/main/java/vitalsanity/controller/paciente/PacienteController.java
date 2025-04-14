@@ -136,7 +136,11 @@ public class PacienteController{
     public String subirPdfAutorizacionCofirmadaEnAws(@RequestParam Long idSolicitudAutorizacion,
                                                      @RequestParam String cosignedPdfBase64
                                                      ) throws IOException {
+        Long idPaciente = pacienteService.encontrarPacienteAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId();
         Long idProfesionalMedico = Long.parseLong(profesionalMedicoService.encontrarProfesionalMedicoAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId());
+
+        pacienteService.agregarProfesionalMedicoAutorizado(idPaciente, idProfesionalMedico);
+
         UsuarioData usuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(idProfesionalMedico);
         String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
 

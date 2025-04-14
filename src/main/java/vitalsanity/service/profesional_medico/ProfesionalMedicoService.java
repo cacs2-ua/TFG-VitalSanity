@@ -180,12 +180,16 @@ public class ProfesionalMedicoService {
         if (solicitudAutorizacion == null) return null;
         return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
     }
+
     @Transactional(readOnly = true)
     public ProfesionalMedicoData encontrarProfesionalMedicoAPartirDeIdSolicitudAutorizacion(Long solicitudId) {
         ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findBySolicitudesAutorizacion_Id(solicitudId).orElse(null);
         if (profesionalMedico == null) return null;
         return modelMapper.map(profesionalMedico, ProfesionalMedicoData.class);
     }
+
+
+
 
 
 }
