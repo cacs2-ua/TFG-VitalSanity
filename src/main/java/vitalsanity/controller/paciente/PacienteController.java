@@ -211,4 +211,12 @@ public class PacienteController{
 
     }
 
+    @GetMapping("/api/paciente/denegar-solicitud-autorizacion")
+    public String denegarSolicitudAutorizacion(@RequestParam Long idSolicitudAutorizacion,
+                                                         Model model) {
+
+        return "paciente/pop-up-denegar-solicitud-autorizacion";
+    }
+
+
 }
