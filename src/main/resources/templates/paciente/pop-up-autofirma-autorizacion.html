@@ -234,9 +234,8 @@
         }
     </style>
 
-    <script>
-        const base = window.location.pathname.split("/")[1];
-        const contextPath = base && base !== "api" ? "/" + base : "";
+    <script th:inline="javascript">
+        const contextPath = /*[[${contextPath}]]*/ '';
     </script>
 
     <!-- Cargamos autoscript.js (JavaScript de despliegue de @firma) -->

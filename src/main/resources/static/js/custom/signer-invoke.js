@@ -110,8 +110,9 @@ function onClickPacienteCofirmarAutorizacion() {
     const params = new URLSearchParams();
     params.append("idSolicitudAutorizacion", solicitudAutorizacionId);
 
+    const safeContextPath = typeof contextPath !== "undefined" ? contextPath : "";
     // Realizamos la llamada fetch enviando el parámetro
-    fetch(`${contextPath}/api/paciente/solicitud-autorizacion-firmada`, {
+    fetch(`${safeContextPath}/api/paciente/solicitud-autorizacion-firmada`, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"

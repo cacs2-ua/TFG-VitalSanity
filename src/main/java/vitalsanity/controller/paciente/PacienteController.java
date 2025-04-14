@@ -1,5 +1,6 @@
 package vitalsanity.controller.paciente;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,11 +62,15 @@ public class PacienteController{
     }
 
     @GetMapping("/api/paciente/pop-up-autofirma-autorizacion")
-    public String cofirmarAutorizacionForm(@RequestParam("solicitudId") Long solicitudId, Model model) {
+    public String cofirmarAutorizacionForm(@RequestParam("solicitudId") Long solicitudId,
+                                           Model model,
+                                           HttpServletRequest request) {
         SolicitudAutorizacionData solicitud = pacienteService.obtenerSolicitudPorId(solicitudId);
         model.addAttribute("solicitud", solicitud);
+        model.addAttribute("contextPath", request.getContextPath()); // 👈 Añadido
         return "paciente/pop-up-autofirma-autorizacion";
     }
+
 
 
     @GetMapping("/api/paciente/{idPaciente}/profesionales-autorizados")
@@ -106,7 +111,7 @@ public class PacienteController{
 
             String pdfFirmadoBase64 = Base64.getEncoder().encodeToString(pdfFirmado);
 
-            return new AutorizacionFirmadaResponse(pdfFirmadoBase64, idSolicitudAutorizacion);
+            return new AutorizacionFirmadaResponse(idSolicitudAutorizacion, pdfFirmadoBase64);
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
