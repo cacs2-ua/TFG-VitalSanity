@@ -105,10 +105,12 @@ public class PacienteService {
         return solicitudesAutorizacionData;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public SolicitudAutorizacionData obtenerSolicitudPorId(Long solicitudId) {
         SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(solicitudId).orElse(null);
         if (solicitudAutorizacion == null) return null;
         return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
     }
+
+
 }

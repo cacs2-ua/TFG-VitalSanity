@@ -174,8 +174,9 @@ function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
             hideLoading();
 
             setTimeout(() => {
-                window.parent.location.href = "/vital-sanity/api/paciente/pdf-autorizacion-cofirmada";
+                window.parent.location.href = `/vital-sanity/api/paciente/pdf-autorizacion-cofirmada?idSolicitudAutorizacion=${idSolicitud}`;
             }, 250);
+
 
         })
         .catch(err => {

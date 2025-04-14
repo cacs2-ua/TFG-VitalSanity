@@ -14,6 +14,7 @@ import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
+import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
 import java.io.IOException;
@@ -29,8 +30,12 @@ public class PacienteController{
 
     @Autowired
     private ManagerUserSession managerUserSession;
+
     @Autowired
     private PacienteService pacienteService;
+
+    @Autowired
+    private ProfesionalMedicoService profesionalMedicoService;
 
     @Autowired
     private S3VitalSanityService s3VitalSanityService;
@@ -126,17 +131,31 @@ public class PacienteController{
     public String subirPdfAutorizacionCofirmadaEnAws(@RequestParam Long idSolicitudAutorizacion,
                                                      @RequestParam String cosignedPdfBase64
                                                      ) throws IOException {
+        Long idProfesionalMedico = Long.parseLong(profesionalMedicoService.encontrarProfesionalMedicoAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId());
+        String uuidUsuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(idProfesionalMedico).getUuid();
+
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        String uuidUsuarioPaciente = usuarioService.findById(idUsuarioPaciente).getUuid();
+
+        String s3Key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+
         byte[] cosignedPdf = Base64.getDecoder().decode(cosignedPdfBase64);
-        String key = "debug/autorizaciones/" + "prueba_cofirma.pdf";
-        s3VitalSanityService.subirFicheroBytes(key, cosignedPdf);
+        s3VitalSanityService.subirFicheroBytes(s3Key, cosignedPdf);
 
         return  "ok";
     }
 
     @GetMapping("/api/paciente/pdf-autorizacion-cofirmada")
-    public String descargarPdfAutorizacionCofirmadaDeAws(Model model) {
+    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam Long idSolicitudAutorizacion,
+                                                         Model model) {
 
-        String s3Key = "debug/autorizaciones/" + "prueba_cofirma.pdf";
+        Long idProfesionalMedico = Long.parseLong(profesionalMedicoService.encontrarProfesionalMedicoAPartirDeIdSolicitudAutorizacion(idSolicitudAutorizacion).getId());
+        String uuidUsuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(idProfesionalMedico).getUuid();
+
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        String uuidUsuarioPaciente = usuarioService.findById(idUsuarioPaciente).getUuid();
+
+        String s3Key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
 
         String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
                 s3Key,

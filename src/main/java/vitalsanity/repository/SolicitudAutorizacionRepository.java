@@ -1,6 +1,7 @@
 package vitalsanity.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import vitalsanity.model.ProfesionalMedico;
 import vitalsanity.model.SolicitudAutorizacion;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface SolicitudAutorizacionRepository extends JpaRepository<Solicitud
     Optional<SolicitudAutorizacion> findTopByProfesionalMedicoIdAndPacienteIdOrderByIdDesc(Long profesionalMedicoId, Long pacienteId);
 
     List<SolicitudAutorizacion> findByPacienteIdAndDenegadaFalse(Long pacienteId);
+
+
 
 
 
