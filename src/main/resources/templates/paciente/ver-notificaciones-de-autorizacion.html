@@ -35,7 +35,12 @@
         </div>
       </div>
 
+      <div th:if="${noHaySolicitudes == true}" class="no-authorization-requests">
+        <p>No existe actualmente ninguna solicitud de autorización para usted</p>
+      </div>
+
     </div>
+
   </div>
 
   <!-- ===== MODAL / POP-UP CONTAINER (NEW) ===== -->

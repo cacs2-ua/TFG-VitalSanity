@@ -95,9 +95,15 @@ public class PacienteController{
 
         PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
 
+        boolean noHaySolicitudes = false;
+
         List<SolicitudAutorizacionData> solicitudesAutorizacion = pacienteService.obtenerTodasLasSolicitudesValidas(pacienteData.getId());
+        if (solicitudesAutorizacion.isEmpty()) {
+            noHaySolicitudes = true;
+        }
         model.addAttribute("solicitudesAutorizacion", solicitudesAutorizacion);
         model.addAttribute("contextPath", request.getContextPath());
+        model.addAttribute("noHaySolicitudes", noHaySolicitudes);
         return "paciente/ver-notificaciones-de-autorizacion";
     }
 
