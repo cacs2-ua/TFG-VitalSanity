@@ -216,8 +216,8 @@ window.addEventListener("load", () => {
     if (AutoScript.isAndroid() || AutoScript.isIOS()) {
         AutoScript.setForceWSMode(true);
         AutoScript.setServlets(
-            "https://192.168.43.218/vital-sanity/afirma-signature-storage/StorageService",
-            "https://192.168.43.218/vital-sanity/afirma-signature-retriever/RetrieveService"
+            "https://192.168.247.218/vital-sanity/afirma-signature-storage/StorageService",
+            "https://192.168.247.218/vital-sanity/afirma-signature-retriever/RetrieveService"
         );
     }
     // Cargamos la app de autofirma
