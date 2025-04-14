@@ -59,6 +59,9 @@ public class GenerarPdf {
             document.add(new Paragraph("Especialidad del profesional médico: " + profesionalMedico.getEspecialidadMedica().getNombre()));
             document.add(new Paragraph("NIF del Centro médico desde el que se ha solicitado la autorización: " + centro.getUsuario().getNifNie()));
             document.add(new Paragraph("Nombre del Centro médico desde el que se ha solicitado la autorización: " + centro.getUsuario().getNombreCompleto()));
+            document.add(new Paragraph("Provincia del Centro médico desde el que se ha solicitado la autorización: " + centro.getUsuario().getProvincia()));
+            document.add(new Paragraph("Municipio del Centro médico desde el que se ha solicitado la autorización: " + centro.getUsuario().getMunicipio()));
+            document.add(new Paragraph("Dirección del Centro médico desde el que se ha solicitado la autorización: " + centro.getDireccion()));
             document.add(new Paragraph("Nombre del paciente: " + usuarioPaciente.getNombreCompleto()));
             document.add(new Paragraph("NIF/NIE del paciente: " + usuarioPaciente.getNifNie()));
             document.add(new Paragraph("Motivo: " + motivo));
