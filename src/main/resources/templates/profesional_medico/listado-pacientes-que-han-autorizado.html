@@ -29,11 +29,11 @@
       </div>
 
       <!-- Report Cards -->
-      <div class="report-card">
-        <div class="report-patient"><strong>Nombre del paciente:</strong> <span class="report-patient-name">Pablo Ramos Castillo</span></div>
-        <div class="report-detail"><strong>NIF:</strong> 67890123T</div>
-        <div class="report-detail"><strong>Género:</strong> Masculino</div>
-        <div class="report-detail"><strong>Edad:</strong> 21</div>
+      <div th:each="paciente: ${pacientes}" class="report-card">
+        <div class="report-patient"><strong>Nombre del paciente:</strong> <span th:text="${paciente.usuario.nombreCompleto}" class="report-patient-name"></span></div>
+        <div class="report-detail"><strong>NIF: </strong> <span th:text="${paciente.usuario.nifNie}"> </span> </div>
+        <div class="report-detail"><strong>Género: </strong> <span th:text="${paciente.genero}"> </span> </div>
+        <div class="report-detail"><strong>Edad: </strong> <span th:text="${paciente.fechaNacimiento}"> </span> </div>
         <div class="button-container">
           <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
             <button type="submit" class="button-access-record">Acceder al historial</button>
@@ -41,29 +41,6 @@
         </div>
       </div>
 
-      <div class="report-card">
-        <div class="report-patient"><strong>Nombre del paciente:</strong> <span class="report-patient-name">Adriana Ramos Fernández</span></div>
-        <div class="report-detail"><strong>NIF:</strong> 45678901M</div>
-        <div class="report-detail"><strong>Género:</strong> Femenino</div>
-        <div class="report-detail"><strong>Edad:</strong> 27</div>
-        <div class="button-container">
-          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
-            <button type="submit" class="button-access-record">Acceder al historial</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="report-card">
-        <div class="report-patient"><strong>Nombre del paciente:</strong> <span class="report-patient-name">Francisco Martín Cano</span></div>
-        <div class="report-detail"><strong>NIE:</strong> Y2963883W</div>
-        <div class="report-detail"><strong>Género:</strong> Masculino</div>
-        <div class="report-detail"><strong>Edad:</strong> 25</div>
-        <div class="button-container">
-          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
-            <button type="submit" class="button-access-record">Acceder al historial</button>
-          </form>
-        </div>
-      </div>
     </div>
   </div>
   <div th:replace="navbar::javascript"></div>

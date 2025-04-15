@@ -16,4 +16,10 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
 
     Optional<Paciente> findBySolicitudesAutorizacion_Id(Long id);
 
+    List<Paciente> findByProfesionalesMedicosAutorizados_IdOrderByIdAsc(Long profesionalMedicoId);
+
+    List<Paciente> findByProfesionalesMedicosDesautorizados_IdOrderByIdAsc(Long profesionalMedicoId);
+
+
+
 }

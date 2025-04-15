@@ -55,7 +55,7 @@
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/buscar-paciente'}" onclick="highlightLink(this)">Solicitar Autorizacion</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
-                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-autorizado'}" onclick="highlightLink(this)">Pacientes que han autorizado</a>
+                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/pacientes-que-han-autorizado'}" onclick="highlightLink(this)">Pacientes que han autorizado</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/' + ${usuario.id} + '/pacientes-que-han-desautorizado'}" onclick="highlightLink(this)">Pacientes desautorizados</a>

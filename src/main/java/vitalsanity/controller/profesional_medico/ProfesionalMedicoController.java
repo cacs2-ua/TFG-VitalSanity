@@ -12,7 +12,9 @@ import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
+import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.DocumentoData;
+import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.SolicitudAutorizacion;
 import vitalsanity.service.general_user.UsuarioService;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -85,11 +88,21 @@ public class ProfesionalMedicoController {
         return "profesional_medico/ver-detalles-informe";
     }
 
-    @GetMapping("/api/profesional-medico/{idProfesionalMedico}/pacientes-que-han-autorizado")
-    public String verPacientesQueHanAutorizado(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                             Model model) {
+    @GetMapping("/api/profesional-medico/pacientes-que-han-autorizado")
+    public String verPacientesQueHanAutorizado(Model model) {
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
+        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanAutorizado(Long.parseLong(profesionalMedicoData.getId()));
+
+        if (pacientesData.isEmpty()) {
+            boolean noHayPacientes = true;
+            model.addAttribute("noHayPacientes", noHayPacientes);
+        }
+        model.addAttribute("pacientes", pacientesData);
+
         return "profesional_medico/listado-pacientes-que-han-autorizado";
     }
+
 
     @GetMapping("/api/profesional-medico/{idProfesionalMedico}/pacientes-que-han-desautorizado")
     public String verPacientesQueHanDesautorizado(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,

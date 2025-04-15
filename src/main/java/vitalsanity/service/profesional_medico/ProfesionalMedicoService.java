@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -186,6 +188,17 @@ public class ProfesionalMedicoService {
         ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findBySolicitudesAutorizacion_Id(solicitudId).orElse(null);
         if (profesionalMedico == null) return null;
         return modelMapper.map(profesionalMedico, ProfesionalMedicoData.class);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PacienteData> obtenerPacientesQueHanAutorizado(Long idProfesional) {
+        List<Paciente> pacientesQueHanAutorizado = pacienteRepository.findByProfesionalesMedicosAutorizados_IdOrderByIdAsc(idProfesional);
+
+        List<PacienteData> pacientesQueHanAutorizadoData = pacientesQueHanAutorizado.stream()
+                .map(paciente -> modelMapper.map(paciente, PacienteData.class))
+                .collect(Collectors.toList());
+
+        return  pacientesQueHanAutorizadoData;
     }
 
 
