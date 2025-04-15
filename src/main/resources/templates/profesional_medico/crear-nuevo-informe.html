@@ -4,203 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crear nuevo informe</title>
-
-  <style>
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    .body {
-      background-color: #DBD5FF;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 1rem;
-    }
-
-    /* Typography */
-    .page-title {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      text-decoration: underline;
-    }
-
-    /* Form container */
-    .form-container {
-      background-color: #6528BF;
-      border-radius: 0.5rem;
-      width: 100%;
-      max-width: 35rem;
-      padding: 1rem;
-      color: white;
-    }
-
-    /* Form sections */
-    .form-section {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-field {
-      margin-bottom: 1rem;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-    }
-
-    .required::before {
-      content: "*";
-      color: white;
-    }
-
-    .form-input, .form-textarea {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 0.25rem;
-      border: none;
-      background-color: #F5F3FF;
-    }
-
-    .form-textarea {
-      min-height: 5rem;
-      resize: vertical;
-    }
-
-    /* Modified: Underline the entire ID block and combine the text */
-    .form-id {
-      display: flex;
-      margin-bottom: 1rem;
-      justify-content: center;
-      text-decoration: underline; /* Underlines all content including spaces */
-    }
-
-    /* New combined ID class; the <strong> tag inside ensures bold for "Id. informe:" */
-    .form-id-combined {
-      font-size: 1.3rem;
-    }
-
-    /* Attachments section */
-    .attachments-title {
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-      text-decoration: underline;
-    }
-
-    .attachment-button {
-      background-color: #c0c0c0;
-      color: black;
-      border: none;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      cursor: pointer;
-      display: block;
-      margin: 0 auto 1rem;
-      font-weight: bold;
-      width: fit-content; /* Agregado para que el ancho se ajuste al contenido */
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-
-    /* NEW: Hover effect for the "Adjuntar Ficheros" button */
-    .attachment-button:hover {
-      background-color: #a9a9a9;
-      transform: scale(1.05);
-    }
-
-    .attachment-icon {
-      display: inline-block;
-      margin-left: 0.25rem;
-    }
-
-    .attachments-list {
-      background-color: #F5F3FF;
-      border-radius: 0.25rem;
-      padding: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .attachment-item {
-      color: blue;
-      text-decoration: none;
-      display: block;
-      padding: 0.5rem;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .attachment-item:hover {
-      text-decoration: underline;
-    }
-
-    /* Submit button */
-    .submit-container {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
-
-    .submit-button {
-      background-color: #4643FF;
-      color: white;
-      border: none;
-      padding: 0.5rem 2rem;
-      border-radius: 1.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-      font-weight: bold;
-      /* NEW: Added transition for hover effect */
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .submit-button:hover {
-      background-color: #303f9f;
-      transform: scale(1.05);
-    }
-
-    .selected-files {
-      margin-top: 1rem;
-      background-color: #F5F3FF;
-      border-radius: 0.25rem;
-      padding: 0.75rem;
-      color: #333;
-      font-size: 0.95rem;
-      font-weight: normal;
-    }
-
-    .selected-files h3 {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 0.75rem;
-      color: #000;
-      text-align: center;
-      text-decoration: underline;
-    }
-
-    .selected-file-item {
-      margin-bottom: 0.5rem;
-      text-align: center;
-      word-break: break-all;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-      .form-container {
-        padding: 0.75rem;
-      }
-
-      .page-title {
-        font-size: 1.25rem;
-      }
-    }
-  </style>
   <div th:include="navbar :: head (titulo='Crear nuevo Informe')"></div>
   <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
   <link rel="stylesheet" th:href="@{/css/custom/profesional_medico/crear-nuevo-informe.css}">
@@ -253,6 +56,78 @@
     <button class="submit-button">Aceptar</button>
   </div>
   </div>
+
+  <div class="body" id="firmaAutorizacion" style="display:none;">
+    <h1 class="page-title">Firma de la autorización</h1>
+
+    <div class="report-card">
+      <div class="title-v1"><strong>Instrucciones</strong></div>
+
+      <div class="report-section">
+        <div class="report-value">
+          A continuación se va a proceder a la firma de la autorización. Para ello, es necesario tener instalado el programa de AutoFirma. Cuando haya leído toda la información, pulse sobre el botón de "Firmar y enviar".
+          Tras haber pulsado sobre dicho botón se abrirá en el navegador el programa de AutoFirma, el cual le solicitará elegir el certificado con el cual desea usted firmar la autorización. Una vez elegido el certificado, se realizará de forma
+          automática con el proceso de firma. Cuando este proceso haya finalizado, usted podrá descargarse una copia de la autorización firmada.
+        </div>
+      </div>
+
+      <br>
+
+      <div class="title-v1"><strong>Información básica sobre protección de datos:</strong></div>
+
+      <div class="report-section">
+        <div class="report-value">
+
+          <strong>Responsable: </strong> VitalSanity, S.A. dentro del ámbito sanitario.
+
+          <br>
+          <br>
+
+          <strong>Propósito: </strong> Administrar la gestión de la solicitud de autorización al historial médico centralizado de uno de los pacientes registrados en la aplicación.
+
+          <br>
+          <br>
+
+          <strong>Transferencia de datos: </strong>  Es imprescindible comunicar la información de contacto y todos los datos de la autorización al paciente en específico para que este pueda tomar la decisión de autorizar o denegar la solicitud de la autorización.
+
+          <br>
+          <br>
+
+          <strong>Derechos: </strong>  Una vez el paciente haya autorizado la solicitud, se garantiza el derecho de acceder a todas las entradas dentro del historial médico del paciente. Asimismo, se garantiza el poder agregar nuevas entradas
+          dentro del historial del paciente, así como el poder modificar las entradas propias que usted como profesional médico haya agregado con anterioridad.
+          Del mismo modo, se garantiza que toda la información proporcionada del paciente es auténtica, precisa y de su legítima propiedad y/o de terceras personas (siempre y cuando el paciente lo haya autorizado).
+
+          <br>
+          <br>
+
+          Para conocer el procedimiento para ejercer estos derechos y obtener detalles adicionales, consulte nuestra <a class="file-link" href="#" target="_blank">política de privacidad</a>.
+
+          <br>
+          <br>
+          <br>
+
+          <hr>
+
+          <div class="checkbox-container">
+            <input type="checkbox" id="accept" name="accept">
+            <label for="accept">He leído y comprendido toda la información expuesta en materia de protección de datos.</label>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="button-container">
+
+      <div class="button-container">
+        <button type="button" onclick="if(document.getElementById('accept').checked){ onClickFirmarAutorizacion(); } else { alert('Debe de marcar la casilla asociada a lo expuesto en materia de protección de datos.'); }" class="back-button">Firmar y Enviar</button>
+      </div>
+    </div>
+  </div>
+
+
   <div th:replace="navbar::javascript"></div>
 
 
@@ -279,6 +154,29 @@
       } else {
         selectedFilesContainer.style.display = 'none';
       }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var firmaDiv = document.getElementById('firmaAutorizacion');
+      var aceptarButton = document.querySelector('.submit-container button.submit-button');
+      aceptarButton.addEventListener('click', function(e) {
+        // Selecciona todos los campos de entrada y áreas de texto del primer div que no sean de solo lectura
+        var requiredFields = document.querySelectorAll('.form-container input.form-input:not([readonly]), .form-container textarea.form-textarea');
+        var isValid = true;
+        requiredFields.forEach(function(field) {
+          if (!field.value.trim()) {
+            isValid = false;
+          }
+        });
+        if (isValid) {
+          // Se cambia de 'block' a 'flex' para respetar el layout definido en ".body"
+          firmaDiv.style.display = 'flex';
+        } else {
+          alert('Por favor, complete todos los campos del formulario de la solicitud de autorización.');
+        }
+      });
     });
   </script>
 
