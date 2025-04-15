@@ -35,7 +35,7 @@
         <div class="report-detail"><strong>Género: </strong> <span th:text="${paciente.genero}"> </span> </div>
         <div class="report-detail"><strong>Edad: </strong> <span th:text="${paciente.edad}"> </span> </div>
         <div class="button-container">
-          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
+          <form th:action="@{'/api/profesional-medico/pacientes/' + ${paciente.id} + '/informes'}" method="get">
             <button type="submit" class="button-access-record">Acceder al historial</button>
           </form>
         </div>
