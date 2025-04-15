@@ -63,12 +63,6 @@ public class PacienteController{
         return "paciente/ver-informes-propios";
     }
 
-    @GetMapping("/api/paciente/{idPaciente}/profesionales-autorizados")
-    public String verProfesionalesMedicosAutorizados(@PathVariable(value="idPaciente") Long idInforme,
-                                                  Model model) {
-        return "paciente/ver-profesionales-medicos-autorizados";
-    }
-
     @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
     public String datosResidenciaForm(@PathVariable("idPaciente") Long idPaciente, Model model) {
         model.addAttribute("residenciaData", new ResidenciaData());
@@ -231,6 +225,11 @@ public class PacienteController{
         pacienteService.marcarSolicitudAutorizacionComoDenegada(idSolicitudAutorizacion);
 
         return "paciente/denegacion-exitosa";
+    }
+
+    @GetMapping("/api/paciente/profesionales-autorizados")
+    public String verProfesionalesMedicosAutorizados(Model model) {
+        return "paciente/ver-profesionales-medicos-autorizados";
     }
 
 

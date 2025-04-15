@@ -10,11 +10,15 @@ import vitalsanity.model.Usuario;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProfesionalMedicoRepository extends JpaRepository<ProfesionalMedico, Long> {
     Optional<ProfesionalMedico> findByUsuarioId(Long usuarioId);
 
     Optional<ProfesionalMedico> findBySolicitudesAutorizacion_Id(Long id);
+    Set<ProfesionalMedico> findByPacientesQueHanAutorizado_Id(Long pacienteId);
+    Set<ProfesionalMedico> findByPacientesQueHanDesautorizado_Id(Long pacienteId);
+
 
 }
 
