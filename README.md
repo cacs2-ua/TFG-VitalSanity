@@ -1,13 +1,13 @@
-# VitalSanity v2.1.1
+# VitalSanity v2.1.2
 
 ## 🚀 Levantar el Proyecto en Local
 
 ---
-
+ 
  
 ### 🔥 Ejecutar la aplicación a partir del application.properties
 
-
+ 
 ```sh
 mvn spring-boot:run
 ```

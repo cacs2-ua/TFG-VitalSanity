@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface CentroMedicoRepository extends JpaRepository<CentroMedico, Long> {
     @Query("select cm from CentroMedico cm left join fetch cm.profesionalesMedicos where cm.usuario.id = :usuarioId")
     Optional<CentroMedico> findByUsuarioId(@Param("usuarioId") Long usuarioId);
+
 }

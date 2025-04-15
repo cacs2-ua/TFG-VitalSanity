@@ -1,6 +1,7 @@
 package vitalsanity.dto.admin_user;
 
 public class RegistroCentroMedicoData {
+    private String ccc;
     private String nombreCompleto;
     private String nifNie;
     private String movil;
@@ -11,9 +12,19 @@ public class RegistroCentroMedicoData {
     private String municipio;
     private String codigoPostal;
 
+
     public String getNombreCompleto() {
         return nombreCompleto;
     }
+
+    public void setCcc(String ccc) {
+        this.ccc = ccc;
+    }
+
+    public String getCcc() {
+        return ccc;
+    }
+
     public void setNombreCompleto(String nombreCompleto) {
         this.nombreCompleto = nombreCompleto;
     }

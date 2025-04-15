@@ -17,41 +17,24 @@
 
 
       <!-- Report Cards -->
-      <div class="report-card">
-        <div class="report-doctor"><strong>Profesional Médico:</strong> <span class="report-doctor-name">Alejandro López Hernández</span></div>
-        <div class="report-detail"><strong>Centro médico:</strong> Vithas Alicante</div>
-        <div class="report-detail"><strong>Especialidad del profesional:</strong> Traumatología</div>
-        <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
-        <div class="report-detail"><strong>Municipio:</strong> San Vicente del Raspeig</div>
+      <div th:each="profesionalMedico: ${profesionalesMedicosAutorizados}" class="report-card">
+        <div class="report-doctor"><strong>Profesional Médico: </strong> <span th:text="${profesionalMedico.usuario.nombreCompleto}" class="report-doctor-name"></span></div>
+        <div class="report-detail"><strong>Nº del documento de identidad: </strong> <span th:text="${profesionalMedico.usuario.nifNie}"> </span> </div>
+        <div class="report-detail"><strong>Especialidad médica: </strong> <span th:text="${profesionalMedico.especialidadMedica.nombre}"> </span> </div>
+        <div class="report-detail"><strong>Dirección del centro médico: </strong> <span th:text="${profesionalMedico.centroMedico.direccion}"> </span> </div>
         <div class="button-container">
           <button class="button-view">Ver informes</button>
-          <button class="button-deauthorize">Desautorizar</button>
+          <form method="post" th:action="@{/api/paciente/desautorizar-profesional-medico}">
+            <input type="hidden" name="id" th:value="${profesionalMedico.id}" />
+            <button type="submit" class="button-deauthorize">Desautorizar</button>
+          </form>
         </div>
       </div>
 
-      <div class="report-card">
-        <div class="report-doctor"><strong>Profesional Médico:</strong> <span class="report-doctor-name">Diego Torres Muñoz</span></div>
-        <div class="report-detail"><strong>Centro médico:</strong> Quirón Salud Alicante</div>
-        <div class="report-detail"><strong>Especialidad del profesional:</strong> Dermatología</div>
-        <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
-        <div class="report-detail"><strong>Municipio:</strong> Altea</div>
-        <div class="button-container">
-          <button class="button-view">Ver informes</button>
-          <button class="button-deauthorize">Desautorizar</button>
-        </div>
+      <div th:if="${noHayProfesionalesAutorizados == true}" class="no-authorization-requests">
+        <p>Actualmente no tiene ningún profesional médico autorizado</p>
       </div>
 
-      <div class="report-card">
-        <div class="report-doctor"><strong>Profesional Médico:</strong> <span class="report-doctor-name">Sofía Ortiz Paredes</span></div>
-        <div class="report-detail"><strong>Centro médico:</strong> Centro Adeslas Ciudad Real</div>
-        <div class="report-detail"><strong>Especialidad del profesional:</strong> Cardiología</div>
-        <div class="report-detail"><strong>Provincia:</strong> Ciudad Real</div>
-        <div class="report-detail"><strong>Municipio:</strong> Puertollano</div>
-        <div class="button-container">
-          <button class="button-view">Ver informes</button>
-          <button class="button-deauthorize">Desautorizar</button>
-        </div>
-      </div>
     </div>
   </div>
   <div th:replace="navbar::javascript"></div>

@@ -13,4 +13,13 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     Optional<Paciente> findByUsuarioId(Long usuarioId);
 
     Optional<Paciente> findByUsuarioNifNie(String nifNie);
+
+    Optional<Paciente> findBySolicitudesAutorizacion_Id(Long id);
+
+    List<Paciente> findByProfesionalesMedicosAutorizados_IdOrderByIdAsc(Long profesionalMedicoId);
+
+    List<Paciente> findByProfesionalesMedicosDesautorizados_IdOrderByIdAsc(Long profesionalMedicoId);
+
+
+
 }

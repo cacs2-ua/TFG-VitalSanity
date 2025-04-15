@@ -1,13 +1,20 @@
 package vitalsanity.dto.profesional_medico;
 
+import vitalsanity.model.Documento;
+
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class SolicitudAutorizacionData {
 
     private Long id;
     private String nombreProfesionalMedico;
     private String nifNieProfesionalMedico;
+    private String especialidadProfesionalMedico;
+    private String nifCentroMedico;
+    private  String nombreCentroMedico;
     private String nombrePaciente;
     private String nifNiePaciente;
     private String motivo;
@@ -15,7 +22,11 @@ public class SolicitudAutorizacionData {
     private boolean firmada;
     private boolean cofirmada;
     private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaFirma;
+    private LocalDateTime fechaCofirma;
     private boolean denegada;
+
+    Set<Documento> documentos = new HashSet<>();
 
     // Getters y Setters
 
@@ -41,6 +52,30 @@ public class SolicitudAutorizacionData {
 
     public void setNifNieProfesionalMedico(String nifNieProfesionalMedico) {
         this.nifNieProfesionalMedico = nifNieProfesionalMedico;
+    }
+
+    public String getEspecialidadProfesionalMedico() {
+        return especialidadProfesionalMedico;
+    }
+
+    public void setEspecialidadProfesionalMedico(String especialidadProfesionalMedico) {
+        this.especialidadProfesionalMedico = especialidadProfesionalMedico;
+    }
+
+    public String getNifCentroMedico() {
+        return nifCentroMedico;
+    }
+
+    public void setNifCentroMedico(String nifCentroMedico) {
+        this.nifCentroMedico = nifCentroMedico;
+    }
+
+    public String getNombreCentroMedico() {
+        return nombreCentroMedico;
+    }
+
+    public void setNombreCentroMedico(String nombreCentroMedico) {
+        this.nombreCentroMedico = nombreCentroMedico;
     }
 
     public String getNombrePaciente() {
@@ -95,6 +130,26 @@ public class SolicitudAutorizacionData {
         return fechaCreacion;
     }
 
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDateTime getFechaFirma() {
+        return fechaFirma;
+    }
+
+    public void setFechaFirma(LocalDateTime fechaFirma) {
+        this.fechaFirma = fechaFirma;
+    }
+
+    public LocalDateTime getFechaCofirma() {
+        return fechaCofirma;
+    }
+
+    public void setFechaCofirma(LocalDateTime fechaCofirma) {
+        this.fechaCofirma = fechaCofirma;
+    }
+
     public boolean isDenegada() {
         return denegada;
     }
@@ -103,9 +158,14 @@ public class SolicitudAutorizacionData {
         this.denegada = denegada;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    public Set<Documento> getDocumentos() {
+        return documentos;
     }
+
+    public void setDocumentos(Set<Documento> documentos) {
+        this.documentos = documentos;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,6 +177,5 @@ public class SolicitudAutorizacionData {
     public int hashCode() {
         return Objects.hash(getId());
     }
-
 
 }

@@ -42,11 +42,19 @@ public class Paciente implements Serializable {
     public void addProfesionalMedicoAutorizado(ProfesionalMedico profesionalMedicoAutorizado) {
         this.getProfesionalesMedicosAutorizados().add(profesionalMedicoAutorizado);
         profesionalMedicoAutorizado.getPacientesQueHanAutorizado().add(this);
+
+        this.getProfesionalesMedicosDesautorizados().remove(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanDesautorizado().remove(this);
+
+
     }
 
     public  void  quitarProfesionalMedicoAutorizado (ProfesionalMedico profesionalMedicoAutorizado) {
         this.getProfesionalesMedicosAutorizados().remove(profesionalMedicoAutorizado);
         profesionalMedicoAutorizado.getPacientesQueHanAutorizado().remove(this);
+
+        this.getProfesionalesMedicosDesautorizados().add(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanDesautorizado().add(this);
     }
 
 
@@ -64,11 +72,17 @@ public class Paciente implements Serializable {
     public void addProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
         this.getProfesionalesMedicosDesautorizados().add(profesionalMedicoDesautorizado);
         profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().add(this);
+
+        this.getProfesionalesMedicosAutorizados().remove(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanAutorizado().remove(this);
     }
 
     public void quitarProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
         this.getProfesionalesMedicosDesautorizados().remove(profesionalMedicoDesautorizado);
         profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().remove(this);
+
+        this.getProfesionalesMedicosAutorizados().add(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanAutorizado().add(this);
     }
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

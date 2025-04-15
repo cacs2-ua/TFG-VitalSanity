@@ -10,7 +10,12 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "profesionales_medicos")
+@Table(
+        name = "profesionales_medicos",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"naf", "ccc"})
+        }
+)
 public class ProfesionalMedico implements Serializable {
 
     @Id
@@ -21,7 +26,6 @@ public class ProfesionalMedico implements Serializable {
     private String naf;
 
     @NotNull
-    @Column(unique = true)
     private String ccc;
 
     @NotNull
@@ -102,6 +106,7 @@ public class ProfesionalMedico implements Serializable {
         }
 
         this.centroMedico = centroMedico;
+        this.ccc = centroMedico.getCcc();
 
         if (!centroMedico.getProfesionalesMedicos().contains(this)) {
             centroMedico.addProfesionalMedico(this);
@@ -118,11 +123,17 @@ public class ProfesionalMedico implements Serializable {
     public void addPacienteQueHaAutorizado(Paciente paciente) {
         this.getPacientesQueHanAutorizado().add(paciente);
         paciente.getProfesionalesMedicosAutorizados().add(this);
+
+        this.getPacientesQueHanDesautorizado().remove(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().remove(this);
     }
 
     public  void  quitarPacienteQueHaAutorizado (Paciente paciente) {
         this.getPacientesQueHanAutorizado().remove(paciente);
         paciente.getProfesionalesMedicosAutorizados().remove(this);
+
+        this.getPacientesQueHanDesautorizado().add(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().add(this);
     }
 
 
@@ -137,11 +148,17 @@ public class ProfesionalMedico implements Serializable {
     public void addPacienteQueHaDesautorizado(Paciente paciente) {
         this.getPacientesQueHanDesautorizado().add(paciente);
         paciente.getProfesionalesMedicosDesautorizados().add(this);
+
+        this.getPacientesQueHanAutorizado().remove(paciente);
+        paciente.getProfesionalesMedicosAutorizados().remove(this);
     }
 
     public  void  quitarPacienteQueHaDesautorizado (Paciente paciente) {
         this.getPacientesQueHanDesautorizado().remove(paciente);
         paciente.getProfesionalesMedicosDesautorizados().remove(this);
+
+        this.getPacientesQueHanAutorizado().add(paciente);
+        paciente.getProfesionalesMedicosAutorizados().add(this);
     }
 
     @OneToMany(mappedBy = "profesionalMedico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

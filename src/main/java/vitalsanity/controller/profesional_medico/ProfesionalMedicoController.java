@@ -12,8 +12,11 @@ import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
+import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.DocumentoData;
+import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
+import vitalsanity.model.SolicitudAutorizacion;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
@@ -21,9 +24,11 @@ import vitalsanity.service.utils.EmailService;
 import vitalsanity.service.utils.autofirma.GenerarPdf;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,29 +75,11 @@ public class ProfesionalMedicoController {
         return "profesional_medico/editar-informe";
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes")
-    public String verInformesPaciente(@PathVariable(value="idPaciente") Long idPaciente,
-                                             Model model) {
-        return "profesional_medico/ver-informes-del-paciente";
-    }
-
     @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/{idInforme}")
     public String verDetallesInformePaciente(@PathVariable(value="idPaciente") Long idPaciente,
                                              @PathVariable(value="idInforme") Long idInforme,
                                                     Model model) {
         return "profesional_medico/ver-detalles-informe";
-    }
-
-    @GetMapping("/api/profesional-medico/{idProfesionalMedico}/pacientes-que-han-autorizado")
-    public String verPacientesQueHanAutorizado(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                             Model model) {
-        return "profesional_medico/listado-pacientes-que-han-autorizado";
-    }
-
-    @GetMapping("/api/profesional-medico/{idProfesionalMedico}/pacientes-que-han-desautorizado")
-    public String verPacientesQueHanDesautorizado(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                               Model model) {
-        return "profesional_medico/listado-pacientes-que-han-desautorizado";
     }
 
     @GetMapping("/api/profesional-medico/buscar-paciente")
@@ -104,15 +91,28 @@ public class ProfesionalMedicoController {
     @PostMapping("/api/profesional-medico/buscar-paciente")
     public String buscarPacienteSubmit(@ModelAttribute("buscarPacienteData") BuscarPacienteData buscarPacienteData,
                                        Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
         String nif = buscarPacienteData.getNifNie().trim();
         BuscarPacienteResponse pacienteResponse = pacienteService.buscarPacientePorNifNie(nif);
 
         if (pacienteResponse == null) {
             model.addAttribute("error", "Paciente no encontrado");
         } else {
+
+            Long idProfesional = Long.parseLong(profesionalMedicoService.encontrarPorIdUsuario(idUsuarioProfesionalMedico).getId());
+            Long idPaciente = pacienteResponse.getId();
             UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(pacienteResponse.getId());
+            SolicitudAutorizacionData solicitudAutorizacion = profesionalMedicoService.obtenerUltimaAutorizacionAsociadaAUnProfesionalMedicoYAUnPaciente(
+                    idProfesional, idPaciente);
+
+            boolean denegada = true;
+            if (solicitudAutorizacion != null) {
+                denegada = solicitudAutorizacion.isDenegada();
+            }
+            boolean solicitada = !denegada;
             model.addAttribute("paciente", pacienteResponse);
             model.addAttribute("usuarioPaciente", usuarioPaciente);
+            model.addAttribute("solicitada", solicitada);
         }
         return "profesional_medico/buscar-paciente";
     }
@@ -153,23 +153,17 @@ public class ProfesionalMedicoController {
                               @RequestParam String descripcion) {
 
         Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        Long idUsuarioPaciente = usuarioService.obtenerUsuarioPacienteAPartirDeNifNie(nifNiePaciente).getId();
         profesionalMedicoService.nuevaSolicitudAutorizacion(
                 idUsuarioProfesionalMedico,
-                nombreProfesional,
-                nifNieProfesional,
-                nombreCentroMedico,
-                nombrePaciente,
-                nifNiePaciente,
+                idUsuarioPaciente,
                 motivo,
                 descripcion
         );
 
         byte[] pdfBytes = generarPdf.generarPdfAutorizacion(
-                nombreProfesional,
-                nifNieProfesional,
-                nombreCentroMedico,
-                nombrePaciente,
-                nifNiePaciente,
+                idUsuarioProfesionalMedico,
+                idUsuarioPaciente,
                 motivo,
                 descripcion);
         return Base64.getEncoder().encodeToString(pdfBytes);
@@ -177,15 +171,14 @@ public class ProfesionalMedicoController {
 
     @PostMapping("/api/profesional-medico/pdf-autorizacion-firmada")
     @ResponseBody
-    public String subirPdfAutorizacionFirmadaEnAws(@RequestParam String signedPdfBase64) {
-        try {
+    public String subirPdfAutorizacionFirmadaEnAws(@RequestParam String signedPdfBase64) throws IOException {
             Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
             SolicitudAutorizacionData ultimaSolicitudCreadaDelProfesionalMedico =
                     profesionalMedicoService.obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(idUsuarioProfesionalMedico);
 
             Long idUltimaSolicitudCreadaDelProfesionalMedico = ultimaSolicitudCreadaDelProfesionalMedico.getId();
+            profesionalMedicoService.establecerFechaFirmaAutorizacion(idUltimaSolicitudCreadaDelProfesionalMedico, LocalDateTime.now());
             profesionalMedicoService.marcarSolicitudAutorizacionComoFirmada(idUltimaSolicitudCreadaDelProfesionalMedico);
-
 
             String nifNiePaciente = ultimaSolicitudCreadaDelProfesionalMedico.getNifNiePaciente();
             UsuarioData usuarioPaciente = usuarioService.obtenerUsuarioPacienteAPartirDeNifNie(nifNiePaciente);
@@ -195,7 +188,7 @@ public class ProfesionalMedicoController {
             String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
 
             byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-            String key = "autorizaciones/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+            String key = "debug/autorizaciones/firmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
             s3VitalSanityService.subirFicheroBytes(key, signedPdf);
 
             String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
@@ -227,25 +220,19 @@ public class ProfesionalMedicoController {
 
             String subject = "Solicitud de autorización por parte del profesional médico: " + nombreProfesionalMedico;
 
-            String text = "El profesional médico: " + nombreProfesionalMedico + " con NIF/NIE: "
-                    + nifNieProfesionalMedico + " le ha solicitado autorización para acceder a su historial clínico desde el centro médico: "
-                    + nombreCentroMedico + " . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
+            String text = "El profesional médico: '" + nombreProfesionalMedico + "' con NIF/NIE: '"
+                    + nifNieProfesionalMedico + "' le ha solicitado autorización para acceder a su historial clínico desde el centro médico: '"
+                    + nombreCentroMedico + "' . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
                     + " Una vez haya revisado la solicitud, usted podrá autorizar o denegar el acceso a su historial médico. "
                     + "Si usted autoriza el acceso al profesional médico, dicho profesional médico podrá acceder a su historial clínico centralizado, "
                     + "lo cual podría ayudar a agilizar el proceso de diagnóstico y tratamiento, mejorando así su atención médica y la calidad de su servicio. "
                     + "Le recordamos que cualquier tratamiento de datos está sujeto a la ley de protección de datos vigente. ";
 
-            emailService.send(emailPaciente, subject, text);
+            // emailService.send(emailPaciente, subject, text);
 
             String uuid = UUID.randomUUID().toString();
             signedRepository.put(uuid, signedPdf);
             return uuid;
-        }   catch (Exception e) {
-            System.err.println("Error al subir el PDF de la autorizacion firmada a AWS: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-
     }
 
     @GetMapping("/api/profesional-medico/pdf-autorizacion/{id}")
@@ -280,6 +267,48 @@ public class ProfesionalMedicoController {
                 Duration.ofMinutes(5));
         model.addAttribute("urlPrefirmada", urlPrefirmada);
         return "profesional_medico/descargar-pdf-autorizacion-firmada";
+    }
+
+
+    @GetMapping("/api/profesional-medico/pacientes-que-han-autorizado")
+    public String verPacientesQueHanAutorizado(Model model) {
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
+        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanAutorizado(Long.parseLong(profesionalMedicoData.getId()));
+
+        boolean noHayPacientes = false;
+        if (pacientesData.isEmpty()) {
+            noHayPacientes = true;
+        }
+        model.addAttribute("pacientes", pacientesData);
+        model.addAttribute("noHayPacientes", noHayPacientes);
+
+
+        return "profesional_medico/listado-pacientes-que-han-autorizado";
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes-que-han-desautorizado")
+    public String verPacientesQueHanDesautorizado(Model model) {
+
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
+        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanDesautorizado(Long.parseLong(profesionalMedicoData.getId()));
+
+        boolean noHayPacientes = false;
+        if (pacientesData.isEmpty()) {
+            noHayPacientes = true;
+        }
+
+        model.addAttribute("pacientes", pacientesData);
+        model.addAttribute("noHayPacientes", noHayPacientes);
+
+        return "profesional_medico/listado-pacientes-que-han-desautorizado";
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes")
+    public String verInformesPaciente(@PathVariable(value="idPaciente") Long idPaciente,
+                                      Model model) {
+        return "profesional_medico/ver-informes-del-paciente";
     }
 
 }

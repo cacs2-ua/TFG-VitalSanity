@@ -49,7 +49,11 @@
         <strong>Edad:</strong>
         <span th:text="${paciente.edad}"></span>
       </div>
-      <div class="button-container">
+      <div th:if="${solicitada == true}" class="already-requested-message">
+        <p>Ya existe una solicitud de autorización válida asociada a dicho paciente</p>
+      </div>
+
+      <div th:if="${solicitada == false}" class="button-container">
         <form th:action="@{'/api/profesional-medico/solicitar-autorizacion/' + ${usuarioPaciente.id}}" method="get">
           <button type="submit" class="button-access-record">Solicitar acceso</button>
         </form>

@@ -182,6 +182,14 @@
     transform: scale(1.05);
 }
 
+.no-authorization-requests {
+    color: #0236c8;
+    font-size: 16.5px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
 /* Responsive styles */
 @media (max-width: 48rem) { /* 48rem = 768px assuming 16px base */
     .filter-section {

@@ -6,18 +6,25 @@ import org.springframework.stereotype.Service;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
+import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.Paciente;
 import vitalsanity.model.ProfesionalMedico;
 import vitalsanity.model.SolicitudAutorizacion;
 import vitalsanity.model.Usuario;
 import vitalsanity.repository.PacienteRepository;
+import vitalsanity.repository.ProfesionalMedicoRepository;
 import vitalsanity.repository.SolicitudAutorizacionRepository;
 import vitalsanity.repository.UsuarioRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.transaction.annotation.Transactional;
+import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 
 
 @Service
@@ -33,6 +40,11 @@ public class PacienteService {
 
     @Autowired
     private SolicitudAutorizacionRepository solicitudAutorizacionRepository;
+
+    @Autowired
+    private ProfesionalMedicoRepository profesionalMedicoRepository;
+    @Autowired
+    private ProfesionalMedicoService profesionalMedicoService;
 
     // Metodo para buscar paciente por nifNie (ignora mayusculas/minusculas)
     public BuscarPacienteResponse buscarPacientePorNifNie(String nifNie) {
@@ -85,4 +97,78 @@ public class PacienteService {
         solicitudAutorizacion.setDenegada(true);
         solicitudAutorizacionRepository.save(solicitudAutorizacion);
     }
+
+    @Transactional(readOnly = true)
+    public List<SolicitudAutorizacionData> obtenerTodasLasSolicitudesValidas(Long pacienteId) {
+        List<SolicitudAutorizacion> solicitudesAutorizacion =
+                solicitudAutorizacionRepository.findByPacienteIdAndDenegadaFalseAndFirmadaTrueAndCofirmadaFalseOrderByFechaFirmaDesc(pacienteId);
+
+        List<SolicitudAutorizacionData> solicitudesAutorizacionData = solicitudesAutorizacion.stream()
+                .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
+                .collect(Collectors.toList());
+
+        return solicitudesAutorizacionData;
+    }
+
+    @Transactional(readOnly = true)
+    public SolicitudAutorizacionData obtenerSolicitudPorId(Long solicitudId) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(solicitudId).orElse(null);
+        if (solicitudAutorizacion == null) return null;
+        return modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
+    }
+
+    @Transactional
+    public  void marcarSolicitudAutorizacionComoCofirmada(Long idSolicitudAutorizacion) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+        solicitudAutorizacion.setCofirmada(true);
+        solicitudAutorizacionRepository.save(solicitudAutorizacion);
+    }
+
+    @Transactional
+    public  void establecerFechaCofirmaAutorizacion(Long idSolicitudAutorizacion, LocalDateTime fechaCofirma) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findById(idSolicitudAutorizacion).orElse(null);
+        solicitudAutorizacion.setFechaCofirma(fechaCofirma);
+        solicitudAutorizacionRepository.save(solicitudAutorizacion);
+    }
+
+    @Transactional(readOnly = true)
+    public PacienteData encontrarPacienteAPartirDeIdSolicitudAutorizacion(Long solicitudId) {
+        Paciente paciente = pacienteRepository.findBySolicitudesAutorizacion_Id(solicitudId).orElse(null);
+        if (paciente == null) return null;
+        return modelMapper.map(paciente, PacienteData.class);
+    }
+
+    @Transactional
+    public void agregarProfesionalMedicoAutorizado(Long idPaciente, Long idProfesionalMedico) {
+        Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
+        paciente.addProfesionalMedicoAutorizado(profesionalMedico);
+    }
+
+    @Transactional
+    public void agregarProfesionalMedicoDesautorizado(Long idPaciente, Long idProfesionalMedico) {
+        Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
+        paciente.addProfesionalMedicoDesautorizado(profesionalMedico);
+
+        pacienteRepository.save(paciente);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProfesionalMedicoData> obtenerProfesionalesMedicosAutorizados(Long idPaciente) {
+        List<ProfesionalMedico> profesionalMedicosAutorizados = profesionalMedicoRepository.findByPacientesQueHanAutorizado_IdOrderByIdAsc(idPaciente);
+
+        List<ProfesionalMedicoData> profesionalesMedicosAutorizadosData = profesionalMedicosAutorizados.stream()
+                .map(profesionalMedicoAutorizado -> modelMapper.map(profesionalMedicoAutorizado, ProfesionalMedicoData.class))
+                .collect(Collectors.toList());
+
+        return  profesionalesMedicosAutorizadosData;
+    }
+
+    @Transactional(readOnly = true)
+    public SolicitudAutorizacionData obtenerUltimaSolicitudAutorizacionValida(Long idProfesionalMedico, Long idPaciente) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdAndPacienteIdAndDenegadaFalse(idProfesionalMedico, idPaciente).orElse(null);
+        return  modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
+    }
+
 }
