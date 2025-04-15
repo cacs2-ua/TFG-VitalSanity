@@ -16,7 +16,7 @@
       <h2 class="header"><strong>Listado de los pacientes que han autorizado el acceso a su historial</strong></h2>
 
       <!-- Filter Section -->
-      <div class="filter-section">
+      <div th:if="${!noHayPacientes}" class="filter-section">
         <div class="input-group">
           <label for="NIF/NIE-id">NIF/NIE</label>
           <input type="text" id="NIF/NIE-id" class="filter-input">
@@ -33,12 +33,16 @@
         <div class="report-patient"><strong>Nombre del paciente:</strong> <span th:text="${paciente.usuario.nombreCompleto}" class="report-patient-name"></span></div>
         <div class="report-detail"><strong>NIF: </strong> <span th:text="${paciente.usuario.nifNie}"> </span> </div>
         <div class="report-detail"><strong>Género: </strong> <span th:text="${paciente.genero}"> </span> </div>
-        <div class="report-detail"><strong>Edad: </strong> <span th:text="${paciente.fechaNacimiento}"> </span> </div>
+        <div class="report-detail"><strong>Edad: </strong> <span th:text="${paciente.edad}"> </span> </div>
         <div class="button-container">
           <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
             <button type="submit" class="button-access-record">Acceder al historial</button>
           </form>
         </div>
+      </div>
+
+      <div th:if="${noHayPacientes == true}" class="no-authorization-requests">
+        <p>No existe actualmente paciente que le haya autorizado acceso a su historial médico</p>
       </div>
 
     </div>

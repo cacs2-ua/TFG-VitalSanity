@@ -47,6 +47,16 @@ public class PacienteData {
         this.usuario = usuario;
     }
 
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

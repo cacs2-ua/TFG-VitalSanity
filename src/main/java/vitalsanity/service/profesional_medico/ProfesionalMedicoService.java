@@ -198,6 +198,12 @@ public class ProfesionalMedicoService {
                 .map(paciente -> modelMapper.map(paciente, PacienteData.class))
                 .collect(Collectors.toList());
 
+        for (PacienteData paciente : pacientesQueHanAutorizadoData) {
+            LocalDate fechaNacimiento = LocalDate.parse(paciente.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            paciente.setEdad(edad);
+        }
+
         return  pacientesQueHanAutorizadoData;
     }
 

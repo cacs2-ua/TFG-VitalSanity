@@ -94,11 +94,13 @@ public class ProfesionalMedicoController {
         ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
         List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanAutorizado(Long.parseLong(profesionalMedicoData.getId()));
 
+        boolean noHayPacientes = false;
         if (pacientesData.isEmpty()) {
-            boolean noHayPacientes = true;
-            model.addAttribute("noHayPacientes", noHayPacientes);
+            noHayPacientes = true;
         }
         model.addAttribute("pacientes", pacientesData);
+        model.addAttribute("noHayPacientes", noHayPacientes);
+
 
         return "profesional_medico/listado-pacientes-que-han-autorizado";
     }
