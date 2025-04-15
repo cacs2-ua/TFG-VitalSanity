@@ -48,7 +48,7 @@
         <button class="button-primary">Aplicar filtros</button>
       </div>
 
-      <form th:action="@{'/api/profesional-medico/pacientes/' + ${pacienteId} + '/informes'}" method="get">
+      <form th:action="@{'/api/profesional-medico/pacientes/' + ${pacienteId} + '/informes/nuevo'}" method="get">
         <button type="submit" class="button-create">
           Crear nuevo informe
         </button>

@@ -62,12 +62,6 @@ public class ProfesionalMedicoController {
         return managerUserSession.usuarioLogeado();
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/nuevo")
-    public String crearNuevoInforme(@PathVariable(value="idPaciente") Long idPaciente,
-                                                    Model model) {
-        return "profesional_medico/crear-nuevo-informe";
-    }
-
     @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/{idInforme}/editar")
     public String editarInforme(@PathVariable(value="idPaciente") Long idPaciente,
                                 @PathVariable(value="idPaciente") Long idInforme,
@@ -310,6 +304,13 @@ public class ProfesionalMedicoController {
                                       Model model) {
         model.addAttribute("pacienteId", pacienteId);
         return "profesional_medico/ver-informes-del-paciente";
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes/nuevo")
+    public String crearNuevoInforme(@PathVariable(value="pacienteId") Long pacienteId,
+                                    Model model) {
+        model.addAttribute("pacienteId", pacienteId);
+        return "profesional_medico/crear-nuevo-informe";
     }
 
 }
