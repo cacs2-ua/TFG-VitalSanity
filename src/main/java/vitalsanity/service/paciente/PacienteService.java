@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -97,7 +98,7 @@ public class PacienteService {
     @Transactional(readOnly = true)
     public List<SolicitudAutorizacionData> obtenerTodasLasSolicitudesValidas(Long pacienteId) {
         List<SolicitudAutorizacion> solicitudesAutorizacion =
-                solicitudAutorizacionRepository.findByPacienteIdAndDenegadaFalseAndFirmadaTrueAndCofirmadaFalse(pacienteId);
+                solicitudAutorizacionRepository.findByPacienteIdAndDenegadaFalseAndFirmadaTrueAndCofirmadaFalseOrderByFechaFirmaDesc(pacienteId);
 
         List<SolicitudAutorizacionData> solicitudesAutorizacionData = solicitudesAutorizacion.stream()
                 .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
@@ -147,6 +148,12 @@ public class PacienteService {
         Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
         ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
         paciente.addProfesionalMedicoDesautorizado(profesionalMedico);
+    }
+
+    @Transactional(readOnly = true)
+    public void obtenerProfesionalesMedicosAutorizados(Long idPaciente) {
+        Set<ProfesionalMedico> profesionalMedicosAutorizados = profesionalMedicoRepository.findByPacientesQueHanAutorizado_Id(idPaciente);
+
     }
 
 }
