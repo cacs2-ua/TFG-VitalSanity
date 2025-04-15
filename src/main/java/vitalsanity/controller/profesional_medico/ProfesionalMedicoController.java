@@ -88,30 +88,6 @@ public class ProfesionalMedicoController {
         return "profesional_medico/ver-detalles-informe";
     }
 
-    @GetMapping("/api/profesional-medico/pacientes-que-han-autorizado")
-    public String verPacientesQueHanAutorizado(Model model) {
-        Long idUsuarioPaciente = getUsuarioLogeadoId();
-        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
-        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanAutorizado(Long.parseLong(profesionalMedicoData.getId()));
-
-        boolean noHayPacientes = false;
-        if (pacientesData.isEmpty()) {
-            noHayPacientes = true;
-        }
-        model.addAttribute("pacientes", pacientesData);
-        model.addAttribute("noHayPacientes", noHayPacientes);
-
-
-        return "profesional_medico/listado-pacientes-que-han-autorizado";
-    }
-
-
-    @GetMapping("/api/profesional-medico/{idProfesionalMedico}/pacientes-que-han-desautorizado")
-    public String verPacientesQueHanDesautorizado(@PathVariable(value="idProfesionalMedico") Long idProfesionalMedico,
-                                               Model model) {
-        return "profesional_medico/listado-pacientes-que-han-desautorizado";
-    }
-
     @GetMapping("/api/profesional-medico/buscar-paciente")
     public String buscarPacienteForm(Model model) {
         model.addAttribute("buscarPacienteData", new BuscarPacienteData());
@@ -297,6 +273,42 @@ public class ProfesionalMedicoController {
                 Duration.ofMinutes(5));
         model.addAttribute("urlPrefirmada", urlPrefirmada);
         return "profesional_medico/descargar-pdf-autorizacion-firmada";
+    }
+
+
+    @GetMapping("/api/profesional-medico/pacientes-que-han-autorizado")
+    public String verPacientesQueHanAutorizado(Model model) {
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
+        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanAutorizado(Long.parseLong(profesionalMedicoData.getId()));
+
+        boolean noHayPacientes = false;
+        if (pacientesData.isEmpty()) {
+            noHayPacientes = true;
+        }
+        model.addAttribute("pacientes", pacientesData);
+        model.addAttribute("noHayPacientes", noHayPacientes);
+
+
+        return "profesional_medico/listado-pacientes-que-han-autorizado";
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes-que-han-desautorizado")
+    public String verPacientesQueHanDesautorizado(Model model) {
+
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
+        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanDesautorizado(Long.parseLong(profesionalMedicoData.getId()));
+
+        boolean noHayPacientes = false;
+        if (pacientesData.isEmpty()) {
+            noHayPacientes = true;
+        }
+
+        model.addAttribute("pacientes", pacientesData);
+        model.addAttribute("noHayPacientes", noHayPacientes);
+
+        return "profesional_medico/listado-pacientes-que-han-desautorizado";
     }
 
 }

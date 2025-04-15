@@ -207,6 +207,23 @@ public class ProfesionalMedicoService {
         return  pacientesQueHanAutorizadoData;
     }
 
+    @Transactional(readOnly = true)
+    public List<PacienteData> obtenerPacientesQueHanDesautorizado(Long idProfesional) {
+        List<Paciente> pacientesQueHanDesautorizado = pacienteRepository.findByProfesionalesMedicosDesautorizados_IdOrderByIdAsc(idProfesional);
+
+        List<PacienteData> pacientesQueHanDesautorizadoData = pacientesQueHanDesautorizado.stream()
+                .map(paciente -> modelMapper.map(paciente, PacienteData.class))
+                .collect(Collectors.toList());
+
+        for (PacienteData paciente : pacientesQueHanDesautorizadoData) {
+            LocalDate fechaNacimiento = LocalDate.parse(paciente.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            paciente.setEdad(edad);
+        }
+
+        return  pacientesQueHanDesautorizadoData;
+    }
+
 
 
 
