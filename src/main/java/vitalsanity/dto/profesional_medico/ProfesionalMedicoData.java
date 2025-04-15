@@ -18,6 +18,9 @@ public class ProfesionalMedicoData {
 
     private  String nombreCentroMedico;
 
+    private  String centroMedico;
+
+
     //getters y setters
 
     public String getId() {

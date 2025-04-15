@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
+import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 
 
 @Service
@@ -42,6 +43,8 @@ public class PacienteService {
 
     @Autowired
     private ProfesionalMedicoRepository profesionalMedicoRepository;
+    @Autowired
+    private ProfesionalMedicoService profesionalMedicoService;
 
     // Metodo para buscar paciente por nifNie (ignora mayusculas/minusculas)
     public BuscarPacienteResponse buscarPacientePorNifNie(String nifNie) {
@@ -151,8 +154,14 @@ public class PacienteService {
     }
 
     @Transactional(readOnly = true)
-    public void obtenerProfesionalesMedicosAutorizados(Long idPaciente) {
-        Set<ProfesionalMedico> profesionalMedicosAutorizados = profesionalMedicoRepository.findByPacientesQueHanAutorizado_Id(idPaciente);
+    public List<ProfesionalMedicoData> obtenerProfesionalesMedicosAutorizados(Long idPaciente) {
+        List<ProfesionalMedico> profesionalMedicosAutorizados = profesionalMedicoRepository.findByPacientesQueHanAutorizado_IdOrderByIdAsc(idPaciente);
+
+        List<ProfesionalMedicoData> profesionalesMedicosAutorizadosData = profesionalMedicosAutorizados.stream()
+                .map(profesionalMedicoAutorizado -> modelMapper.map(profesionalMedicoAutorizado, ProfesionalMedicoData.class))
+                .collect(Collectors.toList());
+
+        return  profesionalesMedicosAutorizadosData;
 
     }
 

@@ -229,6 +229,11 @@ public class PacienteController{
 
     @GetMapping("/api/paciente/profesionales-autorizados")
     public String verProfesionalesMedicosAutorizados(Model model) {
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
+        List<ProfesionalMedicoData> profesionalesMedicosData = pacienteService.obtenerProfesionalesMedicosAutorizados(pacienteData.getId());
+        model.addAttribute("profesionalesMedicosAutorizados", profesionalesMedicosData);
+
         return "paciente/ver-profesionales-medicos-autorizados";
     }
 

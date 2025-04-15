@@ -16,8 +16,9 @@ public interface ProfesionalMedicoRepository extends JpaRepository<ProfesionalMe
     Optional<ProfesionalMedico> findByUsuarioId(Long usuarioId);
 
     Optional<ProfesionalMedico> findBySolicitudesAutorizacion_Id(Long id);
-    Set<ProfesionalMedico> findByPacientesQueHanAutorizado_Id(Long pacienteId);
-    Set<ProfesionalMedico> findByPacientesQueHanDesautorizado_Id(Long pacienteId);
+    List<ProfesionalMedico> findByPacientesQueHanAutorizado_IdOrderByIdAsc(Long pacienteId);
+    List<ProfesionalMedico> findByPacientesQueHanDesautorizado_IdOrderByIdAsc(Long pacienteId);
+
 
 
 }
