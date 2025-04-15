@@ -48,10 +48,11 @@
         <button class="button-primary">Aplicar filtros</button>
       </div>
 
-      <!-- Create New Report Button -->
-      <button class="button-create" th:onclick="|window.location.href='@{/api/profesional-medico/pacientes/{id}/informes/nuevo(id=${usuario.id})}'|">
-        Crear nuevo informe
-      </button>
+      <form th:action="@{'/api/profesional-medico/pacientes/' + ${pacienteId} + '/informes'}" method="get">
+        <button type="submit" class="button-create">
+          Crear nuevo informe
+        </button>
+      </form>
 
 
 

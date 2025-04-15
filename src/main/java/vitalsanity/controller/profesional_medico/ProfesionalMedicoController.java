@@ -305,9 +305,10 @@ public class ProfesionalMedicoController {
         return "profesional_medico/listado-pacientes-que-han-desautorizado";
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes")
-    public String verInformesPaciente(@PathVariable(value="idPaciente") Long idPaciente,
+    @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes")
+    public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
                                       Model model) {
+        model.addAttribute("pacienteId", pacienteId);
         return "profesional_medico/ver-informes-del-paciente";
     }
 
