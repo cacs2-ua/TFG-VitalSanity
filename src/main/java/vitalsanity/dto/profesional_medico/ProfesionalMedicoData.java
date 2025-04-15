@@ -1,5 +1,8 @@
 package vitalsanity.dto.profesional_medico;
 
+import vitalsanity.dto.centro_medico.CentroMedicoData;
+import vitalsanity.dto.general_user.UsuarioData;
+
 import java.util.Objects;
 
 public class ProfesionalMedicoData {
@@ -18,8 +21,9 @@ public class ProfesionalMedicoData {
 
     private  String nombreCentroMedico;
 
-    private  String centroMedico;
+    private UsuarioData usuario;
 
+    private CentroMedicoData centroMedico;
 
     //getters y setters
 
@@ -77,6 +81,22 @@ public class ProfesionalMedicoData {
 
     public void setNombreCentroMedico(String nombreCentroMedico) {
         this.nombreCentroMedico = nombreCentroMedico;
+    }
+
+    public UsuarioData getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioData usuario) {
+        this.usuario = usuario;
+    }
+
+    public CentroMedicoData getCentroMedico() {
+        return centroMedico;
+    }
+
+    public void setCentroMedico(CentroMedicoData centroMedico) {
+        this.centroMedico = centroMedico;
     }
 
     @Override

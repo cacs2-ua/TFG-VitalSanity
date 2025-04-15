@@ -162,7 +162,6 @@ public class PacienteService {
                 .collect(Collectors.toList());
 
         return  profesionalesMedicosAutorizadosData;
-
     }
 
 }
