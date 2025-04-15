@@ -21,6 +21,8 @@ public class ProfesionalMedicoData {
 
     private  String nombreCentroMedico;
 
+    private  EspecialidadMedicaData especialidadMedica;
+
     private UsuarioData usuario;
 
     private CentroMedicoData centroMedico;
@@ -81,6 +83,14 @@ public class ProfesionalMedicoData {
 
     public void setNombreCentroMedico(String nombreCentroMedico) {
         this.nombreCentroMedico = nombreCentroMedico;
+    }
+
+    public EspecialidadMedicaData getEspecialidadMedica() {
+        return especialidadMedica;
+    }
+
+    public void setEspecialidadMedica(EspecialidadMedicaData especialidadMedica) {
+        this.especialidadMedica = especialidadMedica;
     }
 
     public UsuarioData getUsuario() {

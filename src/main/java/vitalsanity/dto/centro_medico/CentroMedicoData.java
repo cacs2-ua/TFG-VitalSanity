@@ -1,5 +1,7 @@
 package vitalsanity.dto.centro_medico;
 
+import vitalsanity.dto.general_user.UsuarioData;
+
 import java.util.Objects;
 
 public class CentroMedicoData {
@@ -8,6 +10,8 @@ public class CentroMedicoData {
     private String ccc;
     private String iban;
     private String direccion;
+
+    private UsuarioData usuario;
 
     // getters and setters
 
@@ -41,6 +45,14 @@ public class CentroMedicoData {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public UsuarioData getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioData usuario) {
+        this.usuario = usuario;
     }
 
 
