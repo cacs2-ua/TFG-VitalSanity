@@ -165,6 +165,31 @@
       transform: scale(1.05);
     }
 
+    .selected-files {
+      margin-top: 1rem;
+      background-color: #F5F3FF;
+      border-radius: 0.25rem;
+      padding: 0.75rem;
+      color: #333;
+      font-size: 0.95rem;
+      font-weight: normal;
+    }
+
+    .selected-files h3 {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      color: #000;
+      text-align: center;
+      text-decoration: underline;
+    }
+
+    .selected-file-item {
+      margin-bottom: 0.5rem;
+      text-align: center;
+      word-break: break-all;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 600px) {
       .form-container {
@@ -209,27 +234,54 @@
     </div>
     
     <div class="form-section">
-      <h2 class="attachments-title">Ficheros adjuntos</h2>
+      <h2 class="attachments-title">Adjuntar ficheros para el informe</h2>
 
       <label for="fileInput" class="attachment-button">
-        Adjuntar Ficheros
+        Adjuntar
         <span class="attachment-icon">▼</span>
       </label>
       <input type="file" id="fileInput" multiple style="display: none;">
 
-      <div class="attachments-list">
-        <a href="#" class="attachment-item">Imagenes_RMN.pdf</a>
-        <a href="#" class="attachment-item">Diagnostico_Preliminar.pdf</a>
-        <a href="#" class="attachment-item">Recomendaciones_Clinicas.pdf</a>
-        <a href="#" class="attachment-item">Analisis_Comparativo.pdf</a>
+      <div id="selectedFiles" class="selected-files" style="display: none;">
+        <h3>Ficheros adjuntados</h3>
       </div>
+
     </div>
   </div>
   
   <div class="submit-container">
-    <button class="submit-button">Enviar</button>
+    <button class="submit-button">Aceptar</button>
   </div>
   </div>
   <div th:replace="navbar::javascript"></div>
+
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const selectedFilesContainer = document.getElementById('selectedFiles');
+
+    fileInput.addEventListener('change', function () {
+      const files = Array.from(fileInput.files);
+// Preservamos el h3 original si existe
+      const heading = selectedFilesContainer.querySelector('h3');
+      selectedFilesContainer.innerHTML = '';
+      if (heading) selectedFilesContainer.appendChild(heading);
+
+
+      if (files.length > 0) {
+        selectedFilesContainer.style.display = 'block';
+        files.forEach(file => {
+          const fileElement = document.createElement('div');
+          fileElement.className = 'selected-file-item';
+          fileElement.textContent = `📎 ${file.name}`;
+          selectedFilesContainer.appendChild(fileElement);
+        });
+      } else {
+        selectedFilesContainer.style.display = 'none';
+      }
+    });
+  </script>
+
+
 </body>
 </html>
