@@ -143,7 +143,6 @@ public class PacienteService {
         Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
         ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
         paciente.addProfesionalMedicoAutorizado(profesionalMedico);
-        paciente.quitarProfesionalMedicoDesautorizado(profesionalMedico);
     }
 
     @Transactional
@@ -151,6 +150,8 @@ public class PacienteService {
         Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
         ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(idProfesionalMedico).orElse(null);
         paciente.addProfesionalMedicoDesautorizado(profesionalMedico);
+
+        pacienteRepository.save(paciente);
     }
 
     @Transactional(readOnly = true)
@@ -162,6 +163,12 @@ public class PacienteService {
                 .collect(Collectors.toList());
 
         return  profesionalesMedicosAutorizadosData;
+    }
+
+    @Transactional(readOnly = true)
+    public SolicitudAutorizacionData obtenerUltimaSolicitudAutorizacionValida(Long idProfesionalMedico, Long idPaciente) {
+        SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdAndPacienteIdAndDenegadaFalse(idProfesionalMedico, idPaciente).orElse(null);
+        return  modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
     }
 
 }

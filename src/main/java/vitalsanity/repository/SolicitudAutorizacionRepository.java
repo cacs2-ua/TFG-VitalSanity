@@ -12,6 +12,8 @@ public interface SolicitudAutorizacionRepository extends JpaRepository<Solicitud
 
     Optional<SolicitudAutorizacion> findTopByProfesionalMedicoIdAndPacienteIdOrderByIdDesc(Long profesionalMedicoId, Long pacienteId);
 
+    Optional<SolicitudAutorizacion> findTopByProfesionalMedicoIdAndPacienteIdAndDenegadaFalse(Long profesionalMedicoId, Long pacienteId);
+
     List<SolicitudAutorizacion> findByPacienteIdAndDenegadaFalse(Long pacienteId);
 
     List<SolicitudAutorizacion> findByPacienteIdAndDenegadaFalseAndFirmadaTrueAndCofirmadaFalseOrderByFechaFirmaDesc(Long pacienteId);

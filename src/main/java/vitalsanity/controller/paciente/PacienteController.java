@@ -232,9 +232,27 @@ public class PacienteController{
         Long idUsuarioPaciente = getUsuarioLogeadoId();
         PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
         List<ProfesionalMedicoData> profesionalesMedicosData = pacienteService.obtenerProfesionalesMedicosAutorizados(pacienteData.getId());
+
+        if (profesionalesMedicosData.isEmpty()) {
+            boolean noHayProfesionalesAutorizados = true;
+            model.addAttribute("noHayProfesionalesAutorizados", noHayProfesionalesAutorizados);
+        }
         model.addAttribute("profesionalesMedicosAutorizados", profesionalesMedicosData);
 
         return "paciente/ver-profesionales-medicos-autorizados";
+    }
+
+    @PostMapping("/api/paciente/desautorizar-profesional-medico")
+    public String desautorizarProfesionalMedico(@RequestParam("id") String idProfesionalMedicoStr,
+                                                Model model) {
+        Long idUsuarioPaciente = getUsuarioLogeadoId();
+        Long idPaciente = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente).getId();
+        Long idProfesionalMedico = Long.parseLong(idProfesionalMedicoStr);
+        SolicitudAutorizacionData solicitudAutorizacionData = pacienteService.obtenerUltimaSolicitudAutorizacionValida(idProfesionalMedico,idPaciente);
+        pacienteService.marcarSolicitudAutorizacionComoDenegada(solicitudAutorizacionData.getId());
+        pacienteService.agregarProfesionalMedicoDesautorizado(idPaciente, idProfesionalMedico);
+
+        return "redirect:/api/paciente/profesionales-autorizados";
     }
 
 

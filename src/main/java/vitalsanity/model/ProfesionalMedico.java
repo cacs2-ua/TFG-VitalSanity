@@ -123,11 +123,17 @@ public class ProfesionalMedico implements Serializable {
     public void addPacienteQueHaAutorizado(Paciente paciente) {
         this.getPacientesQueHanAutorizado().add(paciente);
         paciente.getProfesionalesMedicosAutorizados().add(this);
+
+        this.getPacientesQueHanDesautorizado().remove(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().remove(this);
     }
 
     public  void  quitarPacienteQueHaAutorizado (Paciente paciente) {
         this.getPacientesQueHanAutorizado().remove(paciente);
         paciente.getProfesionalesMedicosAutorizados().remove(this);
+
+        this.getPacientesQueHanDesautorizado().add(paciente);
+        paciente.getProfesionalesMedicosDesautorizados().add(this);
     }
 
 

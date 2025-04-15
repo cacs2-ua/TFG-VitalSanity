@@ -72,11 +72,17 @@ public class Paciente implements Serializable {
     public void addProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
         this.getProfesionalesMedicosDesautorizados().add(profesionalMedicoDesautorizado);
         profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().add(this);
+
+        this.getProfesionalesMedicosAutorizados().remove(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanAutorizado().remove(this);
     }
 
     public void quitarProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
         this.getProfesionalesMedicosDesautorizados().remove(profesionalMedicoDesautorizado);
         profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().remove(this);
+
+        this.getProfesionalesMedicosAutorizados().add(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanAutorizado().add(this);
     }
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
