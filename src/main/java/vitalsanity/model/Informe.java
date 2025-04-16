@@ -21,38 +21,30 @@ public class Informe implements Serializable {
 
     @NotNull
     @Column(unique = true)
-    private String Uuid;
+    private String uuid;
 
     @NotNull
     @Column(unique = true)
     private String identificadorPublico;
 
+    @Column(length = 500)
     @NotNull
     private String titulo;
+
+    @Column(columnDefinition = "TEXT")
+    @NotNull
+    private String descripcion;
+
+    @Column(columnDefinition = "TEXT")
+    @NotNull
+    private String observaciones;
 
     @NotNull
     private LocalDateTime fechaCreacion;
 
-    @NotNull
-    private String nombreCentroMedico;
+    boolean firmado;
 
-    @NotNull
-    private String nombreProfesionalMedico;
-
-    @NotNull
-    private String nifNieProfesionalMedico;
-
-    @NotNull
-    private String nombrePaciente;
-
-    @NotNull
-    private String nifNiePaciente;
-
-    @NotNull
-    private String provincia;
-
-    @NotNull
-    private String municipio;
+    LocalDateTime fechaFirma;
 
     @NotNull
     @ManyToOne
@@ -72,7 +64,6 @@ public class Informe implements Serializable {
             this.paciente.getInformes().remove(this);
         }
 
-        // Asigna el nuevo tipo
         this.paciente = paciente;
 
         if (!paciente.getInformes().contains(this)) {
@@ -123,19 +114,6 @@ public class Informe implements Serializable {
 
     public Informe() {}
 
-    public Informe(String Uuid, String titulo, LocalDateTime fechaCreacion, String nombreCentroMedico, String nombreProfesionalMedico,
-                   String nifNieProfesionalMedico, String nombrePaciente, String nifNiePaciente, String provincia, String municipio) {
-        this.Uuid = Uuid;
-        this.titulo = titulo;
-        this.fechaCreacion = fechaCreacion;
-        this.nombreCentroMedico = nombreCentroMedico;
-        this.nombreProfesionalMedico = nombreProfesionalMedico;
-        this.nifNieProfesionalMedico = nifNieProfesionalMedico;
-        this.nombrePaciente = nombrePaciente;
-        this.nifNiePaciente = nifNiePaciente;
-        this.provincia = provincia;
-        this.municipio = municipio;
-    }
 
     public Long getId() {
         return id;
@@ -154,11 +132,11 @@ public class Informe implements Serializable {
     }
 
     public String getUuid() {
-        return Uuid;
+        return uuid;
     }
 
-    public void setUuid(String Uuid) {
-        this.Uuid = Uuid;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getTitulo() {
@@ -169,6 +147,22 @@ public class Informe implements Serializable {
         this.titulo = titulo;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
@@ -177,60 +171,20 @@ public class Informe implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public String getNombreCentroMedico() {
-        return nombreCentroMedico;
+    public boolean isFirmado() {
+        return firmado;
     }
 
-    public void setNombreCentroMedico(String nombreCentroMedico) {
-        this.nombreCentroMedico = nombreCentroMedico;
+    public void setFirmado(boolean firmado) {
+        this.firmado = firmado;
     }
 
-    public String getNombreProfesionalMedico() {
-        return nombreProfesionalMedico;
+    public LocalDateTime getFechaFirma() {
+        return fechaFirma;
     }
 
-    public void setNombreProfesionalMedico(String nombreProfesionalMedico) {
-        this.nombreProfesionalMedico = nombreProfesionalMedico;
-    }
-
-    public String getNifNieProfesionalMedico() {
-        return nifNieProfesionalMedico;
-    }
-
-    public void setNifNieProfesionalMedico(String nifNieProfesionalMedico) {
-        this.nifNieProfesionalMedico = nifNieProfesionalMedico;
-    }
-
-    public String getNombrePaciente() {
-        return nombrePaciente;
-    }
-
-    public void setNombrePaciente(String nombrePaciente) {
-        this.nombrePaciente = nombrePaciente;
-    }
-
-    public String getNifNiePaciente() {
-        return nifNiePaciente;
-    }
-
-    public void setNifNiePaciente(String nifNiePaciente) {
-        this.nifNiePaciente = nifNiePaciente;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
-    }
-
-    public String getMunicipio() {
-        return municipio;
-    }
-
-    public void setMunicipio(String municipio) {
-        this.municipio = municipio;
+    public void setFechaFirma(LocalDateTime fechaFirma) {
+        this.fechaFirma = fechaFirma;
     }
 
     @Override

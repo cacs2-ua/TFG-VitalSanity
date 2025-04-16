@@ -10,6 +10,7 @@ import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.DocumentoData;
+import vitalsanity.dto.profesional_medico.InformeData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.*;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -27,4 +29,58 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class InformeService {
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private InformeRepository informeRepository;
+
+    @Autowired
+    private ProfesionalMedicoRepository profesionalMedicoRepository;
+
+    @Autowired
+    private PacienteRepository pacienteRepository;
+
+    public InformeService(ProfesionalMedicoRepository profesionalMedicoRepository, PacienteRepository pacienteRepository) {
+        this.pacienteRepository = pacienteRepository;
+    }
+
+    @Transactional
+    public InformeData crearNuevoInforme(
+                                  Long profesionalMedicoId,
+                                  Long pacienteId,
+                                  String titulo,
+                                  String descripcion,
+                                  String observaciones) {
+        ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(profesionalMedicoId).orElse(null);
+        Paciente paciente = pacienteRepository.findById(pacienteId).orElse(null);
+
+        Informe informe = new Informe();
+        String uuid = "";
+
+        do {
+            uuid = UUID.randomUUID().toString();
+        } while(informeRepository.existsByUuid(uuid));
+
+        informe.setUuid(uuid);
+
+        // NUMERO RANDOM DE 6 CIFRAS
+
+        long numero = (long)(Math.random() * 9000000000L) + 1000000000L;
+        String identificadorPublico = "INF_" + String.valueOf(numero);
+
+        informe.setIdentificadorPublico(identificadorPublico);
+
+        informe.setTitulo(titulo);
+        informe.setDescripcion(descripcion);
+        informe.setObservaciones(observaciones);
+        informe.setFechaCreacion(LocalDateTime.now());
+
+        informe.setProfesionalMedico(profesionalMedico);
+        informe.setPaciente(paciente);
+
+        informeRepository.save(informe);
+        return modelMapper.map(informe, InformeData.class);
+    }
 }

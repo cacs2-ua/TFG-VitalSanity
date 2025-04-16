@@ -210,8 +210,7 @@ function onClickFirmarInforme() {
                     // EXITO: subimos el PDF firmado al servidor
                     console.log("✔ Firma del informe realizada correctamente. Resultado (Base64):", signedPdfBase64);
 
-                    hideLoading();
-
+                    subirPdfInformeFirmado(signedPdfBase64);
 
                 },
                 function (errorType, errorMessage) {
@@ -223,6 +222,33 @@ function onClickFirmarInforme() {
         })
         .catch(err => {
             alert("Error generando el PDF: " + err);
+            hideLoading();
+        });
+}
+
+function subirPdfInformeFirmado(idSolicitud, cosignedPdfBase64) {
+
+    const formData = new FormData();
+    formData.append("idSolicitudAutorizacion", idSolicitud);
+    formData.append("cosignedPdfBase64", cosignedPdfBase64);
+
+
+    fetch("/vital-sanity/api/paciente/aws-pdf-autorizacion-cofirmada", {
+        method: "POST",
+        body: formData
+    })
+        .then(response => response.text())
+        .then(s3Key => {
+
+            hideLoading();
+
+            setTimeout(() => {
+                window.parent.location.href = `/vital-sanity/api/paciente/pdf-autorizacion-cofirmada?s3Key=${s3Key}`;
+            }, 250);
+
+        })
+        .catch(err => {
+            alert("Error subiendo PDF cofirmado: " + err);
             hideLoading();
         });
 }
