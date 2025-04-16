@@ -102,6 +102,15 @@ public class InformeService {
         return modelMapper.map(informe, InformeData.class);
     }
 
+    @Transactional(readOnly = true)
+    public  List<InformeData> obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados (Long pacienteId) {
+        List<Informe> informes = informeRepository.findAllByPacienteIdAndProfesionalesMedicosAutorizados(pacienteId);
+
+        return informes.stream()
+                .map(informe -> modelMapper.map(informe, InformeData.class))
+                .collect(Collectors.toList());
+    }
+
 
 
 }
