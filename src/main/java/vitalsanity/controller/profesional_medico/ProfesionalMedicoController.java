@@ -315,7 +315,10 @@ public class ProfesionalMedicoController {
     @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes")
     public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
                                       Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        List<InformeData> informes = informeService.obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados(pacienteId);
         model.addAttribute("pacienteId", pacienteId);
+        model.addAttribute("informes", informes);
         return "profesional_medico/ver-informes-del-paciente";
     }
 

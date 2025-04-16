@@ -1,5 +1,9 @@
 package vitalsanity.dto.profesional_medico;
 
+import vitalsanity.dto.centro_medico.CentroMedicoData;
+import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.paciente.PacienteData;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -12,6 +16,14 @@ public class InformeData {
     private String descripcion;
     private String observaciones;
     private LocalDateTime fechaCreacion;
+
+    private PacienteData paciente;
+
+    private ProfesionalMedicoData profesionalMedico;
+
+    private CentroMedicoData centroMedico;
+
+    private UsuarioData centroMedicoUsuario;
 
     // getters y setters
 
@@ -70,6 +82,40 @@ public class InformeData {
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
+
+    public PacienteData getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(PacienteData paciente) {
+        this.paciente = paciente;
+    }
+
+    public ProfesionalMedicoData getProfesionalMedico() {
+        return profesionalMedico;
+    }
+
+    public void setProfesionalMedico(ProfesionalMedicoData profesionalMedico) {
+        this.profesionalMedico = profesionalMedico;
+    }
+
+    public CentroMedicoData getCentroMedico() {
+        return centroMedico;
+    }
+
+    public void setCentroMedico(CentroMedicoData centroMedico) {
+        this.centroMedico = centroMedico;
+    }
+
+    public UsuarioData getCentroMedicoUsuario() {
+        return centroMedicoUsuario;
+    }
+
+    public void setCentroMedicoUsuario(UsuarioData centroMedicoUsuario) {
+        this.centroMedicoUsuario = centroMedicoUsuario;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

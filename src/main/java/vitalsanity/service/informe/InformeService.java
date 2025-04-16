@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import vitalsanity.dto.centro_medico.CentroMedicoData;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
@@ -41,6 +42,12 @@ public class InformeService {
 
     @Autowired
     private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private CentroMedicoRepository centroMedicoRepository;
+
+    @Autowired
+    private  UsuarioRepository usuarioRepository;
 
     @Transactional
     public InformeData crearNuevoInforme(
@@ -106,11 +113,20 @@ public class InformeService {
     public  List<InformeData> obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados (Long pacienteId) {
         List<Informe> informes = informeRepository.findAllByPacienteIdAndProfesionalesMedicosAutorizados(pacienteId);
 
-        return informes.stream()
+        List<InformeData> informesData = informes.stream()
                 .map(informe -> modelMapper.map(informe, InformeData.class))
                 .collect(Collectors.toList());
+
+        for (InformeData informe : informesData) {
+            ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(Long.parseLong(informe.getProfesionalMedico().getId())).orElse(null);
+            CentroMedico centroMedico = centroMedicoRepository.findById(profesionalMedico.getId()).orElse(null);
+            Usuario centroMedicoUsuario = usuarioRepository.findByCentroMedicoId(centroMedico.getId()).orElse(null);
+
+            informe.setCentroMedico(modelMapper.map(centroMedico, CentroMedicoData.class));
+            informe.setCentroMedicoUsuario(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+        }
+
+        return informesData;
     }
-
-
 
 }
