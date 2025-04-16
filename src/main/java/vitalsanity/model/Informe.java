@@ -24,6 +24,10 @@ public class Informe implements Serializable {
     private String Uuid;
 
     @NotNull
+    @Column(unique = true)
+    private String identificadorPublico;
+
+    @NotNull
     private String titulo;
 
     @NotNull
@@ -139,6 +143,14 @@ public class Informe implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdentificadorPublico() {
+        return identificadorPublico;
+    }
+
+    public void setIdentificadorPublico(String identificadorPublico) {
+        this.identificadorPublico = identificadorPublico;
     }
 
     public String getUuid() {

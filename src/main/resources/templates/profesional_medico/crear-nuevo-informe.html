@@ -17,7 +17,7 @@
     <div class="form-section">
       <!-- Modified: Combined the ID text into a single span -->
       <div class="form-id">
-        <span class="form-id-combined"><strong>Id. informe:</strong> 20939676</span>
+        <span class="form-id-combined"><strong>Identificador del informe:</strong> 20939676</span>
       </div>
 
       <form id="form-authorization-data">
@@ -123,7 +123,7 @@
       var aceptarButton = document.querySelector('.submit-container button.submit-button');
       aceptarButton.addEventListener('click', function(e) {
         // Selecciona todos los campos de entrada y áreas de texto del primer div que no sean de solo lectura
-        var requiredFields = document.querySelectorAll('.form-container input.form-input:not([readonly]), .form-container textarea.form-textarea');
+        var requiredFields = document.querySelectorAll('.form-container input.form-input, .form-container textarea.form-textarea');
         var isValid = true;
         requiredFields.forEach(function(field) {
           if (!field.value.trim()) {
