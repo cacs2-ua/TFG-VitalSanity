@@ -247,7 +247,7 @@ function subirPdfInformeFirmado(informeId, signedPdfBase64) {
             hideLoading();
 
             setTimeout(() => {
-                window.parent.location.href = `/vital-sanity/api/profesional-medico/home?uuid=${uuid}`;
+                window.parent.location.href = `/vital-sanity/api/profesional-medico/descargar-pdf-informe-firmado?uuid=${uuid}`;
             }, 250);
         })
         .catch(err => {

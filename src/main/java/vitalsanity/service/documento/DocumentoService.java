@@ -63,4 +63,10 @@ public class DocumentoService {
 
         return modelMapper.map(documento, DocumentoData.class);
     }
+
+    @Transactional(readOnly = true)
+    public  DocumentoData encontrarPorUuid(String uuid) {
+        Documento documento = documentoRepository.findByUuid(uuid).orElse(null);
+        return modelMapper.map(documento, DocumentoData.class);
+    }
 }

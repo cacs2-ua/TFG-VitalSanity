@@ -370,6 +370,8 @@ public class ProfesionalMedicoController {
         Long informeId = body.getIdInforme();
         InformeData informeData = informeService.encontrarPorId(informeId);
 
+        informeService.establecerInformacionFirma(informeId);
+
         String informeFirmado = body.getPdfBase64();
         byte[] informeFirmadoBytes = Base64.getDecoder().decode(informeFirmado);
 
@@ -401,6 +403,20 @@ public class ProfesionalMedicoController {
         emailService.send(email, subject, text);
 
         return uuid;
+    }
+
+    @GetMapping("/api/profesional-medico/descargar-pdf-informe-firmado")
+    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String uuid,
+                                                         Model model) {
+
+        DocumentoData documentoData = documentoService.encontrarPorUuid(uuid);
+        String s3Key = documentoData.getS3_key();
+        String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
+                s3Key,
+                Duration.ofMinutes(5));
+        model.addAttribute("urlPrefirmada", urlPrefirmada);
+        return "profesional_medico/descargar-pdf-informe-firmado";
+
     }
 
 }
