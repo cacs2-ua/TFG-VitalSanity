@@ -1,5 +1,6 @@
 package vitalsanity.controller.profesional_medico;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -308,9 +309,36 @@ public class ProfesionalMedicoController {
 
     @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes/nuevo")
     public String crearNuevoInforme(@PathVariable(value="pacienteId") Long pacienteId,
-                                    Model model) {
+                                    Model model,
+                                    HttpServletRequest request) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        Long profesionalMedicoId = usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico);
+        model.addAttribute("contextPath", request.getContextPath());
+        model.addAttribute("profesionalMedicoId", profesionalMedicoId);
         model.addAttribute("pacienteId", pacienteId);
         return "profesional_medico/crear-nuevo-informe";
+    }
+
+
+    // LÓGICA DE LA GENERACIÓN DEL INFORME
+
+    @PostMapping("/api/profesional-medico/generar-pdf-informe")
+    @ResponseBody
+    public String generarPdfDelInforme(
+            @RequestParam Long profesionalMedicoId,
+            @RequestParam Long pacienteId,
+            @RequestParam String titulo,
+            @RequestParam String descripcion,
+            @RequestParam String observaciones) {
+
+        byte[] pdfBytes = generarPdf.generarPdfInforme(
+                profesionalMedicoId,
+                pacienteId,
+                titulo,
+                descripcion,
+                observaciones);
+
+        return Base64.getEncoder().encodeToString(pdfBytes);
     }
 
 }

@@ -74,4 +74,52 @@ public class GenerarPdf {
             throw new RuntimeException("Error generando PDF", e);
         }
     }
+
+    public byte[] generarPdfInforme(
+            Long profesionalMedicoId,
+            Long pacienteId,
+            String tituloInforme,
+            String descripcion,
+            String observaciones) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+            ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(profesionalMedicoId).orElse(null);
+            Paciente paciente = pacienteRepository.findById(pacienteId).orElse(null);
+
+            Usuario usuarioProfesionalMedico = profesionalMedico.getUsuario();
+            Usuario usuarioPaciente = paciente.getUsuario();
+
+
+            CentroMedico centro = profesionalMedico.getCentroMedico();
+
+            Usuario usuarioCentroMedico = usuarioRepository.findByCentroMedicoId(centro.getId()).orElse(null);
+
+            // Crear PDFWriter y PDFDocument en memoria
+            PdfWriter pdfWriter = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(pdfWriter);
+            Document document = new Document(pdfDoc);
+
+            // Añadir contenido al PDF (texto de ejemplo)
+            document.add(new Paragraph("DATOS DEL INFORME"));
+            document.add(new Paragraph("Título: " + tituloInforme));
+            document.add(new Paragraph("Descripcion: " + descripcion));
+            document.add(new Paragraph("Observaciones: " + observaciones));
+            document.add(new Paragraph("Nombre del profesional médico: " + usuarioProfesionalMedico.getNombreCompleto()));
+            document.add(new Paragraph("NIF/NIE del profesional médico: " + usuarioProfesionalMedico.getNifNie()));
+            document.add(new Paragraph("Especialidad del profesional médico: " + profesionalMedico.getEspecialidadMedica().getNombre()));
+            document.add(new Paragraph("NIF del Centro médico desde el que se ha solicitado la autorización: " + usuarioCentroMedico.getNifNie()));
+            document.add(new Paragraph("Nombre del Centro médico desde el que se ha solicitado la autorización: " + usuarioCentroMedico.getNombreCompleto()));
+            document.add(new Paragraph("Provincia del Centro médico desde el que se ha solicitado la autorización: " + usuarioCentroMedico.getProvincia()));
+            document.add(new Paragraph("Municipio del Centro médico desde el que se ha solicitado la autorización: " + usuarioCentroMedico.getMunicipio()));
+            document.add(new Paragraph("Dirección del Centro médico desde el que se ha solicitado la autorización: " + centro.getDireccion()));
+            document.add(new Paragraph("Nombre del paciente: " + usuarioPaciente.getNombreCompleto()));
+            document.add(new Paragraph("NIF/NIE del paciente: " + usuarioPaciente.getNifNie()));
+
+            document.close();
+            return baos.toByteArray();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error generando PDF", e);
+        }
+    }
 }

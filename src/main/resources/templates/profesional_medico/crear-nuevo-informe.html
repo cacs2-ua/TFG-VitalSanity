@@ -7,6 +7,16 @@
   <div th:include="navbar :: head (titulo='Crear nuevo Informe')"></div>
   <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
   <link rel="stylesheet" th:href="@{/css/custom/profesional_medico/crear-nuevo-informe.css}">
+
+  <script th:inline="javascript">
+    const contextPath = /*[[${contextPath}]]*/ '';
+  </script>
+
+  <!-- Cargamos autoscript.js (JavaScript de despliegue de @firma) -->
+  <script th:src="@{/js/vendor/autoscript.js}"></script>
+  <!-- Nuestro JS específico de la invocación a la firma -->
+  <script th:src="@{/js/custom/signer-invoke.js}"></script>
+
 </head>
 <body>
   <div th:replace="navbar::menuBar"></div>
@@ -17,13 +27,24 @@
     <div class="form-section">
       <!-- Modified: Combined the ID text into a single span -->
       <div class="form-id">
-        <span class="form-id-combined"><strong>Identificador del informe:</strong> 20939676</span>
+        <span class="form-id-combined"><strong>Datos del informe</strong></span>
       </div>
 
       <form id="form-authorization-data">
+
+        <div class="form-field" style="display:none;">
+          <label class="form-label required">Id del profesional médico</label>
+          <input th:value="${profesionalMedicoId}" type="text" name="profesionalMedicoId" id="profesionalMedicoId" class="form-input">
+        </div>
+
+        <div class="form-field" style="display:none;">
+          <label class="form-label required">Id del paciente</label>
+          <input th:value="${pacienteId}" type="text" name="pacienteId" id="pacienteId" class="form-input">
+        </div>
+
         <div class="form-field">
           <label class="form-label required">Título del informe:</label>
-          <input type="text" name="tituloInforme" id="tituloInforme" class="form-input">
+          <input type="text" name="titulo" id="titulo" class="form-input">
         </div>
         <div class="form-field">
           <label class="form-label required">Descripción:</label>
@@ -33,6 +54,7 @@
           <label class="form-label required">Observaciones:</label>
           <textarea name="observaciones" id="observaciones" class="form-textarea"></textarea>
         </div>
+
       </form>
 
     </div>
@@ -109,9 +131,14 @@
     <div class="button-container">
 
       <div class="button-container">
-        <button type="button" onclick="if(document.getElementById('accept').checked){ onClickFirmarAutorizacion(); } else { alert('Debe de marcar la casilla asociada a lo expuesto en materia de protección de datos.'); }" class="back-button">Firmar y Enviar</button>
+        <button type="button" onclick="if(document.getElementById('accept').checked){ onClickFirmarInforme(); } else { alert('Debe de marcar la casilla asociada a lo expuesto en materia de protección de datos.'); }" class="back-button">Firmar y Enviar</button>
       </div>
     </div>
+  </div>
+
+  <div id="loading-overlay" class="overlay" style="display: none;">
+    <div class="spinner"></div>
+    <p>Procesando, por favor espere...</p>
   </div>
 
 

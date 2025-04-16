@@ -184,6 +184,48 @@ function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
         });
 }
 
+function onClickFirmarInforme() {
+    showLoading();
+
+    // 1) Recogemos datos del formulario
+    const form = document.getElementById("form-authorization-data");
+    const formData = new FormData(form);
+
+    const safeContextPath = typeof contextPath !== "undefined" ? contextPath : "";
+
+    // Llamamos por AJAX a /signer/generate-pdf para obtener un PDF base64
+    fetch(`${safeContextPath}/api/profesional-medico/generar-pdf-informe`, {
+        method: "POST",
+        body: formData
+    })
+        .then(response => response.text())
+        .then(pdfBase64 => {
+            // 2) Invocamos la firma con AutoFirma (sign):
+            AutoScript.sign(
+                pdfBase64,                  // dataB64
+                "SHA512withRSA",            // algorithm
+                "PAdES",                    // format
+                null,                       // params (simple demo)
+                function (signedPdfBase64, signerCert, extraInfo) {
+                    // EXITO: subimos el PDF firmado al servidor
+                    console.log("✔ Firma del informe realizada correctamente. Resultado (Base64):", signedPdfBase64);
+
+                    hideLoading();
+
+
+                },
+                function (errorType, errorMessage) {
+                    alert("ERROR en firma: " + errorType + " - " + errorMessage);
+
+                    hideLoading();
+                }
+            );
+        })
+        .catch(err => {
+            alert("Error generando el PDF: " + err);
+            hideLoading();
+        });
+}
 
 
 /**
