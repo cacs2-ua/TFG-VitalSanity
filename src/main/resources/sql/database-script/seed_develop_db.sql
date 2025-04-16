@@ -1,5 +1,6 @@
 DELETE FROM documentos;
 DELETE FROM solicitudes_autorizacion;
+DELETE FROM informes;
 DELETE FROM pacientes_profesionales_medicos_autorizados;
 DELETE FROM pacientes_profesionales_medicos_desautorizados;
 DELETE FROM profesionales_medicos;
@@ -107,6 +108,7 @@ INSERT INTO public.pacientes_profesionales_medicos_desautorizados (fk_paciente, 
 
 SELECT setval('public.documentos_id_seq', COALESCE((SELECT MAX(id) FROM public.documentos), 0) + 1, false);
 SELECT setval('public.solicitudes_autorizacion_id_seq', COALESCE((SELECT MAX(id) FROM public.solicitudes_autorizacion), 0) + 1, false);
+SELECT setval('public.informes_id_seq', COALESCE((SELECT MAX(id) FROM public.informes), 0) + 1, false);
 SELECT setval('public.profesionales_medicos_id_seq', COALESCE((SELECT MAX(id) FROM public.profesionales_medicos), 0) + 1, false);
 SELECT setval('public.especialidades_medicas_id_seq', COALESCE((SELECT MAX(id) FROM public.especialidades_medicas), 0) + 1, false);
 SELECT setval('public.centros_medicos_id_seq', COALESCE((SELECT MAX(id) FROM public.centros_medicos), 0) + 1, false);

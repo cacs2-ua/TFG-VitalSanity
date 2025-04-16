@@ -198,9 +198,10 @@ function onClickFirmarInforme() {
         method: "POST",
         body: formData
     })
-        .then(response => response.text())
-        .then(pdfBase64 => {
-            // 2) Invocamos la firma con AutoFirma (sign):
+        .then(response => response.json())
+        .then(data => {
+            const informeId= data.idInforme;
+            const pdfBase64 = data.pdfBase64;
             AutoScript.sign(
                 pdfBase64,                  // dataB64
                 "SHA512withRSA",            // algorithm
@@ -210,7 +211,7 @@ function onClickFirmarInforme() {
                     // EXITO: subimos el PDF firmado al servidor
                     console.log("✔ Firma del informe realizada correctamente. Resultado (Base64):", signedPdfBase64);
 
-                    subirPdfInformeFirmado(signedPdfBase64);
+                    subirPdfInformeFirmado(informeId, signedPdfBase64);
 
                 },
                 function (errorType, errorMessage) {
@@ -226,29 +227,31 @@ function onClickFirmarInforme() {
         });
 }
 
-function subirPdfInformeFirmado(idSolicitud, cosignedPdfBase64) {
+function subirPdfInformeFirmado(informeId, signedPdfBase64) {
+    const payload = {
+        idInforme: informeId,
+        pdfBase64: signedPdfBase64
+    };
 
-    const formData = new FormData();
-    formData.append("idSolicitudAutorizacion", idSolicitud);
-    formData.append("cosignedPdfBase64", cosignedPdfBase64);
+    const safeContextPath = typeof contextPath !== "undefined" ? contextPath : "";
 
-
-    fetch("/vital-sanity/api/paciente/aws-pdf-autorizacion-cofirmada", {
+    fetch(`${safeContextPath}/api/profesional-medico/pdf-informe-firmado`, {
         method: "POST",
-        body: formData
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
     })
         .then(response => response.text())
-        .then(s3Key => {
-
+        .then(uuid => {
             hideLoading();
 
             setTimeout(() => {
-                window.parent.location.href = `/vital-sanity/api/paciente/pdf-autorizacion-cofirmada?s3Key=${s3Key}`;
+                window.parent.location.href = `/vital-sanity/api/profesional-medico/home?uuid=${uuid}`;
             }, 250);
-
         })
         .catch(err => {
-            alert("Error subiendo PDF cofirmado: " + err);
+            alert("Error subiendo PDF firmado del informe: " + err);
             hideLoading();
         });
 }

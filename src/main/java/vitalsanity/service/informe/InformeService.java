@@ -42,10 +42,6 @@ public class InformeService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    public InformeService(ProfesionalMedicoRepository profesionalMedicoRepository, PacienteRepository pacienteRepository) {
-        this.pacienteRepository = pacienteRepository;
-    }
-
     @Transactional
     public InformeData crearNuevoInforme(
                                   Long profesionalMedicoId,
@@ -57,6 +53,7 @@ public class InformeService {
         Paciente paciente = pacienteRepository.findById(pacienteId).orElse(null);
 
         Informe informe = new Informe();
+
         String uuid = "";
 
         do {
@@ -65,7 +62,7 @@ public class InformeService {
 
         informe.setUuid(uuid);
 
-        // NUMERO RANDOM DE 6 CIFRAS
+        // NUMERO RANDOM DE 11 CIFRAS
 
         long numero = (long)(Math.random() * 9000000000L) + 1000000000L;
         String identificadorPublico = "INF_" + String.valueOf(numero);
@@ -83,4 +80,28 @@ public class InformeService {
         informeRepository.save(informe);
         return modelMapper.map(informe, InformeData.class);
     }
+
+    @Transactional
+    public  void establecerInformacionFirma(Long informeId) {
+        Informe informe = informeRepository.findById(informeId).orElse(null);
+
+        informe.setFirmado(true);
+        informe.setFechaFirma(LocalDateTime.now());
+        informeRepository.save(informe);
+    }
+
+    @Transactional(readOnly = true)
+    public  InformeData encontrarPorId(Long informeId) {
+        Informe informe = informeRepository.findById(informeId).orElse(null);
+        return modelMapper.map(informe, InformeData.class);
+    }
+
+    @Transactional(readOnly = true)
+    public  InformeData encontrarPorUuid(String uuid) {
+        Informe informe = informeRepository.findByUuid(uuid).orElse(null);
+        return modelMapper.map(informe, InformeData.class);
+    }
+
+
+
 }

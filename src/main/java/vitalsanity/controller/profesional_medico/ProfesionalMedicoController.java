@@ -1,6 +1,7 @@
 package vitalsanity.controller.profesional_medico;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,13 +12,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
-import vitalsanity.dto.profesional_medico.DocumentoData;
-import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
-import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
+import vitalsanity.dto.profesional_medico.*;
 import vitalsanity.model.SolicitudAutorizacion;
+import vitalsanity.repository.InformeRepository;
+import vitalsanity.service.documento.DocumentoService;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.informe.InformeService;
 import vitalsanity.service.paciente.PacienteService;
@@ -45,6 +47,9 @@ public class ProfesionalMedicoController {
     private InformeService informeService;
 
     @Autowired
+    private DocumentoService documentoService;
+
+    @Autowired
     private ProfesionalMedicoService profesionalMedicoService;
 
 
@@ -62,6 +67,9 @@ public class ProfesionalMedicoController {
 
     @Autowired
     private ManagerUserSession managerUserSession;
+    private InformeRepository informeRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
@@ -328,14 +336,15 @@ public class ProfesionalMedicoController {
 
     @PostMapping("/api/profesional-medico/generar-pdf-informe")
     @ResponseBody
-    public String generarPdfDelInforme(
+    public SubirInformeResponse generarPdfDelInforme(
             @RequestParam Long profesionalMedicoId,
             @RequestParam Long pacienteId,
             @RequestParam String titulo,
             @RequestParam String descripcion,
             @RequestParam String observaciones) {
 
-        informeService.crearNuevoInforme(
+
+        InformeData informeRecienCreadoData = informeService.crearNuevoInforme(
                 profesionalMedicoId,
                 pacienteId,
                 titulo,
@@ -351,72 +360,46 @@ public class ProfesionalMedicoController {
 
         String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
 
-        return Base64.getEncoder().encodeToString(pdfBytes);
+        return new SubirInformeResponse(informeRecienCreadoData.getId(), pdfBase64);
     }
 
     @PostMapping("/api/profesional-medico/pdf-informe-firmado")
     @ResponseBody
-    public String subirPdfInformeFirmadoEnAws(@RequestParam String signedPdfBase64) throws IOException {
+    public String subirPdfInformeFirmadoEnAws(@RequestBody SubirInformeResponse body) throws IOException {
         Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
-        SolicitudAutorizacionData ultimaSolicitudCreadaDelProfesionalMedico =
-                profesionalMedicoService.obtenerUltimaAutorizacionCreadaPorUnProfesionalMedico(idUsuarioProfesionalMedico);
+        Long informeId = body.getIdInforme();
+        InformeData informeData = informeService.encontrarPorId(informeId);
 
-        Long idUltimaSolicitudCreadaDelProfesionalMedico = ultimaSolicitudCreadaDelProfesionalMedico.getId();
-        profesionalMedicoService.establecerFechaFirmaAutorizacion(idUltimaSolicitudCreadaDelProfesionalMedico, LocalDateTime.now());
-        profesionalMedicoService.marcarSolicitudAutorizacionComoFirmada(idUltimaSolicitudCreadaDelProfesionalMedico);
+        String informeFirmado = body.getPdfBase64();
+        byte[] informeFirmadoBytes = Base64.getDecoder().decode(informeFirmado);
 
-        String nifNiePaciente = ultimaSolicitudCreadaDelProfesionalMedico.getNifNiePaciente();
-        UsuarioData usuarioPaciente = usuarioService.obtenerUsuarioPacienteAPartirDeNifNie(nifNiePaciente);
-        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
+        String uuid = informeData.getUuid();
+        String nombreArchivo = uuid;
 
-        String uuidUsuarioPaciente = usuarioPaciente.getUuid();
-        String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
+        String s3Key = "debug/informes/firmados/" + nombreArchivo + "_" + System.currentTimeMillis() + ".pdf";
 
-        byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-        String key = "debug/autorizaciones/firmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-        s3VitalSanityService.subirFicheroBytes(key, signedPdf);
-
-        String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-        String s3_key = key;
         String tipoArchivo = "application/pdf";
-        Long tamano = (long) signedPdf.length;
-        LocalDateTime fechaSubida = LocalDateTime.now();
 
-        profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
-                idUltimaSolicitudCreadaDelProfesionalMedico,
+        Long tamano = (long) informeFirmadoBytes.length;
+
+        documentoService.crearNuevoDocumento(
+                informeId,
+                informeData.getUuid(),
                 nombreArchivo,
-                s3_key,
+                s3Key,
                 tipoArchivo,
-                tamano,
-                fechaSubida
+                tamano
         );
 
-        String emailPaciente = usuarioPaciente.getEmail();
+        s3VitalSanityService.subirFicheroBytes(s3Key, informeFirmadoBytes);
 
-        String nombrePaciente = usuarioPaciente.getNombreCompleto();
+        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
+        String email = usuarioProfesionalMedico.getEmail();
+        String subject = "Informe subido con exito";
+        String text = "Estimad@: " + usuarioProfesionalMedico.getNombreCompleto() + ". Su informe con título: "
+                + informeData.getTitulo() + " ha sido subido con éxito.";
+        emailService.send(email, subject, text);
 
-
-        String nifNieProfesionalMedico = usuarioProfesionalMedico.getNifNie();
-        String nombreProfesionalMedico = usuarioProfesionalMedico.getNombreCompleto();
-
-        Long idProfesionalMedico = usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico);
-
-        String nombreCentroMedico = profesionalMedicoService.obtenerNombreCentroMedico(idProfesionalMedico);
-
-        String subject = "Solicitud de autorización por parte del profesional médico: " + nombreProfesionalMedico;
-
-        String text = "El profesional médico: '" + nombreProfesionalMedico + "' con NIF/NIE: '"
-                + nifNieProfesionalMedico + "' le ha solicitado autorización para acceder a su historial clínico desde el centro médico: '"
-                + nombreCentroMedico + "' . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
-                + " Una vez haya revisado la solicitud, usted podrá autorizar o denegar el acceso a su historial médico. "
-                + "Si usted autoriza el acceso al profesional médico, dicho profesional médico podrá acceder a su historial clínico centralizado, "
-                + "lo cual podría ayudar a agilizar el proceso de diagnóstico y tratamiento, mejorando así su atención médica y la calidad de su servicio. "
-                + "Le recordamos que cualquier tratamiento de datos está sujeto a la ley de protección de datos vigente. ";
-
-        // emailService.send(emailPaciente, subject, text);
-
-        String uuid = UUID.randomUUID().toString();
-        signedRepository.put(uuid, signedPdf);
         return uuid;
     }
 
