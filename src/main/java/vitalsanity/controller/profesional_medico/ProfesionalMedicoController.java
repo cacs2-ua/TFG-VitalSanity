@@ -75,20 +75,6 @@ public class ProfesionalMedicoController {
         return managerUserSession.usuarioLogeado();
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/{idInforme}/editar")
-    public String editarInforme(@PathVariable(value="idPaciente") Long idPaciente,
-                                @PathVariable(value="idPaciente") Long idInforme,
-                                    Model model) {
-        return "profesional_medico/editar-informe";
-    }
-
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/{idInforme}")
-    public String verDetallesInformePaciente(@PathVariable(value="idPaciente") Long idPaciente,
-                                             @PathVariable(value="idInforme") Long idInforme,
-                                                    Model model) {
-        return "profesional_medico/ver-detalles-informe";
-    }
-
     @GetMapping("/api/profesional-medico/buscar-paciente")
     public String buscarPacienteForm(Model model) {
         model.addAttribute("buscarPacienteData", new BuscarPacienteData());
@@ -419,7 +405,7 @@ public class ProfesionalMedicoController {
     }
 
     @GetMapping("/api/profesional-medico/descargar-pdf-informe-firmado")
-    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String uuid,
+    public String descargarPdfInformeFirmadoDeAws(@RequestParam String uuid,
                                                          Model model) {
 
         DocumentoData documentoData = documentoService.encontrarPorUuid(uuid);
@@ -430,6 +416,20 @@ public class ProfesionalMedicoController {
         model.addAttribute("urlPrefirmada", urlPrefirmada);
         return "profesional_medico/descargar-pdf-informe-firmado";
 
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes/informes/{informeId}/editar")
+    public String editarInforme(@PathVariable(value="informeId") Long informeId,
+                                Model model) {
+        model.addAttribute("informeId", informeId );
+        return "profesional_medico/editar-informe";
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes/informes/{informeId}/ver-detalles")
+    public String verDetallesInformePaciente(@PathVariable(value="informeId") Long informeId,
+                                             Model model) {
+        model.addAttribute("informeId", informeId );
+        return "profesional_medico/ver-detalles-informe";
     }
 
 }
