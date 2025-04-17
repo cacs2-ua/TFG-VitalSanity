@@ -435,11 +435,20 @@ public class ProfesionalMedicoController {
                 usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
         );
         InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
+
         List <DocumentoData> documentos = documentoService.obtenerDocumentosAsociadosAUnInforme(informeId);
+
+        boolean noHayDocumentos = false;
+
+        if (documentos.isEmpty()) {
+            noHayDocumentos = true;
+        }
+
         model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
         model.addAttribute("informeId", informeId );
         model.addAttribute("informe", informe);
         model.addAttribute("documentos", documentos);
+        model.addAttribute("noHayDocumentos", noHayDocumentos);
         return "profesional_medico/ver-detalles-informe";
     }
 

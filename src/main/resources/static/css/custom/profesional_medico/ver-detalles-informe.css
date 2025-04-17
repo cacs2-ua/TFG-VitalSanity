@@ -195,6 +195,14 @@
     word-break: break-all;
 }
 
+.no-documents-message {
+    color: #0236c8;
+    font-size: 16.5px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
 @media (max-width: 37.5rem) {
     .report-card {
         padding: 1rem;

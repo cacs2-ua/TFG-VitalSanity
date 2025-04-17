@@ -97,19 +97,19 @@
       <br>
       <div class="report-id"><strong>Documentos del informe</strong></div>
 
-      <div class="files-section">
+      <div th:if="${noHayDocumentos == true}" class="no-documents-message">
+        <p>No existe actualmente ningún documento asociado a este informe médico</p>
+      </div>
+
+      <div th:if="${noHayDocumentos == false}" class="files-section">
         <br>
         <h2 class="files-title">Documentos previamente adjuntados</h2>
-
-
 
         <div th:each="documento: ${documentos}" >
           <a th:href="${documento.urlPrefirmada}" th:text="${documento.nombre}" class="file-link"></a>
         </div>
-
         <br>
       </div>
-
 
       <br>
       <br>
