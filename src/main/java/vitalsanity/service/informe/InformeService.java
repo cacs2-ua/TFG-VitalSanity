@@ -117,13 +117,12 @@ public class InformeService {
                 .map(informe -> modelMapper.map(informe, InformeData.class))
                 .collect(Collectors.toList());
 
-        for (InformeData informe : informesData) {
-            ProfesionalMedico profesionalMedico = profesionalMedicoRepository.findById(Long.parseLong(informe.getProfesionalMedico().getId())).orElse(null);
-            CentroMedico centroMedico = centroMedicoRepository.findById(profesionalMedico.getId()).orElse(null);
-            Usuario centroMedicoUsuario = usuarioRepository.findByCentroMedicoId(centroMedico.getId()).orElse(null);
+        for (int i = 0; i < informesData.size(); i++) {
+            ProfesionalMedico profesionalMedico = informes.get(i).getProfesionalMedico();
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
 
-            informe.setCentroMedico(modelMapper.map(centroMedico, CentroMedicoData.class));
-            informe.setCentroMedicoUsuario(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+            informesData.get(i).setCentroMedicoUsuario(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
         }
 
         return informesData;
