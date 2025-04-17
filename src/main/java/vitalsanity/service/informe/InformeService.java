@@ -142,6 +142,10 @@ public class InformeService {
 
         informeData.setCentroMedicoUsuario(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
 
+        LocalDate fechaNacimiento = LocalDate.parse(informeData.getPaciente().getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+        int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        informeData.getPaciente().setEdad(edad);
+
         return informeData;
     }
 
