@@ -6,7 +6,7 @@
   <title>Detalles del informe</title>
   <div th:include="navbar :: head (titulo='Detalles de Informe')"></div>
   <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
-  <link rel="stylesheet" th:href="@{/css/custom/paciente/ver-detalles-informe.css}">
+  <link rel="stylesheet" th:href="@{/css/custom/profesional_medico/ver-detalles-informe.css}">
 </head>
 <body>
 <div th:replace="navbar::menuBar"></div>
@@ -92,9 +92,14 @@
         <div th:text="${informe.profesionalMedico.centroMedico.direccion}" class="report-value"> </div>
       </div>
 
+      <br>
+      <hr>
+      <br>
+      <div class="report-id"><strong>Ficheros del informe</strong></div>
+
       <div class="files-section">
         <br>
-        <h2 class="files-title">Ficheros adjuntos</h2>
+        <h2 class="files-title">Ficheros previamente adjuntados</h2>
 
         <a href="#" class="file-link">Imagenes_RMN.pdf</a>
         <a href="#" class="file-link">Diagnostico_Preliminar.pdf</a>
@@ -103,12 +108,62 @@
         <br>
       </div>
 
+
+      <br>
+      <br>
+
+
+
+      <div class="form-section">
+        <h2 class="report-id">Adjuntar nuevos ficheros para el informe</h2>
+
+        <label for="fileInput" class="attachment-button">
+          Adjuntar
+          <span class="attachment-icon">▼</span>
+        </label>
+        <input type="file" id="fileInput" multiple style="display: none;">
+
+        <div id="selectedFiles" class="selected-files" style="display: none;">
+          <h3>Nuevos ficheros adjuntados</h3>
+        </div>
+
+      </div>
+
     </div>
 
     <div class="button-container">
-      <button class="back-button">Volver</button>
+      <button class="back-button">Subir ficheros</button>
     </div>
+
+
   </div>
 <div th:replace="navbar::javascript"></div>
+
+<script>
+  const fileInput = document.getElementById('fileInput');
+  const selectedFilesContainer = document.getElementById('selectedFiles');
+
+  fileInput.addEventListener('change', function () {
+    const files = Array.from(fileInput.files);
+// Preservamos el h3 original si existe
+    const heading = selectedFilesContainer.querySelector('h3');
+    selectedFilesContainer.innerHTML = '';
+    if (heading) selectedFilesContainer.appendChild(heading);
+
+
+    if (files.length > 0) {
+      selectedFilesContainer.style.display = 'block';
+      files.forEach(file => {
+        const fileElement = document.createElement('div');
+        fileElement.className = 'selected-file-item';
+        fileElement.textContent = `📎 ${file.name}`;
+        selectedFilesContainer.appendChild(fileElement);
+      });
+    } else {
+      selectedFilesContainer.style.display = 'none';
+    }
+  });
+</script>
+
 </body>
 </html>
