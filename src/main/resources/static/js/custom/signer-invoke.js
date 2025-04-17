@@ -184,6 +184,77 @@ function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
         });
 }
 
+function onClickFirmarInforme() {
+    showLoading();
+
+    // 1) Recogemos datos del formulario
+    const form = document.getElementById("form-authorization-data");
+    const formData = new FormData(form);
+
+    const safeContextPath = typeof contextPath !== "undefined" ? contextPath : "";
+
+    // Llamamos por AJAX a /signer/generate-pdf para obtener un PDF base64
+    fetch(`${safeContextPath}/api/profesional-medico/generar-pdf-informe`, {
+        method: "POST",
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            const informeId= data.idInforme;
+            const pdfBase64 = data.pdfBase64;
+            AutoScript.sign(
+                pdfBase64,                  // dataB64
+                "SHA512withRSA",            // algorithm
+                "PAdES",                    // format
+                null,                       // params (simple demo)
+                function (signedPdfBase64, signerCert, extraInfo) {
+                    // EXITO: subimos el PDF firmado al servidor
+                    console.log("✔ Firma del informe realizada correctamente. Resultado (Base64):", signedPdfBase64);
+
+                    subirPdfInformeFirmado(informeId, signedPdfBase64);
+
+                },
+                function (errorType, errorMessage) {
+                    alert("ERROR en firma: " + errorType + " - " + errorMessage);
+
+                    hideLoading();
+                }
+            );
+        })
+        .catch(err => {
+            alert("Error generando el PDF: " + err);
+            hideLoading();
+        });
+}
+
+function subirPdfInformeFirmado(informeId, signedPdfBase64) {
+    const payload = {
+        idInforme: informeId,
+        pdfBase64: signedPdfBase64
+    };
+
+    const safeContextPath = typeof contextPath !== "undefined" ? contextPath : "";
+
+    fetch(`${safeContextPath}/api/profesional-medico/pdf-informe-firmado`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.text())
+        .then(uuid => {
+            hideLoading();
+
+            setTimeout(() => {
+                window.parent.location.href = `/vital-sanity/api/profesional-medico/descargar-pdf-informe-firmado?uuid=${uuid}`;
+            }, 250);
+        })
+        .catch(err => {
+            alert("Error subiendo PDF firmado del informe: " + err);
+            hideLoading();
+        });
+}
 
 
 /**

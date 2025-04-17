@@ -1,5 +1,7 @@
 package vitalsanity.controller.profesional_medico;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,14 +12,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
-import vitalsanity.dto.profesional_medico.DocumentoData;
-import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
-import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
+import vitalsanity.dto.profesional_medico.*;
 import vitalsanity.model.SolicitudAutorizacion;
+import vitalsanity.repository.InformeRepository;
+import vitalsanity.service.documento.DocumentoService;
 import vitalsanity.service.general_user.UsuarioService;
+import vitalsanity.service.informe.InformeService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 import vitalsanity.service.utils.EmailService;
@@ -40,6 +44,12 @@ public class ProfesionalMedicoController {
     private UsuarioService usuarioService;
 
     @Autowired
+    private InformeService informeService;
+
+    @Autowired
+    private DocumentoService documentoService;
+
+    @Autowired
     private ProfesionalMedicoService profesionalMedicoService;
 
 
@@ -57,15 +67,12 @@ public class ProfesionalMedicoController {
 
     @Autowired
     private ManagerUserSession managerUserSession;
+    private InformeRepository informeRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
-    }
-
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/nuevo")
-    public String crearNuevoInforme(@PathVariable(value="idPaciente") Long idPaciente,
-                                                    Model model) {
-        return "profesional_medico/crear-nuevo-informe";
     }
 
     @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes/{idInforme}/editar")
@@ -188,7 +195,7 @@ public class ProfesionalMedicoController {
             String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
 
             byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-            String key = "debug/autorizaciones/firmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+            String key = "autorizaciones/firmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
             s3VitalSanityService.subirFicheroBytes(key, signedPdf);
 
             String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
@@ -305,10 +312,124 @@ public class ProfesionalMedicoController {
         return "profesional_medico/listado-pacientes-que-han-desautorizado";
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/{idPaciente}/informes")
-    public String verInformesPaciente(@PathVariable(value="idPaciente") Long idPaciente,
+    @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes")
+    public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
                                       Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        String profesionalMedicoId = String.valueOf(
+                usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
+        );
+        UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
+        String pacienteNombre = pacienteUsuario.getNombreCompleto();
+        String pacienteNifNie = pacienteUsuario.getNifNie();
+        List<InformeData> informes = informeService.obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados(pacienteId);
+        model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
+        model.addAttribute("pacienteId", pacienteId);
+        model.addAttribute("pacienteNombre", pacienteNombre);
+        model.addAttribute("pacienteNifNie", pacienteNifNie);
+        model.addAttribute("informes", informes);
         return "profesional_medico/ver-informes-del-paciente";
+    }
+
+    @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes/nuevo")
+    public String crearNuevoInforme(@PathVariable(value="pacienteId") Long pacienteId,
+                                    Model model,
+                                    HttpServletRequest request) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        Long profesionalMedicoId = usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico);
+        model.addAttribute("contextPath", request.getContextPath());
+        model.addAttribute("profesionalMedicoId", profesionalMedicoId);
+        model.addAttribute("pacienteId", pacienteId);
+        return "profesional_medico/crear-nuevo-informe";
+    }
+
+
+    // LÓGICA DE LA GENERACIÓN DEL INFORME
+
+    @PostMapping("/api/profesional-medico/generar-pdf-informe")
+    @ResponseBody
+    public SubirInformeResponse generarPdfDelInforme(
+            @RequestParam Long profesionalMedicoId,
+            @RequestParam Long pacienteId,
+            @RequestParam String titulo,
+            @RequestParam String descripcion,
+            @RequestParam String observaciones) {
+
+
+        InformeData informeRecienCreadoData = informeService.crearNuevoInforme(
+                profesionalMedicoId,
+                pacienteId,
+                titulo,
+                descripcion,
+                observaciones);
+
+        byte[] pdfBytes = generarPdf.generarPdfInforme(
+                profesionalMedicoId,
+                pacienteId,
+                titulo,
+                descripcion,
+                observaciones);
+
+        String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
+
+        return new SubirInformeResponse(informeRecienCreadoData.getId(), pdfBase64);
+    }
+
+    @PostMapping("/api/profesional-medico/pdf-informe-firmado")
+    @ResponseBody
+    public String subirPdfInformeFirmadoEnAws(@RequestBody SubirInformeResponse body) throws IOException {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        Long informeId = body.getIdInforme();
+        InformeData informeData = informeService.encontrarPorId(informeId);
+
+        informeService.establecerInformacionFirma(informeId);
+
+        String informeFirmado = body.getPdfBase64();
+        byte[] informeFirmadoBytes = Base64.getDecoder().decode(informeFirmado);
+
+        String uuid = informeData.getUuid();
+        String nombreArchivo = uuid;
+
+        String s3Key = "informes/firmados/" + nombreArchivo + "_" + System.currentTimeMillis() + ".pdf";
+
+        String tipoArchivo = "application/pdf";
+
+        Long tamano = (long) informeFirmadoBytes.length;
+
+        documentoService.crearNuevoDocumento(
+                informeId,
+                informeData.getUuid(),
+                nombreArchivo,
+                s3Key,
+                tipoArchivo,
+                tamano
+        );
+
+        s3VitalSanityService.subirFicheroBytes(s3Key, informeFirmadoBytes);
+
+        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
+        String email = usuarioProfesionalMedico.getEmail();
+        String subject = "Informe subido con exito";
+        String text = "Estimad@: " + usuarioProfesionalMedico.getNombreCompleto() + ". Su informe con título: "
+                + informeData.getTitulo() + " ha sido subido con éxito.";
+
+        // emailService.send(email, subject, text);
+
+        return uuid;
+    }
+
+    @GetMapping("/api/profesional-medico/descargar-pdf-informe-firmado")
+    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String uuid,
+                                                         Model model) {
+
+        DocumentoData documentoData = documentoService.encontrarPorUuid(uuid);
+        String s3Key = documentoData.getS3_key();
+        String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
+                s3Key,
+                Duration.ofMinutes(5));
+        model.addAttribute("urlPrefirmada", urlPrefirmada);
+        return "profesional_medico/descargar-pdf-informe-firmado";
+
     }
 
 }

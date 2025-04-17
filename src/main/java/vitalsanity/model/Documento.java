@@ -23,6 +23,8 @@ public class Documento implements Serializable {
     @NotNull
     private String nombre;
 
+    private String uuid;
+
     @NotNull
     private String s3_key;
 
@@ -148,6 +150,14 @@ public class Documento implements Serializable {
 
     public void setFechaSubida(LocalDateTime fechaSubida) {
         this.fechaSubida = fechaSubida;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Override

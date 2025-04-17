@@ -149,7 +149,7 @@ public class PacienteController{
         UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
         String uuidUsuarioPaciente = usuarioPaciente.getUuid();
 
-        String s3Key = "debug/autorizaciones/cofirmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
+        String s3Key = "autorizaciones/cofirmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
 
         byte[] cosignedPdfBytes = Base64.getDecoder().decode(cosignedPdfBase64);
         s3VitalSanityService.subirFicheroBytes(s3Key, cosignedPdfBytes);
