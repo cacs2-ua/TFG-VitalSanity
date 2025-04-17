@@ -316,8 +316,14 @@ public class ProfesionalMedicoController {
     public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
                                       Model model) {
         Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+
+        UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
+        String pacienteNombre = pacienteUsuario.getNombreCompleto();
+        String pacienteNifNie = pacienteUsuario.getNifNie();
         List<InformeData> informes = informeService.obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados(pacienteId);
         model.addAttribute("pacienteId", pacienteId);
+        model.addAttribute("pacienteNombre", pacienteNombre);
+        model.addAttribute("pacienteNifNie", pacienteNifNie);
         model.addAttribute("informes", informes);
         return "profesional_medico/ver-informes-del-paciente";
     }

@@ -11,7 +11,6 @@
 
 .header {
     text-align: center;
-    text-decoration: underline; /* Underlines the entire header */
     padding-top: 1.875rem; /* Changed from 30px */
     margin-bottom: 1.875rem; /* Changed from 30px */
     font-size: 1.5rem; /* Changed from 30px approximate to 1.85rem */
