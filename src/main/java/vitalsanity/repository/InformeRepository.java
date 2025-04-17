@@ -22,26 +22,26 @@ public interface InformeRepository extends JpaRepository<Informe, Long> {
      * ProfesionalMedico → EspecialidadMedica, Usuario, CentroMedico → Usuario.
      */
     @Query("""
-        SELECT DISTINCT i
-          FROM Informe i
-          JOIN FETCH i.paciente p
-          JOIN FETCH p.usuario pu
-          JOIN FETCH i.profesionalMedico pr
-          JOIN FETCH pr.especialidadMedica em
-          JOIN FETCH pr.usuario pru
-          JOIN FETCH pr.centroMedico cm
-          JOIN FETCH cm.usuario cmu
-         WHERE p.id = :pacienteId
-           AND pr IN (
-               SELECT pm
-                 FROM Paciente p2
-                 JOIN p2.profesionalesMedicosAutorizados pm
-                WHERE p2.id = :pacienteId
-           )
-        """)
+    SELECT DISTINCT i
+      FROM Informe i
+      JOIN FETCH i.paciente p
+      JOIN FETCH p.usuario pu
+      JOIN FETCH i.profesionalMedico pr
+      JOIN FETCH pr.especialidadMedica em
+      JOIN FETCH pr.usuario pru
+      JOIN FETCH pr.centroMedico cm
+      JOIN FETCH cm.usuario cmu
+     WHERE p.id = :pacienteId
+       AND pr IN (
+           SELECT pm
+             FROM Paciente p2
+             JOIN p2.profesionalesMedicosAutorizados pm
+            WHERE p2.id = :pacienteId
+       )
+     ORDER BY i.id DESC
+    """)
     List<Informe> findAllByPacienteIdAndProfesionalesMedicosAutorizados(
             @Param("pacienteId") Long pacienteId
     );
-
 
 }

@@ -381,7 +381,7 @@ public class ProfesionalMedicoController {
         String uuid = informeData.getUuid();
         String nombreArchivo = uuid;
 
-        String s3Key = "debug/informes/firmados/" + nombreArchivo + "_" + System.currentTimeMillis() + ".pdf";
+        String s3Key = "informes/firmados/" + nombreArchivo + "_" + System.currentTimeMillis() + ".pdf";
 
         String tipoArchivo = "application/pdf";
 
@@ -403,7 +403,8 @@ public class ProfesionalMedicoController {
         String subject = "Informe subido con exito";
         String text = "Estimad@: " + usuarioProfesionalMedico.getNombreCompleto() + ". Su informe con título: "
                 + informeData.getTitulo() + " ha sido subido con éxito.";
-        emailService.send(email, subject, text);
+
+        // emailService.send(email, subject, text);
 
         return uuid;
     }
