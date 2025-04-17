@@ -13,6 +13,7 @@ public class DocumentoData {
     private String tipo_archivo;
     private Long tamanyo;
     private LocalDateTime fechaSubida;
+    private String urlPrefirmada;
 
 
     public Long getId() {
@@ -61,6 +62,14 @@ public class DocumentoData {
 
     public void setTipo_archivo(String tipo_archivo) {
         this.tipo_archivo = tipo_archivo;
+    }
+
+    public String getUrlPrefirmada() {
+        return urlPrefirmada;
+    }
+
+    public void setUrlPrefirmada(String urlPrefirmada) {
+        this.urlPrefirmada = urlPrefirmada;
     }
 
     @Override

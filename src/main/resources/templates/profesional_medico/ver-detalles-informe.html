@@ -95,16 +95,18 @@
       <br>
       <hr>
       <br>
-      <div class="report-id"><strong>Ficheros del informe</strong></div>
+      <div class="report-id"><strong>Documentos del informe</strong></div>
 
       <div class="files-section">
         <br>
-        <h2 class="files-title">Ficheros previamente adjuntados</h2>
+        <h2 class="files-title">Documentos previamente adjuntados</h2>
 
-        <a href="#" class="file-link">Imagenes_RMN.pdf</a>
-        <a href="#" class="file-link">Diagnostico_Preliminar.pdf</a>
-        <a href="#" class="file-link">Recomendaciones_Clinicas.pdf</a>
-        <a href="#" class="file-link">Analisis_Comparativo.pdf</a>
+
+
+        <div th:each="documento: ${documentos}" >
+          <a th:href="${documento.urlPrefirmada}" th:text="${documento.nombre}" class="file-link"></a>
+        </div>
+
         <br>
       </div>
 
@@ -117,7 +119,7 @@
             enctype="multipart/form-data"
             id="uploadForm">
         <div class="form-section">
-          <h2 class="report-id">Adjuntar nuevos ficheros para el informe</h2>
+          <h2 class="report-id">Adjuntar nuevos documentos para el informe</h2>
 
           <label for="fileInput" class="attachment-button">
             Adjuntar

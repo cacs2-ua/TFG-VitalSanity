@@ -433,7 +433,9 @@ public class ProfesionalMedicoController {
         model.addAttribute("informeId", informeId );
 
         InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
+        List <DocumentoData> documentos = documentoService.obtenerDocumentosAsociadosAUnInforme(informeId);
         model.addAttribute("informe", informe);
+        model.addAttribute("documentos", documentos);
         return "profesional_medico/ver-detalles-informe";
     }
 

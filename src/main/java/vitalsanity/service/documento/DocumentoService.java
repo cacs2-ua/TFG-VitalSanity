@@ -16,6 +16,7 @@ import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.*;
 import vitalsanity.repository.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -25,6 +26,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
+import vitalsanity.service.utils.aws.S3VitalSanityService;
 
 
 @Service
@@ -38,6 +40,9 @@ public class DocumentoService {
 
     @Autowired
     private InformeRepository informeRepository;
+
+    @Autowired
+    private S3VitalSanityService s3VitalSanityService;
 
     @Transactional
     public DocumentoData crearNuevoDocumento(
@@ -126,5 +131,22 @@ public class DocumentoService {
     public  DocumentoData encontrarPorUuid(String uuid) {
         Documento documento = documentoRepository.findByUuid(uuid).orElse(null);
         return modelMapper.map(documento, DocumentoData.class);
+    }
+
+    @Transactional(readOnly = true)
+    public  List<DocumentoData> obtenerDocumentosAsociadosAUnInforme(Long informeId) {
+        return documentoRepository.findAllByInformeId(informeId).stream()
+                .filter(documento -> documento.getUuid() != null
+                        && !documento.getUuid().equals(documento.getNombre()))
+                .map(documento -> {
+                    DocumentoData dto = modelMapper.map(documento, DocumentoData.class);
+                    String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
+                            dto.getS3_key(),
+                            Duration.ofMinutes(33)
+                    );
+                    dto.setUrlPrefirmada(urlPrefirmada);
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }
