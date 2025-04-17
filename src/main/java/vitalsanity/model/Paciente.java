@@ -29,6 +29,94 @@ public class Paciente implements Serializable {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
+    @ManyToMany
+    @JoinTable(name = "pacientes_profesionales_medicos_autorizados",
+            joinColumns = { @JoinColumn(name = "fk_paciente") },
+            inverseJoinColumns = {@JoinColumn(name = "fk_profesional_medico_autorizado") })
+    Set<ProfesionalMedico> profesionalesMedicosAutorizados = new HashSet<>();
+
+    public Set<ProfesionalMedico> getProfesionalesMedicosAutorizados() {
+        return this.profesionalesMedicosAutorizados;
+    }
+
+    public void addProfesionalMedicoAutorizado(ProfesionalMedico profesionalMedicoAutorizado) {
+        this.getProfesionalesMedicosAutorizados().add(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanAutorizado().add(this);
+
+        this.getProfesionalesMedicosDesautorizados().remove(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanDesautorizado().remove(this);
+
+
+    }
+
+    public  void  quitarProfesionalMedicoAutorizado (ProfesionalMedico profesionalMedicoAutorizado) {
+        this.getProfesionalesMedicosAutorizados().remove(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanAutorizado().remove(this);
+
+        this.getProfesionalesMedicosDesautorizados().add(profesionalMedicoAutorizado);
+        profesionalMedicoAutorizado.getPacientesQueHanDesautorizado().add(this);
+    }
+
+
+    @ManyToMany
+    @JoinTable(name = "pacientes_profesionales_medicos_desautorizados",
+            joinColumns = { @JoinColumn(name = "fk_paciente") },
+            inverseJoinColumns = {@JoinColumn(name = "fk_profesional_medico_desautorizado") })
+    Set<ProfesionalMedico> profesionalesMedicosDesautorizados = new HashSet<>();
+
+
+    public Set<ProfesionalMedico> getProfesionalesMedicosDesautorizados() {
+        return this.profesionalesMedicosDesautorizados;
+    }
+
+    public void addProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
+        this.getProfesionalesMedicosDesautorizados().add(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().add(this);
+
+        this.getProfesionalesMedicosAutorizados().remove(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanAutorizado().remove(this);
+    }
+
+    public void quitarProfesionalMedicoDesautorizado(ProfesionalMedico profesionalMedicoDesautorizado) {
+        this.getProfesionalesMedicosDesautorizados().remove(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanDesautorizado().remove(this);
+
+        this.getProfesionalesMedicosAutorizados().add(profesionalMedicoDesautorizado);
+        profesionalMedicoDesautorizado.getPacientesQueHanAutorizado().add(this);
+    }
+
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<SolicitudAutorizacion> solicitudesAutorizacion = new HashSet<>();
+
+
+    public Set<SolicitudAutorizacion> getSolicitudesAutorizacion() {
+        return  this.solicitudesAutorizacion;
+    }
+
+    public void addSolicitudAutorizacion(SolicitudAutorizacion solicitudAutorizacion) {
+        if (solicitudesAutorizacion.contains(solicitudAutorizacion)) return;
+        solicitudesAutorizacion.add(solicitudAutorizacion);
+        if (solicitudAutorizacion.getPaciente() != this) {
+            solicitudAutorizacion.setPaciente(this);
+        }
+    }
+
+    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    Set<Informe> informes = new HashSet<>();
+
+    public Set<Informe> getInformes() {
+        return  this.informes;
+    }
+
+    public void addInforme(Informe informe) {
+        if (informes.contains(informe)) return;
+        informes.add(informe);
+        if (informe.getPaciente() != this) {
+            informe.setPaciente(this);
+        }
+    }
+
+
     //getters y setters
 
     public Long getId() {

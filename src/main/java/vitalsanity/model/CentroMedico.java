@@ -18,6 +18,10 @@ public class CentroMedico implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
+    private String ccc;
+
+    @NotNull
     private String iban;
 
     @NotNull
@@ -58,6 +62,7 @@ public class CentroMedico implements Serializable {
 
     public void addProfesionalMedico(ProfesionalMedico profesionalMedico) {
         if (profesionalesMedicos.contains(profesionalMedico)) return;
+        profesionalMedico.setCcc(this.ccc);
         profesionalesMedicos.add(profesionalMedico);
         if (profesionalMedico.getCentroMedico() != this) {
             profesionalMedico.setCentroMedico(this);
@@ -71,6 +76,14 @@ public class CentroMedico implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCcc() {
+        return ccc;
+    }
+
+    public void setCcc(String ccc) {
+        this.ccc = ccc;
     }
 
     public String getIban() {

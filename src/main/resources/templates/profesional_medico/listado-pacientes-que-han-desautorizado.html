@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de los pacientes que han desautorizado el acceso a su historial</title>
+  <div th:include="navbar :: head (titulo='Listado de los pacientes que han desautorizado el acceso a su historial')"></div>
+  <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
+  <link rel="stylesheet" th:href="@{/css/custom/profesional_medico/listado-pacientes-que-han-desautorizado.css}">
+</head>
+<body>
+  <div th:replace="navbar::menuBar"></div>
+  <div class="body">
+    <div class="page-container">
+      <!-- Modified header with separate styling for label and DNI -->
+      <h2 class="header"><strong>Listado de los pacientes que han desautorizado el acceso a su historial</strong></h2>
+
+      <!-- Filter Section -->
+      <div th:if="${!noHayPacientes}" class="filter-section">
+        <div class="input-group">
+          <label for="NIF/NIE-id">NIF/NIE</label>
+          <input type="text" id="NIF/NIE-id" class="filter-input">
+        </div>
+        <div class="input-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" class="filter-input">
+        </div>
+        <button class="button-primary">Aplicar filtros</button>
+      </div>
+
+      <!-- Report Cards -->
+      <div th:each="paciente: ${pacientes}" class="report-card">
+        <div class="report-patient"><strong>Nombre del paciente:</strong> <span th:text="${paciente.usuario.nombreCompleto}" class="report-patient-name"></span></div>
+        <div class="report-detail"><strong>NIF: </strong> <span th:text="${paciente.usuario.nifNie}"> </span> </div>
+        <div class="report-detail"><strong>Género: </strong> <span th:text="${paciente.genero}"> </span> </div>
+        <div class="report-detail"><strong>Edad: </strong> <span th:text="${paciente.edad}"> </span> </div>
+        <div class="button-container">
+          <form th:action="@{'/api/profesional-medico/solicitar-autorizacion/' + ${paciente.usuario.id}}" method="get">
+            <button type="submit" class="button-request-access">Volver a solicitar acceso</button>
+          </form>
+          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
+            <button type="submit" class="button-view">Ver informes pasados</button>
+          </form>
+        </div>
+      </div>
+
+      <div th:if="${noHayPacientes == true}" class="no-authorization-requests">
+        <p>No existe actualmente ningún paciente que le haya desautorizado el acceso a su historial médico</p>
+      </div>
+
+    </div>
+  </div>
+  <div th:replace="navbar::javascript"></div>
+</body>
+</html>

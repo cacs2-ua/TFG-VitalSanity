@@ -1,11 +1,3 @@
-/* Custom CSS styles using relative units */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
 .body {
     background-color: #DBD5FF;
 }
@@ -188,6 +180,14 @@
 .button-deauthorize:hover {
     background-color: #d10303;
     transform: scale(1.05);
+}
+
+.no-authorization-requests {
+    color: #0236c8;
+    font-size: 16.5px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
 }
 
 /* Responsive styles */
