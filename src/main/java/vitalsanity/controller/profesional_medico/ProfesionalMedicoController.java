@@ -300,25 +300,6 @@ public class ProfesionalMedicoController {
         return "profesional_medico/listado-pacientes-que-han-desautorizado";
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes")
-    public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
-                                      Model model) {
-        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
-        String profesionalMedicoId = String.valueOf(
-                usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
-        );
-        UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
-        String pacienteNombre = pacienteUsuario.getNombreCompleto();
-        String pacienteNifNie = pacienteUsuario.getNifNie();
-        List<InformeData> informes = informeService.obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados(pacienteId);
-        model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
-        model.addAttribute("pacienteId", pacienteId);
-        model.addAttribute("pacienteNombre", pacienteNombre);
-        model.addAttribute("pacienteNifNie", pacienteNifNie);
-        model.addAttribute("informes", informes);
-        return "profesional_medico/ver-informes-del-paciente";
-    }
-
     @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes/nuevo")
     public String crearNuevoInforme(@PathVariable(value="pacienteId") Long pacienteId,
                                     Model model,
@@ -420,6 +401,25 @@ public class ProfesionalMedicoController {
 
     }
 
+    @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes")
+    public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
+                                      Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        String profesionalMedicoId = String.valueOf(
+                usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
+        );
+        UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
+        String pacienteNombre = pacienteUsuario.getNombreCompleto();
+        String pacienteNifNie = pacienteUsuario.getNifNie();
+        List<InformeData> informes = informeService.obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados(pacienteId);
+        model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
+        model.addAttribute("pacienteId", pacienteId);
+        model.addAttribute("pacienteNombre", pacienteNombre);
+        model.addAttribute("pacienteNifNie", pacienteNifNie);
+        model.addAttribute("informes", informes);
+        return "profesional_medico/ver-informes-del-paciente";
+    }
+
     @GetMapping("/api/profesional-medico/pacientes/informes/{informeId}/editar")
     public String editarInforme(@PathVariable(value="informeId") Long informeId,
                                 Model model) {
@@ -430,10 +430,14 @@ public class ProfesionalMedicoController {
     @GetMapping("/api/profesional-medico/pacientes/informes/{informeId}/ver-detalles")
     public String verDetallesInformePaciente(@PathVariable(value="informeId") Long informeId,
                                              Model model) {
-        model.addAttribute("informeId", informeId );
-
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        String profesionalMedicoId = String.valueOf(
+                usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
+        );
         InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
         List <DocumentoData> documentos = documentoService.obtenerDocumentosAsociadosAUnInforme(informeId);
+        model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
+        model.addAttribute("informeId", informeId );
         model.addAttribute("informe", informe);
         model.addAttribute("documentos", documentos);
         return "profesional_medico/ver-detalles-informe";

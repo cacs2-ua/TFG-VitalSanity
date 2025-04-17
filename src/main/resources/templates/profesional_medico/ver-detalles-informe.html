@@ -114,38 +114,42 @@
       <br>
       <br>
 
-      <form th:action="@{'/api/profesional-medico/pacientes/informes/' + ${informe.id} + '/subir-documentos'}"
-            method="post"
-            enctype="multipart/form-data"
-            id="uploadForm">
-        <div class="form-section">
-          <h2 class="report-id">Adjuntar nuevos documentos para el informe</h2>
+      <div th:if="${profesionalMedicoAutenticadoId == informe.profesionalMedico.id}" >
+        <form th:action="@{'/api/profesional-medico/pacientes/informes/' + ${informe.id} + '/subir-documentos'}"
+              method="post"
+              enctype="multipart/form-data"
+              id="uploadForm">
+          <div class="form-section">
+            <h2 class="report-id">Adjuntar nuevos documentos para el informe</h2>
 
-          <label for="fileInput" class="attachment-button">
-            Adjuntar
-            <span class="attachment-icon">▼</span>
-          </label>
-          <input
-            type="file"
-            id="fileInput"
-            name="documentos"
-            multiple required
-            style="display: none;"
-            accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png">
+            <label for="fileInput" class="attachment-button">
+              Adjuntar
+              <span class="attachment-icon">▼</span>
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              name="documentos"
+              multiple required
+              style="display: none;"
+              accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png">
 
-          <div id="selectedFiles" class="selected-files" style="display: none;">
-            <h3>Nuevos ficheros adjuntados</h3>
+            <div id="selectedFiles" class="selected-files" style="display: none;">
+              <h3>Nuevos ficheros adjuntados</h3>
+            </div>
+
           </div>
 
-        </div>
+          <br>
 
-        <br>
+          <div class="button-container">
+            <button type="submit" class="back-button">Subir ficheros</button>
+          </div>
 
-        <div class="button-container">
-          <button type="submit" class="back-button">Subir ficheros</button>
-        </div>
+        </form>
 
-      </form>
+      </div>
+
 
     </div>
 

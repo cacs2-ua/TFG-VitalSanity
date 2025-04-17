@@ -14,5 +14,5 @@ public interface DocumentoRepository extends JpaRepository<Documento, Long> {
 
     boolean existsByUuid(String uuid);
 
-    List<Documento> findAllByInformeId(Long solicitudAutorizacionId);
+    List<Documento> findAllByInformeIdOrderByIdAsc(Long solicitudAutorizacionId);
 }

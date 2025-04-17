@@ -135,7 +135,7 @@ public class DocumentoService {
 
     @Transactional(readOnly = true)
     public  List<DocumentoData> obtenerDocumentosAsociadosAUnInforme(Long informeId) {
-        return documentoRepository.findAllByInformeId(informeId).stream()
+        return documentoRepository.findAllByInformeIdOrderByIdAsc(informeId).stream()
                 .filter(documento -> documento.getUuid() != null
                         && !documento.getUuid().equals(documento.getNombre()))
                 .map(documento -> {
