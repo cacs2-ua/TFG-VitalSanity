@@ -15,6 +15,27 @@ public interface InformeRepository extends JpaRepository<Informe, Long> {
     Optional<Informe> findByUuid(String uuid);
 
     /**
+     * Anulado el findById por defecto para que cargue:
+     * - Informe.paciente + paciente.usuario
+     * - Informe.profesionalMedico + profesionalMedico.usuario + profesionalMedico.especialidadMedica
+     *   + profesionalMedico.centroMedico + centroMedico.usuario
+     */
+    @Query("""
+        SELECT DISTINCT i
+          FROM Informe i
+          JOIN FETCH i.paciente p
+          JOIN FETCH p.usuario pu
+          JOIN FETCH i.profesionalMedico pr
+          JOIN FETCH pr.usuario pru
+          JOIN FETCH pr.especialidadMedica em
+          JOIN FETCH pr.centroMedico cm
+          JOIN FETCH cm.usuario cmu
+         WHERE i.id = :id
+        """)
+    Optional<Informe> findWithEverythingById(@Param("id") Long id);
+
+
+    /**
      * Devuelve todos los informes del paciente cuyo id es :pacienteId
      * y que han sido emitidos por profesionales que ese mismo paciente
      * tiene en su lista de autorizados, con todas las relaciones precargadas:

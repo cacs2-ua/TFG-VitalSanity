@@ -429,6 +429,9 @@ public class ProfesionalMedicoController {
     public String verDetallesInformePaciente(@PathVariable(value="informeId") Long informeId,
                                              Model model) {
         model.addAttribute("informeId", informeId );
+
+        InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
+        model.addAttribute("informe", informe);
         return "profesional_medico/ver-detalles-informe";
     }
 

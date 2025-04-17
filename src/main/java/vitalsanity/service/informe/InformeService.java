@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -126,6 +127,22 @@ public class InformeService {
         }
 
         return informesData;
+    }
+
+    @Transactional(readOnly = true)
+    public InformeData encontrarInformeFullGraphPorId (Long informeId) {
+
+        Informe informe = informeRepository.findWithEverythingById(informeId).orElse(null);
+
+        InformeData informeData = modelMapper.map(informe, InformeData.class);
+
+        ProfesionalMedico profesionalMedico = informe.getProfesionalMedico();
+        CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+        Usuario centroMedicoUsuario = centroMedico.getUsuario();
+
+        informeData.setCentroMedicoUsuario(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+
+        return informeData;
     }
 
 }
