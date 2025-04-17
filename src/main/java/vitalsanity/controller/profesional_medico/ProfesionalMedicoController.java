@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
@@ -28,6 +29,7 @@ import vitalsanity.service.utils.EmailService;
 import vitalsanity.service.utils.autofirma.GenerarPdf;
 import vitalsanity.service.utils.aws.S3VitalSanityService;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -433,6 +435,40 @@ public class ProfesionalMedicoController {
         InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
         model.addAttribute("informe", informe);
         return "profesional_medico/ver-detalles-informe";
+    }
+
+    @PostMapping("/api/profesional-medico/pacientes/informes/{informeId}/subir-documentos")
+    public String subirDocumentos(@PathVariable(value="informeId") Long informeId,
+                                    @RequestParam("documentos") MultipartFile[] documentos,
+                                             Model model)  {
+        for (MultipartFile documento : documentos) {
+            try {
+                String nombreDocumento = documento.getOriginalFilename();
+                String tipoArchivo = documento.getContentType() != null ? documento.getContentType() : "application/octet-stream";
+                Long tamanyo = documento.getSize();
+
+                DocumentoData documentoCreado = documentoService.crearNuevoDocumentoVersionDos(
+                        informeId,
+                        nombreDocumento,
+                        tipoArchivo,
+                        tamanyo
+                );
+
+                String s3Key = documentoCreado.getS3_key();
+
+                s3VitalSanityService.subirFichero(s3Key, documento);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("error", "Error al subir el documento: " + documento.getOriginalFilename());
+            }
+
+        }
+
+        return "redirect:/api/profesional-medico/pacientes/informes/"
+                + informeId
+                + "/ver-detalles";
+
     }
 
 }
