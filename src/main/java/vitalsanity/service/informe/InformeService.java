@@ -1,20 +1,11 @@
 package vitalsanity.service.informe;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import vitalsanity.dto.centro_medico.CentroMedicoData;
 import vitalsanity.dto.general_user.UsuarioData;
-import vitalsanity.dto.paciente.BuscarPacienteResponse;
-import vitalsanity.dto.paciente.PacienteData;
-import vitalsanity.dto.profesional_medico.DocumentoData;
 import vitalsanity.dto.profesional_medico.InformeData;
-import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
-import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.*;
 import vitalsanity.repository.*;
 
@@ -23,9 +14,9 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -152,7 +143,7 @@ public class InformeService {
     }
 
     @Transactional(readOnly = true)
-    public  List<InformeData> obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados (Long pacienteId) {
+    public  List<InformeData> obtenerTodosLosInformesDeUnPaciente(Long pacienteId) {
         List<Informe> informes = informeRepository.findAllByPacienteId(pacienteId);
 
         List<InformeData> informesData = informes.stream()
@@ -169,6 +160,36 @@ public class InformeService {
 
         return informesData;
     }
+
+    @Transactional(readOnly = true)
+    public  List<InformeData> obtenerFiltradosTodosLosInformesDeUnPaciente (
+            Long pacienteId,
+            String profesionalMedicoId) {
+        List<Informe> informes = informeRepository.findAllByPacienteId(pacienteId);
+
+        List<InformeData> informesData = informes.stream()
+                .map(informe -> modelMapper.map(informe, InformeData.class))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < informesData.size(); i++) {
+            ProfesionalMedico profesionalMedico = informes.get(i).getProfesionalMedico();
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+
+            informesData.get(i).setCentroMedicoUsuario(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+        }
+
+        Stream<InformeData> informesDataFiltrados = informesData.stream();
+
+        if (profesionalMedicoId != null) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> informeData.getProfesionalMedico().getId()
+                            .equals(profesionalMedicoId));
+        }
+
+        return informesDataFiltrados.collect(Collectors.toList());
+    }
+
 
     @Transactional(readOnly = true)
     public InformeData encontrarInformeFullGraphPorId (Long informeId) {

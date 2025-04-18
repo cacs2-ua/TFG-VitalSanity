@@ -235,10 +235,11 @@ public class PacienteController{
     }
 
     @GetMapping("/api/paciente/informes")
-    public String verInformesPropios(Model model) {
+    public String verInformesPropios(Model model,
+                                     @RequestParam(required = false) String profesionalMedicoId) {
         Long idPacienteUsuario = getUsuarioLogeadoId();
         Long idPaciente = pacienteService.encontrarPorIdUsuario(idPacienteUsuario).getId();
-        List<InformeData> informes = informeService.obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados(idPaciente);
+        List<InformeData> informes = informeService.obtenerFiltradosTodosLosInformesDeUnPaciente(idPaciente, profesionalMedicoId);
         model.addAttribute("idPaciente", idPaciente);
         model.addAttribute("informes", informes);
         return "paciente/ver-informes-propios";
