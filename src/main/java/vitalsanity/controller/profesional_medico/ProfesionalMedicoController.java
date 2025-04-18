@@ -268,10 +268,21 @@ public class ProfesionalMedicoController {
 
 
     @GetMapping("/api/profesional-medico/pacientes-que-han-autorizado")
-    public String verPacientesQueHanAutorizado(Model model) {
+    public String verPacientesQueHanAutorizado(Model model,
+                                               @RequestParam(required = false) String pacienteNombre,
+                                               @RequestParam(required = false) String nifNiePaciente,
+                                               @RequestParam(required = false) Integer edadMinima,
+                                               @RequestParam(required = false) Integer edadMaxima) {
         Long idUsuarioPaciente = getUsuarioLogeadoId();
         ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
-        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanAutorizado(Long.parseLong(profesionalMedicoData.getId()));
+        List<PacienteData> pacientesData = pacienteService
+                                .obtenerFiltradosPacientesQueHanAutorizado(
+                                    Long.parseLong(profesionalMedicoData.getId()),
+                                    pacienteNombre,
+                                    nifNiePaciente,
+                                    edadMinima,
+                                    edadMaxima);
+
 
         boolean noHayPacientes = false;
         if (pacientesData.isEmpty()) {
@@ -280,6 +291,11 @@ public class ProfesionalMedicoController {
         model.addAttribute("pacientes", pacientesData);
         model.addAttribute("noHayPacientes", noHayPacientes);
 
+        // FILTROS
+        model.addAttribute("pacienteNombre", pacienteNombre);
+        model.addAttribute("nifNiePaciente", nifNiePaciente);
+        model.addAttribute("edadMinima", edadMinima);
+        model.addAttribute("edadMaxima", edadMaxima);
 
         return "profesional_medico/listado-pacientes-que-han-autorizado";
     }

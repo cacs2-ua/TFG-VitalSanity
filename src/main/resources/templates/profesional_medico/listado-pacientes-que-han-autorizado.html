@@ -16,25 +16,28 @@
       <h2 class="header"><strong>Listado de los pacientes que han autorizado el acceso a su historial</strong></h2>
 
       <!-- Filter Section -->
-      <div th:if="${!noHayPacientes}" class="filter-section">
-        <div class="input-group">
-          <label for="nombre-paciente">Nombre</label>
-          <input type="text" id="nombre-paciente" class="filter-input">
+      <form th:action="@{/api/profesional-medico/pacientes-que-han-autorizado}" method="get">
+        <div class="filter-section">
+          <div class="input-group">
+            <label for="nombre-paciente">Nombre</label>
+            <input th:value="${pacienteNombre}" name="pacienteNombre" type="text" id="nombre-paciente" class="filter-input">
+          </div>
+          <div class="input-group">
+            <label for="nif-nie">NIF/NIE</label>
+            <input th:value="${nifNiePaciente}" name="nifNiePaciente" type="text" id="nif-nie" class="filter-input">
+          </div>
+          <div class="input-group">
+            <label for="edad-minima">Edad Mínima</label>
+            <input th:value="${edadMinima}" name="edadMinima" type="number" min="0" max="150" id="edad-minima" class="filter-input">
+          </div>
+          <div class="input-group">
+            <label for="edad-maxima">Edad Máxima</label>
+            <input th:value="${edadMaxima}" name="edadMaxima" type="number" min="0" max="150" id="edad-maxima" class="filter-input">
+          </div>
+          <button class="button-primary">Aplicar filtros</button>
         </div>
-        <div class="input-group">
-          <label for="nif-nie">NIF/NIE</label>
-          <input type="text" id="nif-nie" class="filter-input">
-        </div>
-        <div class="input-group">
-          <label for="edad-minima">Edad Mínima</label>
-          <input type="number" min="0" max="150" id="edad-minima" class="filter-input">
-        </div>
-        <div class="input-group">
-          <label for="edad-maxima">Edad Máxima</label>
-          <input type="number" min="0" max="150" id="edad-maxima" class="filter-input">
-        </div>
-        <button class="button-primary">Aplicar filtros</button>
-      </div>
+      </form>
+
 
       <!-- Report Cards -->
       <div th:each="paciente: ${pacientes}" class="report-card">
