@@ -282,8 +282,8 @@ public class ProfesionalMedicoController {
     @GetMapping("/api/profesional-medico/pacientes-que-han-desautorizado")
     public String verPacientesQueHanDesautorizado(Model model) {
 
-        Long idUsuarioPaciente = getUsuarioLogeadoId();
-        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idUsuarioPaciente);
+        Long idprofesionalMedicoUsuario = getUsuarioLogeadoId();
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idprofesionalMedicoUsuario);
         List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanDesautorizado(Long.parseLong(profesionalMedicoData.getId()));
 
         boolean noHayPacientes = false;
@@ -291,6 +291,7 @@ public class ProfesionalMedicoController {
             noHayPacientes = true;
         }
 
+        model.addAttribute("profesionalMedicoId", profesionalMedicoData.getId());
         model.addAttribute("pacientes", pacientesData);
         model.addAttribute("noHayPacientes", noHayPacientes);
 
@@ -416,6 +417,7 @@ public class ProfesionalMedicoController {
 
     @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes")
     public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
+                                      @RequestParam(required = false) String profMedId,
                                       Model model) {
         Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
         String profesionalMedicoId = String.valueOf(
@@ -424,7 +426,7 @@ public class ProfesionalMedicoController {
         UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
         String pacienteNombre = pacienteUsuario.getNombreCompleto();
         String pacienteNifNie = pacienteUsuario.getNifNie();
-        List<InformeData> informes = informeService.obtenerTodosLosInformesDeUnPaciente(pacienteId);
+        List<InformeData> informes = informeService.obtenerFiltradosTodosLosInformesDeUnPaciente(pacienteId, profMedId);
         model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
         model.addAttribute("pacienteId", pacienteId);
         model.addAttribute("pacienteNombre", pacienteNombre);

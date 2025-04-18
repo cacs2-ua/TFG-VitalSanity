@@ -38,9 +38,15 @@
           <form th:action="@{'/api/profesional-medico/solicitar-autorizacion/' + ${paciente.usuario.id}}" method="get">
             <button type="submit" class="button-request-access">Volver a solicitar acceso</button>
           </form>
-          <form th:action="@{'/api/profesional-medico/pacientes/' + ${usuario.id} + '/informes'}" method="get">
-            <button type="submit" class="button-view">Ver informes pasados</button>
+
+          <form method="get"
+                th:action="@{'/api/profesional-medico/pacientes/' + ${paciente.id} + '/informes'}"
+                style="display: inline;">
+            <input type="hidden" name="profMedId"
+                   th:value="${profesionalMedicoId}" />
+            <button class="button-view">Ver informes Propios</button>
           </form>
+
         </div>
       </div>
 
