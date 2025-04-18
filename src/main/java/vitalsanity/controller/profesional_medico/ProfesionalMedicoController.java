@@ -318,19 +318,35 @@ public class ProfesionalMedicoController {
     @PostMapping("/api/profesional-medico/generar-pdf-informe")
     @ResponseBody
     public SubirInformeResponse generarPdfDelInforme(
+            @RequestParam(required = false) Long informeId,
             @RequestParam Long profesionalMedicoId,
             @RequestParam Long pacienteId,
             @RequestParam String titulo,
             @RequestParam String descripcion,
             @RequestParam String observaciones) {
 
+        InformeData informe = new InformeData();
 
-        InformeData informeRecienCreadoData = informeService.crearNuevoInforme(
-                profesionalMedicoId,
-                pacienteId,
-                titulo,
-                descripcion,
-                observaciones);
+        if (informeId != null) {
+            informe = informeService.editarInforme(
+                    informeId,
+                    profesionalMedicoId,
+                    pacienteId,
+                    titulo,
+                    descripcion,
+                    observaciones
+            );
+        }
+
+        else {
+            informe = informeService.crearNuevoInforme(
+                    profesionalMedicoId,
+                    pacienteId,
+                    titulo,
+                    descripcion,
+                    observaciones);
+        }
+
 
         byte[] pdfBytes = generarPdf.generarPdfInforme(
                 profesionalMedicoId,
@@ -341,7 +357,7 @@ public class ProfesionalMedicoController {
 
         String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
 
-        return new SubirInformeResponse(informeRecienCreadoData.getId(), pdfBase64);
+        return new SubirInformeResponse(informe.getId(), pdfBase64);
     }
 
     @PostMapping("/api/profesional-medico/pdf-informe-firmado")
@@ -420,12 +436,23 @@ public class ProfesionalMedicoController {
         return "profesional_medico/ver-informes-del-paciente";
     }
 
-    @GetMapping("/api/profesional-medico/pacientes/informes/{informeId}/editar")
-    public String editarInforme(@PathVariable(value="informeId") Long informeId,
-                                Model model) {
-        model.addAttribute("informeId", informeId );
+    @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes/{informeId}/editar")
+    public String editarInforme(@PathVariable(value="pacienteId") Long pacienteId,
+                                @PathVariable(value="informeId") Long informeId,
+                                Model model,
+                                HttpServletRequest request) {
+        InformeData informe = informeService.encontrarPorId(informeId);
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        Long profesionalMedicoId = usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico);
+        model.addAttribute("contextPath", request.getContextPath());
+        model.addAttribute("profesionalMedicoId", profesionalMedicoId);
+        model.addAttribute("pacienteId", pacienteId);
+        model.addAttribute("informe", informe);
+        model.addAttribute("informeId", informeId);
         return "profesional_medico/editar-informe";
     }
+
+
 
     @GetMapping("/api/profesional-medico/pacientes/informes/{informeId}/ver-detalles")
     public String verDetallesInformePaciente(@PathVariable(value="informeId") Long informeId,
