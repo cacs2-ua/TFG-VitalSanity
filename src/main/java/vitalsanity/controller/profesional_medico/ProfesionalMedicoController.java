@@ -19,6 +19,7 @@ import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.*;
 import vitalsanity.repository.InformeRepository;
 import vitalsanity.service.documento.DocumentoService;
+import vitalsanity.service.especialidad_medica.EspecialidadMedicaService;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.informe.InformeService;
 import vitalsanity.service.paciente.PacienteService;
@@ -53,6 +54,8 @@ public class ProfesionalMedicoController {
     @Autowired
     private ProfesionalMedicoService profesionalMedicoService;
 
+    @Autowired
+    private EspecialidadMedicaService especialidadMedicaService;
 
     @Autowired
     private PacienteService pacienteService;
@@ -432,6 +435,9 @@ public class ProfesionalMedicoController {
         String profesionalMedicoId = String.valueOf(
                 usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
         );
+
+        List<EspecialidadMedicaData> especialidadesMedicas = especialidadMedicaService.encontrarTodasLasEspecialidadesMedicas();
+
         UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
         String pacienteNombre = pacienteUsuario.getNombreCompleto();
         String pacienteNifNie = pacienteUsuario.getNifNie();
@@ -449,6 +455,7 @@ public class ProfesionalMedicoController {
                         profMedId);
 
         model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
+        model.addAttribute("especialidadesMedicas", especialidadesMedicas);
         model.addAttribute("pacienteNombre", pacienteNombre);
         model.addAttribute("pacienteNifNie", pacienteNifNie);
         model.addAttribute("informes", informes);

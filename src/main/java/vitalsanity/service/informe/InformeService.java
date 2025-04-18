@@ -192,29 +192,28 @@ public class InformeService {
 
         if (informeIdentificadorPublico != null && !informeIdentificadorPublico.trim().isEmpty()) {
             informesDataFiltrados = informesDataFiltrados
-                    .filter(informeData -> informeData.getIdentificadorPublico().toLowerCase(Locale.ROOT).startsWith(informeIdentificadorPublico.toLowerCase(Locale.ROOT)));
+                    .filter(informeData -> informeData.getIdentificadorPublico().trim().toLowerCase(Locale.ROOT).startsWith(informeIdentificadorPublico.trim().toLowerCase(Locale.ROOT)));
 
             // informesData = informesDataFiltrados.collect(Collectors.toList());
         }
 
         if (centroMedicoNombre != null && !centroMedicoNombre.trim().isEmpty()) {
             informesDataFiltrados = informesDataFiltrados
-                    .filter(informeData -> informeData.getCentroMedicoUsuario().getNombreCompleto().toLowerCase(Locale.ROOT).startsWith(centroMedicoNombre.toLowerCase(Locale.ROOT)));
+                    .filter(informeData -> informeData.getCentroMedicoUsuario().getNombreCompleto().trim().toLowerCase(Locale.ROOT).startsWith(centroMedicoNombre.trim().toLowerCase(Locale.ROOT)));
 
             // informesData = informesDataFiltrados.collect(Collectors.toList());
         }
 
         if (profesionalMedicoNombre != null && !profesionalMedicoNombre.trim().isEmpty()) {
             informesDataFiltrados = informesDataFiltrados
-                    .filter(informeData -> informeData.getProfesionalMedico().getUsuario().getNombreCompleto().toLowerCase(Locale.ROOT).startsWith(profesionalMedicoNombre.toLowerCase(Locale.ROOT)));
+                    .filter(informeData -> informeData.getProfesionalMedico().getUsuario().getNombreCompleto().trim().toLowerCase(Locale.ROOT).startsWith(profesionalMedicoNombre.trim().toLowerCase(Locale.ROOT)));
 
             // informesData = informesDataFiltrados.collect(Collectors.toList());
         }
 
         if (especialidadNombre != null && !especialidadNombre.trim().isEmpty()) {
             informesDataFiltrados = informesDataFiltrados
-                    .filter(informeData -> informeData.getProfesionalMedico().getEspecialidadMedica().getNombre().toLowerCase(Locale.ROOT).startsWith(especialidadNombre.toLowerCase(Locale.ROOT)));
-
+                    .filter(informeData -> informeData.getProfesionalMedico().getEspecialidadMedica().getNombre().trim().equalsIgnoreCase(especialidadNombre.trim()));
             // informesData = informesDataFiltrados.collect(Collectors.toList());
         }
 
