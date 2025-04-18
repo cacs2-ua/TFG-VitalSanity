@@ -486,10 +486,16 @@ public class ProfesionalMedicoController {
                         profesionalMedicoId,
                         profMedId);
 
+        boolean noHayInformes = false;
+        if (informes.isEmpty()) {
+            noHayInformes = true;
+        }
+
         model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
         model.addAttribute("especialidadesMedicas", especialidadesMedicas);
         model.addAttribute("pacienteNombre", pacienteNombre);
         model.addAttribute("pacienteNifNie", pacienteNifNie);
+        model.addAttribute("noHayInformes", noHayInformes);
         model.addAttribute("informes", informes);
 
 

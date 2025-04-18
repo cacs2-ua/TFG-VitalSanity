@@ -97,6 +97,10 @@
         </div>
       </div>
 
+      <div th:if="${noHayInformes == true}" class="no-authorization-requests">
+        <p>No existe ningún informe que cumpla con los criterios establecidos</p>
+      </div>
+
     </div>
   </div>
   <div th:replace="navbar::javascript"></div>

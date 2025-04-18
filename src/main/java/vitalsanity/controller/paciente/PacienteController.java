@@ -261,7 +261,14 @@ public class PacienteController{
                         false,
                         null,
                         profesionalMedicoId);
+
+        boolean noHayInformes = false;
+        if (informes.isEmpty()) {
+            noHayInformes = true;
+        }
+
         model.addAttribute("idPaciente", idPaciente);
+        model.addAttribute("noHayInformes", noHayInformes);
         model.addAttribute("informes", informes);
 
 
