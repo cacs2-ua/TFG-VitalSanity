@@ -16,33 +16,36 @@
             <h2 class="header"><strong>Mis informes</strong></h2>
 
             <!-- Filter Section -->
-            <div class="filter-section">
-                <div class="input-group">
-                    <label for="input-id">Id</label>
-                    <input type="text" id="input-id" class="filter-input">
+            <form  th:action="@{/api/paciente/informes}" method="get">
+                <div class="filter-section">
+                    <div class="input-group">
+                        <label for="input-id">Id</label>
+                        <input th:value="${informeIdentificadorPublico}"  name="informeIdentificadorPublico" type="text" id="input-id" class="filter-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="input-centro">Centro</label>
+                        <input th:value="${centroMedicoNombre}"  name="centroMedicoNombre" type="text" id="input-centro" class="filter-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="input-profesional">Profesional</label>
+                        <input th:value="${profesionalMedicoNombre}"  name="profesionalMedicoNombre" type="text" id="input-profesional" class="filter-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="input-especialidad">Especialidad</label>
+                        <input th:value="${especialidadNombre}"  name="especialidadNombre" type="text" id="input-especialidad" class="filter-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="input-fecha-desde">Fecha desde</label>
+                        <input th:value="${fechaDesdeStr}"  name="fechaDesdeStr" type="date" id="input-fecha-desde" class="filter-input date-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="input-fecha-hasta">Fecha hasta</label>
+                        <input th:value="${fechaHastaStr}"  name="fechaHastaStr" type="date" id="input-fecha-hasta" class="filter-input date-input">
+                    </div>
+                    <button class="button-primary">Aplicar filtros</button>
                 </div>
-                <div class="input-group">
-                    <label for="input-centro">Centro</label>
-                    <input type="text" id="input-centro" class="filter-input">
-                </div>
-                <div class="input-group">
-                    <label for="input-profesional">Profesional</label>
-                    <input type="text" id="input-profesional" class="filter-input">
-                </div>
-                <div class="input-group">
-                    <label for="input-especialidad">Especialidad</label>
-                    <input type="text" id="input-especialidad" class="filter-input">
-                </div>
-                <div class="input-group">
-                    <label for="input-fecha-desde">Fecha desde</label>
-                    <input type="date" id="input-fecha-desde" class="filter-input date-input">
-                </div>
-                <div class="input-group">
-                    <label for="input-fecha-hasta">Fecha hasta</label>
-                    <input type="date" id="input-fecha-hasta" class="filter-input date-input">
-                </div>
-                <button class="button-primary">Aplicar filtros</button>
-            </div>
+            </form>
+
 
             <!-- Report Cards -->
             <div th:each="informe: ${informes}" class="report-card">

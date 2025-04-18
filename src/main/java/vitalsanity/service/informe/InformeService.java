@@ -164,6 +164,14 @@ public class InformeService {
     @Transactional(readOnly = true)
     public  List<InformeData> obtenerFiltradosTodosLosInformesDeUnPaciente (
             Long pacienteId,
+            String informeIdentificadorPublico,
+            String centroMedicoNombre,
+            String profesionalMedicoNombre,
+            String especialidadNombre,
+            LocalDate fechaDesde,
+            LocalDate fechaHasta,
+            boolean propios,
+            String paraInformesPropiosProfesionalMedicoId,
             String profesionalMedicoId) {
         List<Informe> informes = informeRepository.findAllByPacienteId(pacienteId);
 
@@ -180,6 +188,48 @@ public class InformeService {
         }
 
         Stream<InformeData> informesDataFiltrados = informesData.stream();
+
+        if (informeIdentificadorPublico != null && !informeIdentificadorPublico.trim().isEmpty()) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> informeData.getIdentificadorPublico().startsWith(informeIdentificadorPublico));
+        }
+
+        if (centroMedicoNombre != null && !centroMedicoNombre.trim().isEmpty()) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> informeData.getCentroMedicoUsuario().getNombreCompleto().startsWith(centroMedicoNombre));
+        }
+
+        if (profesionalMedicoNombre != null && !profesionalMedicoNombre.trim().isEmpty()) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> informeData.getProfesionalMedico().getUsuario().getNombreCompleto().startsWith(profesionalMedicoNombre));
+        }
+
+        if (especialidadNombre != null && !especialidadNombre.trim().isEmpty()) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> informeData.getProfesionalMedico().getEspecialidadMedica().getNombre().startsWith(especialidadNombre));
+        }
+
+        if (fechaDesde != null) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> {
+                        LocalDate creacion = informeData.getFechaCreacion().toLocalDate();
+                        return creacion.isAfter(fechaDesde) || creacion.isEqual(fechaDesde);
+                    });
+        }
+
+        if (fechaHasta != null) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> {
+                        LocalDate creacion = informeData.getFechaCreacion().toLocalDate();
+                        return creacion.isBefore(fechaHasta) || creacion.isEqual(fechaHasta);
+                    });
+        }
+
+        if (propios && paraInformesPropiosProfesionalMedicoId != null) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> informeData.getProfesionalMedico().getId()
+                            .equals(paraInformesPropiosProfesionalMedicoId));
+        }
 
         if (profesionalMedicoId != null) {
             informesDataFiltrados = informesDataFiltrados

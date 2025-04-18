@@ -25,7 +25,9 @@ import vitalsanity.service.utils.aws.S3VitalSanityService;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 
@@ -236,12 +238,50 @@ public class PacienteController{
 
     @GetMapping("/api/paciente/informes")
     public String verInformesPropios(Model model,
+                                     @RequestParam(required = false) String informeIdentificadorPublico,
+                                     @RequestParam(required = false) String centroMedicoNombre,
+                                     @RequestParam(required = false) String profesionalMedicoNombre,
+                                     @RequestParam(required = false) String especialidadNombre,
+                                     @RequestParam(required = false) LocalDate fechaDesde,
+                                     @RequestParam(required = false) LocalDate fechaHasta,
                                      @RequestParam(required = false) String profesionalMedicoId) {
         Long idPacienteUsuario = getUsuarioLogeadoId();
         Long idPaciente = pacienteService.encontrarPorIdUsuario(idPacienteUsuario).getId();
-        List<InformeData> informes = informeService.obtenerFiltradosTodosLosInformesDeUnPaciente(idPaciente, profesionalMedicoId);
+        List<InformeData> informes = informeService.
+                obtenerFiltradosTodosLosInformesDeUnPaciente(
+                        idPaciente,
+                        informeIdentificadorPublico,
+                        centroMedicoNombre,
+                        profesionalMedicoNombre,
+                        especialidadNombre,
+                        fechaDesde,
+                        fechaHasta,
+                        false,
+                        null,
+                        profesionalMedicoId);
         model.addAttribute("idPaciente", idPaciente);
         model.addAttribute("informes", informes);
+
+
+        // FILTROS
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String fechaDesdeStr = (fechaDesde != null)
+                ? fechaDesde.format(fmt)
+                : "";
+
+        String fechaHastaStr = (fechaHasta != null)
+                ? fechaHasta.format(fmt)
+                : "";
+
+        model.addAttribute("informeIdentificadorPublico", informeIdentificadorPublico);
+        model.addAttribute("centroMedicoNombre", centroMedicoNombre);
+        model.addAttribute("profesionalMedicoNombre", profesionalMedicoNombre);
+        model.addAttribute("especialidadNombre", especialidadNombre);
+        model.addAttribute("fechaDesdeStr", fechaDesdeStr);
+        model.addAttribute("fechaHastaStr", fechaHastaStr);
+
         return "paciente/ver-informes-propios";
     }
 

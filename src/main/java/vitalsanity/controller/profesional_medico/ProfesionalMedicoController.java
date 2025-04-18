@@ -29,7 +29,9 @@ import vitalsanity.service.utils.aws.S3VitalSanityService;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -417,6 +419,13 @@ public class ProfesionalMedicoController {
 
     @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes")
     public String verInformesPaciente(@PathVariable(value="pacienteId") Long pacienteId,
+                                      @RequestParam(required = false) String informeIdentificadorPublico,
+                                      @RequestParam(required = false) String centroMedicoNombre,
+                                      @RequestParam(required = false) String profesionalMedicoNombre,
+                                      @RequestParam(required = false) String especialidadNombre,
+                                      @RequestParam(required = false) LocalDate fechaDesde,
+                                      @RequestParam(required = false) LocalDate fechaHasta,
+                                      @RequestParam(required = false) boolean propios,
                                       @RequestParam(required = false) String profMedId,
                                       Model model) {
         Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
@@ -426,12 +435,48 @@ public class ProfesionalMedicoController {
         UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
         String pacienteNombre = pacienteUsuario.getNombreCompleto();
         String pacienteNifNie = pacienteUsuario.getNifNie();
-        List<InformeData> informes = informeService.obtenerFiltradosTodosLosInformesDeUnPaciente(pacienteId, profMedId);
+        List<InformeData> informes = informeService.
+                obtenerFiltradosTodosLosInformesDeUnPaciente(
+                        pacienteId,
+                        informeIdentificadorPublico,
+                        centroMedicoNombre,
+                        profesionalMedicoNombre,
+                        especialidadNombre,
+                        fechaDesde,
+                        fechaHasta,
+                        propios,
+                        profesionalMedicoId,
+                        profMedId);
+
         model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
-        model.addAttribute("pacienteId", pacienteId);
         model.addAttribute("pacienteNombre", pacienteNombre);
         model.addAttribute("pacienteNifNie", pacienteNifNie);
         model.addAttribute("informes", informes);
+
+
+        // FILTROS
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String fechaDesdeStr = (fechaDesde != null)
+                ? fechaDesde.format(fmt)
+                : "";
+
+        String fechaHastaStr = (fechaHasta != null)
+                ? fechaHasta.format(fmt)
+                : "";
+
+        model.addAttribute("pacienteId", pacienteId);
+        model.addAttribute("informeIdentificadorPublico", informeIdentificadorPublico);
+        model.addAttribute("centroMedicoNombre", centroMedicoNombre);
+        model.addAttribute("profesionalMedicoNombre", profesionalMedicoNombre);
+        model.addAttribute("especialidadNombre", especialidadNombre);
+        model.addAttribute("fechaDesdeStr", fechaDesdeStr);
+        model.addAttribute("fechaHastaStr", fechaHastaStr);
+        model.addAttribute("propios", propios);
+        model.addAttribute("profMedId", profMedId);
+
+
         return "profesional_medico/ver-informes-del-paciente";
     }
 
