@@ -235,8 +235,15 @@
             <input th:value="${profesionalMedicoNombre}" name="profesionalMedicoNombre" type="text" id="input-profesional" class="filter-input">
           </div>
           <div class="input-group">
-            <label for="input-especialidad">Especialidad</label>
-            <input th:value="${especialidadNombre}" name="especialidadNombre" type="text" id="input-especialidad" class="filter-input">
+            <label for="select-especialidad">Especialidad</label>
+            <select id="select-especialidad" name="especialidadNombre" class="filter-input">
+              <option value="">Todas</option>
+              <option th:each="esp : ${especialidadesMedicas}"
+                      th:value="${esp.nombre}"
+                      th:text="${esp.nombre}"
+                      th:selected="${esp.nombre == especialidadNombre}">
+              </option>
+            </select>
           </div>
           <div class="input-group">
             <label for="input-fecha-desde">Fecha desde</label>
@@ -252,7 +259,7 @@
           </div>
           <div class="input-group" style="display: none;">
             <label for="input-prof-med-id-desautorizado">Id del profesional medicos desautorizado</label>
-            <input name="profMedId"  type="text" id="input-prof-med-id-desautorizado" class="filter-input" >
+            <input th:value="${profMedId}" name="profMedId"  type="text" id="input-prof-med-id-desautorizado" class="filter-input" >
           </div>
           <button type="submit" class="button-primary">Aplicar filtros</button>
         </div>
