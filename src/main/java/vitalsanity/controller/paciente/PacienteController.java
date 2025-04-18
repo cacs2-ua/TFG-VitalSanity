@@ -11,11 +11,10 @@ import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.dto.general_user.UsuarioData;
-import vitalsanity.dto.profesional_medico.DocumentoData;
-import vitalsanity.dto.profesional_medico.InformeData;
-import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
-import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
+import vitalsanity.dto.profesional_medico.*;
+import vitalsanity.repository.EspecialidadMedicaRepository;
 import vitalsanity.service.documento.DocumentoService;
+import vitalsanity.service.especialidad_medica.EspecialidadMedicaService;
 import vitalsanity.service.general_user.UsuarioService;
 import vitalsanity.service.informe.InformeService;
 import vitalsanity.service.paciente.PacienteService;
@@ -45,6 +44,9 @@ public class PacienteController{
 
     @Autowired
     private ProfesionalMedicoService profesionalMedicoService;
+
+    @Autowired
+    private EspecialidadMedicaService especialidadMedicaService;
 
     @Autowired
     private S3VitalSanityService s3VitalSanityService;
@@ -265,6 +267,9 @@ public class PacienteController{
 
         // FILTROS
 
+        List<EspecialidadMedicaData> especialidadesMedicas = especialidadMedicaService.encontrarTodasLasEspecialidadesMedicas();
+
+
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         String fechaDesdeStr = (fechaDesde != null)
@@ -278,6 +283,7 @@ public class PacienteController{
         model.addAttribute("informeIdentificadorPublico", informeIdentificadorPublico);
         model.addAttribute("centroMedicoNombre", centroMedicoNombre);
         model.addAttribute("profesionalMedicoNombre", profesionalMedicoNombre);
+        model.addAttribute("especialidadesMedicas", especialidadesMedicas);
         model.addAttribute("especialidadNombre", especialidadNombre);
         model.addAttribute("fechaDesdeStr", fechaDesdeStr);
         model.addAttribute("fechaHastaStr", fechaHastaStr);
