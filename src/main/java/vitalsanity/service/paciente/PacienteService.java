@@ -218,4 +218,49 @@ public class PacienteService {
         return pacientesDataFiltrados.collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public  List<PacienteData> obtenerFiltradosPacientesQueHanDesautorizado (
+            Long profesionalMedicoId,
+            String pacienteNombre,
+            String nifNiePaciente,
+            Integer edadMinima,
+            Integer edadMaxima) {
+
+        List<Paciente> pacientes = pacienteRepository.findByProfesionalesMedicosDesautorizados_IdOrderByIdAsc(profesionalMedicoId);
+
+        List<PacienteData> pacientesData = pacientes.stream()
+                .map(paciente -> modelMapper.map(paciente, PacienteData.class))
+                .collect(Collectors.toList());
+
+        for (PacienteData paciente : pacientesData) {
+            LocalDate fechaNacimiento = LocalDate.parse(paciente.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            paciente.setEdad(edad);
+        }
+
+        Stream<PacienteData> pacientesDataFiltrados = pacientesData.stream();
+
+        if (pacienteNombre != null && !pacienteNombre.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNombreCompleto().trim().toLowerCase(Locale.ROOT).startsWith(pacienteNombre.trim().toLowerCase(Locale.ROOT)));
+        }
+
+        if (nifNiePaciente != null && !nifNiePaciente.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNifNie().trim().equalsIgnoreCase(nifNiePaciente.trim()));
+        }
+
+        if (edadMinima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() >= edadMinima);
+        }
+
+        if (edadMaxima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() <= edadMaxima);
+        }
+
+        return pacientesDataFiltrados.collect(Collectors.toList());
+    }
+
 }

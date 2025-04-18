@@ -301,11 +301,21 @@ public class ProfesionalMedicoController {
     }
 
     @GetMapping("/api/profesional-medico/pacientes-que-han-desautorizado")
-    public String verPacientesQueHanDesautorizado(Model model) {
+    public String verPacientesQueHanDesautorizado(Model model,
+                                                  @RequestParam(required = false) String pacienteNombre,
+                                                  @RequestParam(required = false) String nifNiePaciente,
+                                                  @RequestParam(required = false) Integer edadMinima,
+                                                  @RequestParam(required = false) Integer edadMaxima) {
 
         Long idprofesionalMedicoUsuario = getUsuarioLogeadoId();
         ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(idprofesionalMedicoUsuario);
-        List<PacienteData> pacientesData = profesionalMedicoService.obtenerPacientesQueHanDesautorizado(Long.parseLong(profesionalMedicoData.getId()));
+        List<PacienteData> pacientesData = pacienteService
+                .obtenerFiltradosPacientesQueHanDesautorizado(
+                        Long.parseLong(profesionalMedicoData.getId()),
+                        pacienteNombre,
+                        nifNiePaciente,
+                        edadMinima,
+                        edadMaxima);
 
         boolean noHayPacientes = false;
         if (pacientesData.isEmpty()) {
@@ -315,6 +325,12 @@ public class ProfesionalMedicoController {
         model.addAttribute("profesionalMedicoId", profesionalMedicoData.getId());
         model.addAttribute("pacientes", pacientesData);
         model.addAttribute("noHayPacientes", noHayPacientes);
+
+        // FILTROS
+        model.addAttribute("pacienteNombre", pacienteNombre);
+        model.addAttribute("nifNiePaciente", nifNiePaciente);
+        model.addAttribute("edadMinima", edadMinima);
+        model.addAttribute("edadMaxima", edadMaxima);
 
         return "profesional_medico/listado-pacientes-que-han-desautorizado";
     }
