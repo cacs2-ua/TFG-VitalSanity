@@ -153,7 +153,7 @@ public class InformeService {
 
     @Transactional(readOnly = true)
     public  List<InformeData> obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados (Long pacienteId) {
-        List<Informe> informes = informeRepository.findAllByPacienteIdAndProfesionalesMedicosAutorizados(pacienteId);
+        List<Informe> informes = informeRepository.findAllByPacienteId(pacienteId);
 
         List<InformeData> informesData = informes.stream()
                 .map(informe -> modelMapper.map(informe, InformeData.class))

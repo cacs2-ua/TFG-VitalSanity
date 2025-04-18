@@ -37,10 +37,9 @@ public interface InformeRepository extends JpaRepository<Informe, Long> {
 
     /**
      * Devuelve todos los informes del paciente cuyo id es :pacienteId
-     * y que han sido emitidos por profesionales que ese mismo paciente
-     * tiene en su lista de autorizados, con todas las relaciones precargadas:
+     * con todas las relaciones precargadas:
      * Paciente → Usuario,
-     * ProfesionalMedico → EspecialidadMedica, Usuario, CentroMedico → Usuario.
+     * ProfesionalMedico → Usuario, EspecialidadMedica, CentroMedico → Usuario.
      */
     @Query("""
     SELECT DISTINCT i
@@ -48,20 +47,14 @@ public interface InformeRepository extends JpaRepository<Informe, Long> {
       JOIN FETCH i.paciente p
       JOIN FETCH p.usuario pu
       JOIN FETCH i.profesionalMedico pr
-      JOIN FETCH pr.especialidadMedica em
       JOIN FETCH pr.usuario pru
+      JOIN FETCH pr.especialidadMedica em
       JOIN FETCH pr.centroMedico cm
       JOIN FETCH cm.usuario cmu
      WHERE p.id = :pacienteId
-       AND pr IN (
-           SELECT pm
-             FROM Paciente p2
-             JOIN p2.profesionalesMedicosAutorizados pm
-            WHERE p2.id = :pacienteId
-       )
      ORDER BY i.id DESC
     """)
-    List<Informe> findAllByPacienteIdAndProfesionalesMedicosAutorizados(
+    List<Informe> findAllByPacienteId(
             @Param("pacienteId") Long pacienteId
     );
 
