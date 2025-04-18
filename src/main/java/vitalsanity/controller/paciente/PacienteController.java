@@ -11,9 +11,12 @@ import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.profesional_medico.InformeData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
+import vitalsanity.service.documento.DocumentoService;
 import vitalsanity.service.general_user.UsuarioService;
+import vitalsanity.service.informe.InformeService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 import vitalsanity.service.utils.EmailService;
@@ -44,6 +47,12 @@ public class PacienteController{
     private S3VitalSanityService s3VitalSanityService;
 
     @Autowired
+    private InformeService informeService;
+
+    @Autowired
+    private DocumentoService documentoService;
+
+    @Autowired
     private EmailService emailService;
 
     private Long getUsuarioLogeadoId() {
@@ -55,12 +64,6 @@ public class PacienteController{
     public String detallesInformeMedico(@PathVariable(value="idInforme") Long idInforme,
                                   Model model) {
         return "paciente/ver-detalles-informe";
-    }
-
-    @GetMapping("/api/paciente/{idPaciente}/informes")
-    public String verInformesPropios(@PathVariable(value="idPaciente") Long idInforme,
-                                  Model model) {
-        return "paciente/ver-informes-propios";
     }
 
     @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
@@ -255,5 +258,14 @@ public class PacienteController{
         return "redirect:/api/paciente/profesionales-autorizados";
     }
 
+    @GetMapping("/api/paciente/informes")
+    public String verInformesPropios(Model model) {
+        Long idPacienteUsuario = getUsuarioLogeadoId();
+        Long idPaciente = pacienteService.encontrarPorIdUsuario(idPacienteUsuario).getId();
+        List<InformeData> informes = informeService.obtenerTodosLosInformesDeLosProfesionalesMedicosAutorizados(idPaciente);
+        model.addAttribute("idPaciente", idPaciente);
+        model.addAttribute("informes", informes);
+        return "paciente/ver-informes-propios";
+    }
 
 }

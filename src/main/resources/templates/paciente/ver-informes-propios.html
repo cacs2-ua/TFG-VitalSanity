@@ -45,53 +45,24 @@
             </div>
 
             <!-- Report Cards -->
-            <div class="report-card">
-                <div class="report-id"><strong>Id. informe:</strong> <span class="report-number">20939676</span></div>
-                <div class="report-detail"><strong>Título:</strong> Resonancia Magnética</div>
-                <div class="report-detail"><strong>Fecha:</strong> 17/12/2024 17:45</div>
-                <div class="report-detail"><strong>Centro médico:</strong> Vithas Alicante</div>
-                <div class="report-detail"><strong>Profesional médico:</strong> Juan Martínez Fernández</div>
-                <div class="report-detail"><strong>Especialidad médica:</strong> Traumatología</div>
-                <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
-                <div class="report-detail"><strong>Municipio:</strong> San Vicente del Raspeig</div>
+            <div th:each="informe: ${informes}" class="report-card">
+                <div class="report-id"><strong>Id. informe :</strong> <span th:text="${informe.identificadorPublico}" class="report-number"></span> </div>
+                <div class="report-detail"><strong>Título: </strong> <span th:text="${informe.titulo}"> </span> </div>
+                <div class="report-detail"><strong>Descripción: </strong> <span th:text="${informe.descripcion}"> </span> </div>
+                <div class="report-detail"><strong>Fecha de creación:</strong> <span th:text="${informe.fechaCreacion}"> </span> </div>
+                <div class="report-detail"><strong>Profesional médico:</strong> <span th:text="${informe.profesionalMedico.usuario.nombreCompleto}"> </span> </div>
+                <div class="report-detail"><strong>Nº del documento de identidad:</strong> <span th:text="${informe.profesionalMedico.usuario.nifNie}" > </span> </div>
+                <div class="report-detail"><strong>Especialidad médica:</strong>  <span th:text="${informe.profesionalMedico.especialidadMedica.nombre}"> </span> </div>
+                <div class="report-detail"><strong>Nombre del centro médico:</strong> <span th:text="${informe.centroMedicoUsuario.nombreCompleto}"> </span></div>
+                <div class="report-detail"><strong>NIF del centro médico:</strong> <span th:text="${informe.centroMedicoUsuario.nifNie}"> </span></div>
+                <div class="report-detail"><strong>Dirección del centro médico:</strong> <span th:text="${informe.profesionalMedico.centroMedico.direccion}"> </span></div>
                 <div class="button-container">
-                    <form th:action="@{'/api/paciente/informes/' + ${usuario.id}}" method="get">
+                    <form method="get" th:action="@{'/api/profesional-medico/pacientes/informes/' + ${informe.id} + '/ver-detalles'}" style="display: inline;">
                         <button type="submit" class="button-view">Ver Detalles</button>
                     </form>
                 </div>
             </div>
 
-            <div class="report-card">
-                <div class="report-id"><strong>Id. informe:</strong> <span class="report-number">37142984</span></div>
-                <div class="report-detail"><strong>Título:</strong> Biopsia de piel</div>
-                <div class="report-detail"><strong>Fecha:</strong> 12/10/2024 16:30</div>
-                <div class="report-detail"><strong>Centro médico:</strong> Quirón Salud Alicante</div>
-                <div class="report-detail"><strong>Profesional médico:</strong> Laura Sánchez Rodríguez</div>
-                <div class="report-detail"><strong>Especialidad médica:</strong> Dermatología</div>
-                <div class="report-detail"><strong>Provincia:</strong> Alicante</div>
-                <div class="report-detail"><strong>Municipio:</strong> Altea</div>
-                <div class="button-container">
-                    <form th:action="@{'/api/paciente/informes/' + ${usuario.id}}" method="get">
-                        <button type="submit" class="button-view">Ver Detalles</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="report-card">
-                <div class="report-id"><strong>Id. informe:</strong> <span class="report-number">75138715</span></div>
-                <div class="report-detail"><strong>Título:</strong> Cateterismo cardíaco</div>
-                <div class="report-detail"><strong>Fecha:</strong> 06/09/2024 11:15</div>
-                <div class="report-detail"><strong>Centro médico:</strong> Adeslas Ciudad Real</div>
-                <div class="report-detail"><strong>Profesional médico:</strong> Carlos Hernández Ruiz</div>
-                <div class="report-detail"><strong>Especialidad médica:</strong> Cardiología</div>
-                <div class="report-detail"><strong>Provincia:</strong> Ciudad Real</div>
-                <div class="report-detail"><strong>Municipio:</strong> Puertollano</div>
-                <div class="button-container">
-                    <form th:action="@{'/api/paciente/informes/' + ${usuario.id}}" method="get">
-                        <button type="submit" class="button-view">Ver Detalles</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
     <div th:replace="navbar::javascript"></div>
