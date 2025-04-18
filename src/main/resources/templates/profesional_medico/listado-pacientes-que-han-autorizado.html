@@ -18,12 +18,20 @@
       <!-- Filter Section -->
       <div th:if="${!noHayPacientes}" class="filter-section">
         <div class="input-group">
-          <label for="NIF/NIE-id">NIF/NIE</label>
-          <input type="text" id="NIF/NIE-id" class="filter-input">
+          <label for="nombre-paciente">Nombre</label>
+          <input type="text" id="nombre-paciente" class="filter-input">
         </div>
         <div class="input-group">
-          <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" class="filter-input">
+          <label for="nif-nie">NIF/NIE</label>
+          <input type="text" id="nif-nie" class="filter-input">
+        </div>
+        <div class="input-group">
+          <label for="edad-minima">Edad Mínima</label>
+          <input type="number" min="0" max="150" id="edad-minima" class="filter-input">
+        </div>
+        <div class="input-group">
+          <label for="edad-maxima">Edad Máxima</label>
+          <input type="number" min="0" max="150" id="edad-maxima" class="filter-input">
         </div>
         <button class="button-primary">Aplicar filtros</button>
       </div>
