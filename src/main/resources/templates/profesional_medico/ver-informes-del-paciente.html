@@ -240,15 +240,15 @@
           </div>
           <div class="input-group">
             <label for="input-fecha-desde">Fecha desde</label>
-            <input th:value="${fechaDesdeStr}" name="fechaDesdeStr" type="date" id="input-fecha-desde" class="filter-input date-input">
+            <input th:value="${fechaDesdeStr}" name="fechaDesde" type="date" id="input-fecha-desde" class="filter-input date-input">
           </div>
           <div class="input-group">
             <label for="input-fecha-hasta">Fecha hasta</label>
-            <input th:value="${fechaHastaStr}" name="fechaHastaStr" type="date" id="input-fecha-hasta" class="filter-input date-input">
+            <input th:value="${fechaHastaStr}" name="fechaHasta" type="date" id="input-fecha-hasta" class="filter-input date-input">
           </div>
           <div class="checkbox-container">
             <span>Informes Propios</span>
-            <input type="checkbox" name="propios" class="checkbox-input">
+            <input th:checked="${propios}" type="checkbox" name="propios" class="checkbox-input">
           </div>
           <div class="input-group" style="display: none;">
             <label for="input-prof-med-id-desautorizado">Id del profesional medicos desautorizado</label>
