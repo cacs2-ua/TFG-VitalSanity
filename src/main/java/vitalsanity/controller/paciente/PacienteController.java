@@ -11,6 +11,7 @@ import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.profesional_medico.DocumentoData;
 import vitalsanity.dto.profesional_medico.InformeData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
@@ -57,31 +58,6 @@ public class PacienteController{
 
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
-    }
-
-
-    @GetMapping("/api/paciente/informes/{idInforme}")
-    public String detallesInformeMedico(@PathVariable(value="idInforme") Long idInforme,
-                                  Model model) {
-        return "paciente/ver-detalles-informe";
-    }
-
-    @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
-    public String datosResidenciaForm(@PathVariable("idPaciente") Long idPaciente, Model model) {
-        model.addAttribute("residenciaData", new ResidenciaData());
-        return "paciente/completar-datos-residencia";
-    }
-
-    @PostMapping("/api/paciente/{idPaciente}/datos-residencia")
-    public String completarDatosResidencia(@PathVariable("idPaciente") Long idPaciente,
-                                           @ModelAttribute("residenciaData") ResidenciaData residenciaData,
-                                           Model model) {
-
-        UsuarioData usuario = usuarioService.findById(idPaciente);
-        // Llama a la capa de servicio para actualizar los datos de residencia y setear primerAcceso a false
-        UsuarioData updatedUsuario = usuarioService.actualizarDatosResidencia(idPaciente, residenciaData);
-        // Redirige a alguna página (por ejemplo, al dashboard del paciente)
-        return "redirect:/api/paciente/" + usuario.getId() + "/informes";
     }
 
     // LÓGICA COFIRMA
@@ -266,6 +242,47 @@ public class PacienteController{
         model.addAttribute("idPaciente", idPaciente);
         model.addAttribute("informes", informes);
         return "paciente/ver-informes-propios";
+    }
+
+    @GetMapping("/api/paciente/informes/{informeId}")
+    public String detallesInformeMedico(@PathVariable(value="informeId") Long informeId,
+                                        Model model) {
+        InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
+        List <DocumentoData> documentos = documentoService.obtenerDocumentosAsociadosAUnInforme(informeId);
+
+        boolean noHayDocumentos = false;
+
+        if (documentos.isEmpty()) {
+            noHayDocumentos = true;
+        }
+
+        model.addAttribute("informeId", informeId );
+        model.addAttribute("informe", informe);
+        model.addAttribute("documentos", documentos);
+        model.addAttribute("noHayDocumentos", noHayDocumentos);
+        return "paciente/ver-detalles-informe";
+    }
+
+
+
+
+
+    @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
+    public String datosResidenciaForm(@PathVariable("idPaciente") Long idPaciente, Model model) {
+        model.addAttribute("residenciaData", new ResidenciaData());
+        return "paciente/completar-datos-residencia";
+    }
+
+    @PostMapping("/api/paciente/{idPaciente}/datos-residencia")
+    public String completarDatosResidencia(@PathVariable("idPaciente") Long idPaciente,
+                                           @ModelAttribute("residenciaData") ResidenciaData residenciaData,
+                                           Model model) {
+
+        UsuarioData usuario = usuarioService.findById(idPaciente);
+        // Llama a la capa de servicio para actualizar los datos de residencia y setear primerAcceso a false
+        UsuarioData updatedUsuario = usuarioService.actualizarDatosResidencia(idPaciente, residenciaData);
+        // Redirige a alguna página (por ejemplo, al dashboard del paciente)
+        return "redirect:/api/paciente/" + usuario.getId() + "/informes";
     }
 
 }
