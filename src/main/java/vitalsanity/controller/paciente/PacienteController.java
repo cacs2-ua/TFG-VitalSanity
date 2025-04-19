@@ -11,9 +11,12 @@ import vitalsanity.dto.paciente.AutorizacionFirmadaResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.dto.general_user.UsuarioData;
-import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
-import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
+import vitalsanity.dto.profesional_medico.*;
+import vitalsanity.repository.EspecialidadMedicaRepository;
+import vitalsanity.service.documento.DocumentoService;
+import vitalsanity.service.especialidad_medica.EspecialidadMedicaService;
 import vitalsanity.service.general_user.UsuarioService;
+import vitalsanity.service.informe.InformeService;
 import vitalsanity.service.paciente.PacienteService;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
 import vitalsanity.service.utils.EmailService;
@@ -21,7 +24,9 @@ import vitalsanity.service.utils.aws.S3VitalSanityService;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 
@@ -41,44 +46,22 @@ public class PacienteController{
     private ProfesionalMedicoService profesionalMedicoService;
 
     @Autowired
+    private EspecialidadMedicaService especialidadMedicaService;
+
+    @Autowired
     private S3VitalSanityService s3VitalSanityService;
+
+    @Autowired
+    private InformeService informeService;
+
+    @Autowired
+    private DocumentoService documentoService;
 
     @Autowired
     private EmailService emailService;
 
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
-    }
-
-
-    @GetMapping("/api/paciente/informes/{idInforme}")
-    public String detallesInformeMedico(@PathVariable(value="idInforme") Long idInforme,
-                                  Model model) {
-        return "paciente/ver-detalles-informe";
-    }
-
-    @GetMapping("/api/paciente/{idPaciente}/informes")
-    public String verInformesPropios(@PathVariable(value="idPaciente") Long idInforme,
-                                  Model model) {
-        return "paciente/ver-informes-propios";
-    }
-
-    @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
-    public String datosResidenciaForm(@PathVariable("idPaciente") Long idPaciente, Model model) {
-        model.addAttribute("residenciaData", new ResidenciaData());
-        return "paciente/completar-datos-residencia";
-    }
-
-    @PostMapping("/api/paciente/{idPaciente}/datos-residencia")
-    public String completarDatosResidencia(@PathVariable("idPaciente") Long idPaciente,
-                                           @ModelAttribute("residenciaData") ResidenciaData residenciaData,
-                                           Model model) {
-
-        UsuarioData usuario = usuarioService.findById(idPaciente);
-        // Llama a la capa de servicio para actualizar los datos de residencia y setear primerAcceso a false
-        UsuarioData updatedUsuario = usuarioService.actualizarDatosResidencia(idPaciente, residenciaData);
-        // Redirige a alguna página (por ejemplo, al dashboard del paciente)
-        return "redirect:/api/paciente/" + usuario.getId() + "/informes";
     }
 
     // LÓGICA COFIRMA
@@ -255,5 +238,105 @@ public class PacienteController{
         return "redirect:/api/paciente/profesionales-autorizados";
     }
 
+    @GetMapping("/api/paciente/informes")
+    public String verInformesPropios(Model model,
+                                     @RequestParam(required = false) String informeIdentificadorPublico,
+                                     @RequestParam(required = false) String centroMedicoNombre,
+                                     @RequestParam(required = false) String profesionalMedicoNombre,
+                                     @RequestParam(required = false) String especialidadNombre,
+                                     @RequestParam(required = false) LocalDate fechaDesde,
+                                     @RequestParam(required = false) LocalDate fechaHasta,
+                                     @RequestParam(required = false) String profesionalMedicoId) {
+        Long idPacienteUsuario = getUsuarioLogeadoId();
+        Long idPaciente = pacienteService.encontrarPorIdUsuario(idPacienteUsuario).getId();
+        List<InformeData> informes = informeService.
+                obtenerFiltradosTodosLosInformesDeUnPaciente(
+                        idPaciente,
+                        informeIdentificadorPublico,
+                        centroMedicoNombre,
+                        profesionalMedicoNombre,
+                        especialidadNombre,
+                        fechaDesde,
+                        fechaHasta,
+                        false,
+                        null,
+                        profesionalMedicoId);
+
+        boolean noHayInformes = false;
+        if (informes.isEmpty()) {
+            noHayInformes = true;
+        }
+
+        model.addAttribute("idPaciente", idPaciente);
+        model.addAttribute("noHayInformes", noHayInformes);
+        model.addAttribute("informes", informes);
+
+
+        // FILTROS
+
+        List<EspecialidadMedicaData> especialidadesMedicas = especialidadMedicaService.encontrarTodasLasEspecialidadesMedicas();
+
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String fechaDesdeStr = (fechaDesde != null)
+                ? fechaDesde.format(fmt)
+                : "";
+
+        String fechaHastaStr = (fechaHasta != null)
+                ? fechaHasta.format(fmt)
+                : "";
+
+        model.addAttribute("informeIdentificadorPublico", informeIdentificadorPublico);
+        model.addAttribute("centroMedicoNombre", centroMedicoNombre);
+        model.addAttribute("profesionalMedicoNombre", profesionalMedicoNombre);
+        model.addAttribute("especialidadesMedicas", especialidadesMedicas);
+        model.addAttribute("especialidadNombre", especialidadNombre);
+        model.addAttribute("fechaDesdeStr", fechaDesdeStr);
+        model.addAttribute("fechaHastaStr", fechaHastaStr);
+
+        return "paciente/ver-informes-propios";
+    }
+
+    @GetMapping("/api/paciente/informes/{informeId}")
+    public String detallesInformeMedico(@PathVariable(value="informeId") Long informeId,
+                                        Model model) {
+        InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
+        List <DocumentoData> documentos = documentoService.obtenerDocumentosAsociadosAUnInforme(informeId);
+
+        boolean noHayDocumentos = false;
+
+        if (documentos.isEmpty()) {
+            noHayDocumentos = true;
+        }
+
+        model.addAttribute("informeId", informeId );
+        model.addAttribute("informe", informe);
+        model.addAttribute("documentos", documentos);
+        model.addAttribute("noHayDocumentos", noHayDocumentos);
+        return "paciente/ver-detalles-informe";
+    }
+
+
+
+
+
+    @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
+    public String datosResidenciaForm(@PathVariable("idPaciente") Long idPaciente, Model model) {
+        model.addAttribute("residenciaData", new ResidenciaData());
+        return "paciente/completar-datos-residencia";
+    }
+
+    @PostMapping("/api/paciente/{idPaciente}/datos-residencia")
+    public String completarDatosResidencia(@PathVariable("idPaciente") Long idPaciente,
+                                           @ModelAttribute("residenciaData") ResidenciaData residenciaData,
+                                           Model model) {
+
+        UsuarioData usuario = usuarioService.findById(idPaciente);
+        // Llama a la capa de servicio para actualizar los datos de residencia y setear primerAcceso a false
+        UsuarioData updatedUsuario = usuarioService.actualizarDatosResidencia(idPaciente, residenciaData);
+        // Redirige a alguna página (por ejemplo, al dashboard del paciente)
+        return "redirect:/api/paciente/" + usuario.getId() + "/informes";
+    }
 
 }

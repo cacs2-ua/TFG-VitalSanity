@@ -20,8 +20,10 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.transaction.annotation.Transactional;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
@@ -169,6 +171,96 @@ public class PacienteService {
     public SolicitudAutorizacionData obtenerUltimaSolicitudAutorizacionValida(Long idProfesionalMedico, Long idPaciente) {
         SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdAndPacienteIdAndDenegadaFalse(idProfesionalMedico, idPaciente).orElse(null);
         return  modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
+    }
+
+    @Transactional(readOnly = true)
+    public  List<PacienteData> obtenerFiltradosPacientesQueHanAutorizado (
+            Long profesionalMedicoId,
+            String pacienteNombre,
+            String nifNiePaciente,
+            Integer edadMinima,
+            Integer edadMaxima) {
+
+        List<Paciente> pacientes = pacienteRepository.findByProfesionalesMedicosAutorizados_IdOrderByIdAsc(profesionalMedicoId);
+
+        List<PacienteData> pacientesData = pacientes.stream()
+                .map(paciente -> modelMapper.map(paciente, PacienteData.class))
+                .collect(Collectors.toList());
+
+        for (PacienteData paciente : pacientesData) {
+            LocalDate fechaNacimiento = LocalDate.parse(paciente.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            paciente.setEdad(edad);
+        }
+
+        Stream<PacienteData> pacientesDataFiltrados = pacientesData.stream();
+
+        if (pacienteNombre != null && !pacienteNombre.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNombreCompleto().trim().toLowerCase(Locale.ROOT).startsWith(pacienteNombre.trim().toLowerCase(Locale.ROOT)));
+        }
+
+        if (nifNiePaciente != null && !nifNiePaciente.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNifNie().trim().equalsIgnoreCase(nifNiePaciente.trim()));
+        }
+
+        if (edadMinima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() >= edadMinima);
+        }
+
+        if (edadMaxima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() <= edadMaxima);
+        }
+
+        return pacientesDataFiltrados.collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public  List<PacienteData> obtenerFiltradosPacientesQueHanDesautorizado (
+            Long profesionalMedicoId,
+            String pacienteNombre,
+            String nifNiePaciente,
+            Integer edadMinima,
+            Integer edadMaxima) {
+
+        List<Paciente> pacientes = pacienteRepository.findByProfesionalesMedicosDesautorizados_IdOrderByIdAsc(profesionalMedicoId);
+
+        List<PacienteData> pacientesData = pacientes.stream()
+                .map(paciente -> modelMapper.map(paciente, PacienteData.class))
+                .collect(Collectors.toList());
+
+        for (PacienteData paciente : pacientesData) {
+            LocalDate fechaNacimiento = LocalDate.parse(paciente.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            paciente.setEdad(edad);
+        }
+
+        Stream<PacienteData> pacientesDataFiltrados = pacientesData.stream();
+
+        if (pacienteNombre != null && !pacienteNombre.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNombreCompleto().trim().toLowerCase(Locale.ROOT).startsWith(pacienteNombre.trim().toLowerCase(Locale.ROOT)));
+        }
+
+        if (nifNiePaciente != null && !nifNiePaciente.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNifNie().trim().equalsIgnoreCase(nifNiePaciente.trim()));
+        }
+
+        if (edadMinima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() >= edadMinima);
+        }
+
+        if (edadMaxima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() <= edadMaxima);
+        }
+
+        return pacientesDataFiltrados.collect(Collectors.toList());
     }
 
 }
