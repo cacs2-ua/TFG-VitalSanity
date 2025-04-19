@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head (titulo)">
     <meta charset="UTF-8" />
     <!-- Meta viewport for proper mobile behavior -->
@@ -32,9 +32,6 @@
         <div class="custom-nav-menu" id="customNavMenu">
             <ul class="custom-nav-list">
                 <!-- Guest User -->
-                <li class="custom-nav-item" th:if="${usuario == null}">
-                    <a class="custom-nav-link" th:href="@{/api/general/home}" onclick="highlightLink(this)">Home</a>
-                </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
                     <a class="custom-nav-link" th:href="@{/login}" onclick="highlightLink(this)">Iniciar Sesion</a>
                 </li>
