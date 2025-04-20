@@ -1,10 +1,12 @@
 package vitalsanity.service.utils.autofirma;
 
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.TextAlignment;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import vitalsanity.repository.UsuarioRepository;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.Locale;
 
 @Service
@@ -39,218 +42,419 @@ public class GenerarPdf {
             Long idUsuarioPaciente,
             String motivo,
             String descripcion) {
+
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
-            // Recuperar datos de la base
-            Usuario usuarioProfesionalMedico = usuarioRepository.findById(idUsuarioProfesionalMedico)
-                    .orElseThrow(() -> new RuntimeException("Profesional no encontrado"));
-            Usuario usuarioPaciente = usuarioRepository.findById(idUsuarioPaciente)
-                    .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
-            ProfesionalMedico profesionalMedico = profesionalMedicoRepository
-                    .findByUsuarioId(idUsuarioProfesionalMedico)
-                    .orElseThrow(() -> new RuntimeException("Profesional médico no encontrado"));
+            // Recuperar datos dinámicos
+            Usuario usuarioProfesional = usuarioRepository.findById(idUsuarioProfesionalMedico).orElseThrow();
+            Usuario usuarioPaciente    = usuarioRepository.findById(idUsuarioPaciente).orElseThrow();
+            ProfesionalMedico profesional = profesionalMedicoRepository
+                    .findByUsuarioId(idUsuarioProfesionalMedico).orElseThrow();
             Paciente paciente = pacienteRepository
-                    .findByUsuarioId(idUsuarioPaciente)
-                    .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
-            CentroMedico centro = profesionalMedico.getCentroMedico();
+                    .findByUsuarioId(idUsuarioPaciente).orElseThrow();
+            CentroMedico centro = profesional.getCentroMedico();
             Hibernate.initialize(centro);
             Hibernate.initialize(centro.getUsuario());
 
-            // Crear PDF en memoria
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            Document document = new Document(pdfDoc);
+            // Fuentes para texto normal y negrita
+            PdfFont font  = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+            PdfFont bold  = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
-            // Formatear fecha en español: "20 de abril de 2025"
-            LocalDate hoy = LocalDate.now();
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-            String fechaLarga = hoy.format(fmt);
-            // Formatear fecha corta: "20/04/2025"
-            DateTimeFormatter fmtCorto = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String fechaCorta = hoy.format(fmtCorto);
+            // Crear documento PDF
+            PdfWriter  writer  = new PdfWriter(baos);
+            PdfDocument pdfDoc  = new PdfDocument(writer);
+            Document    document = new Document(pdfDoc);
+            document.setFont(font);
 
-            // Encabezado con lugar y fecha, alineado a la derecha
-            String lugar = centro.getUsuario().getMunicipio() + " (" + centro.getUsuario().getProvincia() + ")";
-            document.add(new Paragraph(lugar + ", a " + fechaLarga + ".")
+            // Línea de encabezado: ubicación y fecha en texto
+            LocalDate today = LocalDate.now();
+            String monthName = today.getMonth()
+                    .getDisplayName(TextStyle.FULL, new Locale("es","ES"))
+                    .toLowerCase();
+            String header = String.format("%s (%s), a %d de %s de %d.",
+                    centro.getUsuario().getMunicipio(),
+                    centro.getUsuario().getProvincia(),
+                    today.getDayOfMonth(),
+                    monthName,
+                    today.getYear());
+            document.add(new Paragraph(header)
+                    .setFont(font)
+                    .setFontSize(10)
                     .setTextAlignment(TextAlignment.RIGHT)
-            );
-
-            // Título centrado y en negrita
-            document.add(new Paragraph("AUTORIZACIÓN DE ACCESO AL HISTORIAL MÉDICO CENTRALIZADO")
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setBold()
-                    .setMarginTop(10)
                     .setMarginBottom(10)
             );
 
-            // Resumen Ejecutivo
-            document.add(new Paragraph("Resumen Ejecutivo").setBold());
+            // Título principal en negrita y centrado
+            document.add(new Paragraph("AUTORIZACIÓN DE ACCESO AL HISTORIAL MÉDICO CENTRALIZADO")
+                    .setFont(bold)
+                    .setFontSize(14)
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setMarginBottom(15)
+            );
+
+            // 1. Introducción
+            document.add(new Paragraph("1. Introducción")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
             document.add(new Paragraph(
-                    "A continuación, se presenta el texto completo de la autorización de acceso al historial médico centralizado, " +
-                            "incluyendo todos los datos proporcionados, estructurado conforme a los requisitos de información y consentimiento " +
-                            "recogidos en el Reglamento General de Protección de Datos (RGPD) y en la Ley Orgánica 3/2018 de Protección de Datos " +
-                            "Personales y garantía de los derechos digitales (LOPDGDD). Se detallan las partes intervinientes, la finalidad del " +
-                            "tratamiento, la base jurídica, el alcance de los derechos del paciente, el mecanismo de revocación, la identificación " +
-                            "del responsable del tratamiento, así como las firmas electrónica y cofirma mediante AutoFirma/@firma."
-            ));
-
-            // 1. Identificación de las partes
-            document.add(new Paragraph("1. Identificación de las partes").setBold().setMarginTop(10));
-            document.add(new Paragraph("Profesional médico").setBold().setMarginLeft(10));
-            document.add(new Paragraph()
-                    .add(new Text("• Nombre: ").setBold())
-                    .add(usuarioProfesionalMedico.getNombreCompleto())
-                    .setMarginLeft(20)
-            );
-            document.add(new Paragraph()
-                    .add(new Text("• NIF/NIE: ").setBold())
-                    .add(usuarioProfesionalMedico.getNifNie())
-                    .setMarginLeft(20)
-            );
-            document.add(new Paragraph()
-                    .add(new Text("• Especialidad: ").setBold())
-                    .add(profesionalMedico.getEspecialidadMedica().getNombre())
-                    .setMarginLeft(20)
+                    "A continuación, se presenta el texto completo de la autorización de acceso al " +
+                            "historial médico centralizado, incluyendo todos los datos proporcionados, " +
+                            "estructurado conforme a los requisitos de información y consentimiento " +
+                            "recogidos en el Reglamento General de Protección de Datos (RGPD) y en la Ley " +
+                            "Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos " +
+                            "digitales (LOPDGDD). Se detallan las partes intervinientes, la finalidad del " +
+                            "tratamiento, la base jurídica, el alcance de los derechos del paciente, el " +
+                            "mecanismo de revocación, la identificación del responsable del tratamiento, " +
+                            "así como las firmas electrónica y cofirma mediante AutoFirma/@firma.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginBottom(10)
             );
 
-            document.add(new Paragraph("Centro médico solicitante").setBold().setMarginLeft(10));
-            document.add(new Paragraph()
-                    .add(new Text("• NIF: ").setBold())
-                    .add(centro.getUsuario().getNifNie())
-                    .setMarginLeft(20)
+            // 2. Identificación de las partes
+            document.add(new Paragraph("2. Identificación de las partes")
+                    .setFont(bold)
+                    .setFontSize(12)
             );
-            document.add(new Paragraph()
-                    .add(new Text("• Nombre: ").setBold())
-                    .add(centro.getUsuario().getNombreCompleto())
-                    .setMarginLeft(20)
-            );
-            document.add(new Paragraph()
-                    .add(new Text("• Provincia: ").setBold())
-                    .add(centro.getUsuario().getProvincia())
-                    .setMarginLeft(20)
-            );
-            document.add(new Paragraph()
-                    .add(new Text("• Municipio: ").setBold())
-                    .add(centro.getUsuario().getMunicipio())
-                    .setMarginLeft(20)
-            );
-            document.add(new Paragraph()
-                    .add(new Text("• Dirección: ").setBold())
-                    .add(centro.getDireccion())
-                    .setMarginLeft(20)
-            );
-
-            document.add(new Paragraph("Paciente autorizado").setBold().setMarginLeft(10));
-            document.add(new Paragraph()
-                    .add(new Text("• Nombre: ").setBold())
-                    .add(usuarioPaciente.getNombreCompleto())
-                    .setMarginLeft(20)
-            );
-            document.add(new Paragraph()
-                    .add(new Text("• NIF/NIE: ").setBold())
-                    .add(usuarioPaciente.getNifNie())
-                    .setMarginLeft(20)
-            );
-
-            // 2. Objeto y Finalidad
-            document.add(new Paragraph("2. Objeto y Finalidad de la autorización").setBold().setMarginTop(10));
-            document.add(new Paragraph(
-                    "Mediante el presente documento, yo, " + usuarioPaciente.getNombreCompleto() + ", otorgo mi consentimiento libre, " +
-                            "específico, informado e inequívoco al profesional identificado en el apartado 1 y al centro sanitario al que presta " +
-                            "servicios para acceder íntegramente a mi historial médico centralizado en la plataforma VitalSanity, con la única " +
-                            "finalidad de posibilitar la adecuada prestación de atención sanitaria, de conformidad con el artículo 9.2.a) RGPD " +
-                            "que permite el tratamiento de categorías especiales de datos previo consentimiento explícito del interesado Reglamento GDPR."
-            ));
-            document.add(new Paragraph(
-                    "El acceso comprenderá todos los informes médicos y la documentación clínica asociada que obren en el repositorio, " +
-                            "incluidos los informes futuros que se incorporen mientras la presente autorización permanezca vigente."
-            ));
-
-            // 3. Información de la autorización
-            document.add(new Paragraph("3. Información de la autorización").setBold().setMarginTop(10));
-            document.add(new Paragraph()
-                    .add(new Text("• Motivo de la solicitud: ").setBold())
-                    .add(motivo)
+            // Profesional médico
+            document.add(new Paragraph("Profesional médico")
+                    .setFont(bold)
                     .setMarginLeft(10)
             );
-            document.add(new Paragraph()
-                    .add(new Text("• Descripción complementaria: ").setBold())
-                    .add(descripcion)
+            document.add(new Paragraph("• Nombre: " + usuarioProfesional.getNombreCompleto())
+                    .setMarginLeft(20)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• NIF/NIE: " + usuarioProfesional.getNifNie())
+                    .setMarginLeft(20)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Especialidad: " + profesional.getEspecialidadMedica().getNombre())
+                    .setMarginLeft(20)
+                    .setMarginBottom(5)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            // Centro médico solicitante
+            document.add(new Paragraph("Centro médico solicitante")
+                    .setFont(bold)
                     .setMarginLeft(10)
             );
+            document.add(new Paragraph("• NIF: " + centro.getUsuario().getNifNie())
+                    .setMarginLeft(20)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Nombre: " + centro.getUsuario().getNombreCompleto())
+                    .setMarginLeft(20)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Provincia: " + centro.getUsuario().getProvincia())
+                    .setMarginLeft(20)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Municipio: " + centro.getUsuario().getMunicipio())
+                    .setMarginLeft(20)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Dirección: " + centro.getDireccion())
+                    .setMarginLeft(20)
+                    .setMarginBottom(5)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            // Paciente autorizado
+            document.add(new Paragraph("Paciente autorizado")
+                    .setFont(bold)
+                    .setMarginLeft(10)
+            );
+            document.add(new Paragraph("• Nombre: " + usuarioPaciente.getNombreCompleto())
+                    .setMarginLeft(20)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• NIF/NIE: " + usuarioPaciente.getNifNie())
+                    .setMarginLeft(20)
+                    .setMarginBottom(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
 
-            // 4. Base Jurídica del Tratamiento
-            document.add(new Paragraph("4. Base Jurídica del Tratamiento").setBold().setMarginTop(10));
-            document.add(new Paragraph("1. Consentimiento informado: La legitimación para el tratamiento se basa en el consentimiento libre, específico, informado e inequívoco del paciente, tal como exige el artículo 6 de la LOPDGDD BOE y el artículo 6.1.a) del RGPD EUR-Lex."));
-            document.add(new Paragraph("2. Datos de salud (categoría especial): Se trata de datos relativos a la salud, cuya recogida y tratamiento requieren consentimiento explícito conforme al artículo 9.2.a) del RGPD Agencia Española de Protección de Datos."));
-            document.add(new Paragraph("3. Obligación de información: El responsable ha facilitado a la paciente toda la información prevista en el artículo 13 del RGPD en el momento de la obtención de sus datos EUR-Lex."));
-            document.add(new Paragraph("4. Deber de confidencialidad: El profesional y el centro están sujetos al deber de confidencialidad establecido en el artículo 5 de la LOPDGDD BOE y en la Ley 41/2002, que protege la confidencialidad de los datos de salud BOE."));
-
-            // 5. Datos objeto de tratamiento
-            document.add(new Paragraph("5. Datos objeto de tratamiento").setBold().setMarginTop(10));
+            // 3. Objeto y Finalidad de la autorización
+            document.add(new Paragraph("3. Objeto y Finalidad de la autorización")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
             document.add(new Paragraph(
-                    "Se incluyen todos los datos clínicos recogidos en el historial médico centralizado, incluidos informes, diagnósticos, " +
-                            "pruebas complementarias y demás documentación sanitaria. Se hace especial mención a que se tratarán datos especialmente " +
-                            "protegidos (relativos a la salud) conforme al artículo 9.1 h) del RGPD."
-            ));
-
-            // 6. Principios aplicables
-            document.add(new Paragraph("6. Principios aplicables").setBold().setMarginTop(10));
+                    "Mediante el presente documento, por una parte, el profesional médico identificado " +
+                            "en el apartado 1 solicita autorización al historial clínico centralizado del paciente. " +
+                            "Por otra parte, el paciente identificado en el apartado 1, otorga su consentimiento " +
+                            "libre, específico, informado e inequívoco al profesional identificado en el apartado 1 " +
+                            "y al centro sanitario al que presta servicios para acceder íntegramente a su historial " +
+                            "clínico centralizado en la plataforma VitalSanity, con la única finalidad de posibilitar " +
+                            "la adecuada prestación de atención sanitaria, de conformidad con el artículo 9.2.a) RGPD " +
+                            "que permite el tratamiento de categorías especiales de datos previo consentimiento explícito del interesado.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginBottom(5)
+            );
             document.add(new Paragraph(
-                    "El tratamiento de los datos se regirá por los principios de licitud, lealtad, transparencia, limitación de la finalidad, " +
-                            "minimización de datos, exactitud, limitación del plazo de conservación, integridad y confidencialidad establecidos en el " +
-                            "artículo 5 del RGPD EUR-Lex, así como por las garantías adicionales recogidas en la LOPDGDD BOE."
-            ));
-
-            // 7. Derechos de las partes involucradas
-            document.add(new Paragraph("7. Derechos de las partes involucradas").setBold().setMarginTop(10));
+                    "El acceso comprenderá todos los informes médicos y la documentación clínica asociada " +
+                            "que obren en el repositorio, incluidos los informes futuros que se incorporen mientras " +
+                            "la presente autorización permanezca vigente.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginBottom(5)
+            );
             document.add(new Paragraph(
-                    "Cualquiera de las partes podrá ejercer los derechos reconocidos en la LOPDGDD y el RGPD:\n" +
-                            "• Acceso a sus datos y a la información relacionada (art. 15 RGPD).\n" +
-                            "• Rectificación de datos inexactos (art. 16 RGPD).\n" +
-                            "• Supresión de datos («derecho al olvido», art. 17 RGPD).\n" +
-                            "• Limitación del tratamiento (art. 18 RGPD).\n" +
-                            "• Portabilidad de los datos (art. 20 RGPD).\n" +
-                            "• Oposición al tratamiento (art. 21 RGPD).\n" +
-                            "• Revocación del consentimiento en cualquier momento, sin afectar la licitud del tratamiento previo (art. 7.3 RGPD).\n" +
-                            "• Derecho a no ser objeto de decisiones automatizadas.\n" +
-                            "Para ejercitarlos, puede contactar con el Delegado de Protección de Datos en [dpd@centro-medico-default.es] o presentar reclamación ante la AEPD."
-            ));
-
-            // 8. Firma electrónica y validez jurídica
-            document.add(new Paragraph("8. Firma electrónica y validez jurídica").setBold().setMarginTop(10));
+                    "Tras la firma de esta autorización tanto por parte del profesional médico como por parte " +
+                            "del paciente, el profesional médico en cuestión tendrá acceso a todo el historial médico " +
+                            "centralizado del paciente, lo cual implicará el acceso a todos los informes y documentos " +
+                            "médicos del paciente, incluyendo informes y documentos creados por otros profesionales médicos.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginBottom(5)
+            );
             document.add(new Paragraph(
-                    "1. Profesional médico: firmado electrónicamente por el Dr. " + usuarioProfesionalMedico.getNombreCompleto() +
-                            " mediante AutoFirma, conforme a la definición de firma electrónica avanzada en el art. 26 del Reglamento (UE) 910/2014 (eIDAS).\n" +
-                            "2. Paciente: co-firma electrónica avanzada con la versión móvil @firma de AutoFirma.\n" +
-                            "3. Validez jurídica: ambas firmas cumplen los requisitos de seguridad y legalidad establecidos en la Ley 59/2003, de firma electrónica, y tienen plena eficacia probatoria."
-            ));
+                    "Tras haberse efectuado la autorización, el paciente podrá en cualquier momento desautorizar " +
+                            "al profesional médico, acción que implicará la pérdida del acceso al historial centralizado " +
+                            "por parte del profesional en cuestión. No obstante, la acción de desautorización no supondrá " +
+                            "la denegación al acceso a informes y documentos propios creados con anterioridad, de modo que " +
+                            "el profesional médico seguirá teniendo acceso a estos informes y documentos que el mismo hubiese agregado al historial del paciente con fecha anterior a la desautorización.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginBottom(10)
+            );
 
-            // 9. Revocación y Plazo de Conservación
-            document.add(new Paragraph("9. Revocación y Plazo de Conservación").setBold().setMarginTop(10));
-            document.add(new Paragraph(
-                    "La paciente podrá revocar libremente su consentimiento en cualquier momento, sin que ello afecte la licitud del tratamiento realizado con anterioridad a la revocación, conforme al artículo 7.3 del RGPD. " +
-                            "Los datos se conservarán únicamente durante el tiempo necesario para cumplir las finalidades sanitarias y las obligaciones legales y de custodia."
-            ));
+            // 4. Responsable y Encargado del tratamiento
+            document.add(new Paragraph("4. Responsable y Encargado del tratamiento")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            document.add(new Paragraph("• Responsable: Centro Médico “"
+                    + centro.getUsuario().getNombreCompleto()
+                    + "” (CIF " + centro.getUsuario().getNifNie() + ").")
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Encargado: VitalSanity S.A. (CIF A79667150), Calle Salud, nº 10, 28001 Madrid, correo: vital@sanity.es.")
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("Ambas entidades mantienen sus correspondientes contratos de encargado de tratamiento, con las cláusulas y garantías exigidas por el art. 28 RGPD.")
+                    .setMarginLeft(10)
+                    .setMarginBottom(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
 
-            // 10. Responsable del Tratamiento
-            document.add(new Paragraph("10. Responsable del Tratamiento").setBold().setMarginTop(10));
+            // 5. Información específica de la autorización
+            document.add(new Paragraph("5. Información específica de la autorización")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            document.add(new Paragraph("• Motivo de la solicitud: " + motivo)
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Descripción de la solicitud: " + descripcion)
+                    .setMarginLeft(10)
+                    .setMarginBottom(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+
+            // 6. Base Jurídica del Tratamiento
+            document.add(new Paragraph("6. Base Jurídica del Tratamiento")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            String[] baseJuridica = {
+                    "Consentimiento informado: La legitimación para el tratamiento se basa en el consentimiento libre, específico, informado e inequívoco del paciente, tal como exige el artículo 6 de la LOPDGDD y el artículo 6.1.a) del RGPD.",
+                    "Datos de salud (categoría especial): Se trata de datos relativos a la salud, cuya recogida y tratamiento requieren consentimiento explícito conforme al artículo 9.2.a) del RGPD.",
+                    "Obligación de información: El responsable ha facilitado a la paciente toda la información prevista en el artículo 13 del RGPD en el momento de la obtención de sus datos.",
+                    "Deber de confidencialidad: El profesional y el centro están sujetos al deber de confidencialidad establecido en el artículo 5 de la LOPDGDD y en la Ley 41/2002, que protege la confidencialidad de los datos de salud."
+            };
+            for (String b : baseJuridica) {
+                document.add(new Paragraph("• " + b)
+                        .setMarginLeft(10)
+                        .setFont(font)
+                        .setFontSize(10)
+                );
+            }
+            document.add(new Paragraph("")  // espaciado
+                    .setMarginBottom(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+
+            // 7. Datos objeto de tratamiento
+            document.add(new Paragraph("7. Datos objeto de tratamiento")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            String[] datosTratamiento = {
+                    "Informes médicos (con sus descripciones, observaciones, …).",
+                    "Documentación clínica (informe de urgencias, notas de evolución, prescripciones, …).",
+                    "Cualquier dato de salud recabado en el historial centralizado."
+            };
+            for (String d : datosTratamiento) {
+                document.add(new Paragraph("• " + d)
+                        .setMarginLeft(10)
+                        .setFont(font)
+                        .setFontSize(10)
+                );
+            }
             document.add(new Paragraph(
-                    "El Responsable del Tratamiento es el Centro Médico \"" + centro.getUsuario().getNombreCompleto() + "\" (NIF " +
-                            centro.getUsuario().getNifNie() + "), con domicilio en " + centro.getDireccion() + ", " +
-                            centro.getUsuario().getMunicipio() + " (" + centro.getUsuario().getProvincia() + "). Para cualquier consulta, puede contactar con el centro."
-            ));
+                    "Se hace especial mención a que se tratarán datos especialmente protegidos (relativos a la salud) conforme al artículo 9.1 h) del RGPD.")
+                    .setMarginLeft(10)
+                    .setMarginBottom(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+
+            // 8. Principios aplicables
+            document.add(new Paragraph("8. Principios aplicables")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            document.add(new Paragraph(
+                    "El tratamiento de los datos se regirá por los principios de licitud, lealtad, transparencia, limitación de la finalidad, minimización de datos, exactitud, limitación del plazo de conservación, integridad y confidencialidad establecidos en el artículo 5 del RGPD, así como por las garantías adicionales recogidas en la LOPDGDD.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginBottom(10)
+            );
+
+            // 9. Derechos de las partes involucradas
+            document.add(new Paragraph("9. Derechos de las partes involucradas")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            String[] derechos = {
+                    "Acceso a sus datos y a la información relacionada (art. 15 RGPD).",
+                    "Rectificación de datos inexactos (art. 16 RGPD).",
+                    "Supresión de datos («derecho al olvido», art. 17 RGPD).",
+                    "Limitación del tratamiento (art. 18 RGPD).",
+                    "Portabilidad de los datos (art. 20 RGPD).",
+                    "Oposición al tratamiento (art. 21 RGPD).",
+                    "Revocación del consentimiento en cualquier momento, sin afectar la licitud del tratamiento previo (art. 7.3 RGPD).",
+                    "Derecho a no ser objeto de decisiones automatizadas."
+            };
+            for (String r : derechos) {
+                document.add(new Paragraph("• " + r)
+                        .setMarginLeft(10)
+                        .setFont(font)
+                        .setFontSize(10)
+                );
+            }
+            document.add(new Paragraph(
+                    "Podrá dirigir sus solicitudes al Responsable del Tratamiento, quien facilitará su ejercicio en un plazo máximo de un mes, prorrogable por otros dos meses en casos de especial complejidad,")
+                    .setMarginLeft(10)
+                    .setMarginBottom(5)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            // Medios de ejercicio
+            String centroEmailName = centro.getUsuario().getNombreCompleto()
+                    .toLowerCase()
+                    .replace(" ", "-");
+            document.add(new Paragraph("• Puede contactar con el Delegado de Protección de Datos en delegadopd@"
+                    + centroEmailName + ".es.")
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Puede contactar con el encargado en vital@sanity.es.")
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Puede presentarse presencialmente en el domicilio social de las entidades.")
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Puede presentar reclamación ante la AEPD.")
+                    .setMarginLeft(10)
+                    .setMarginBottom(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+
+            // 10. Revocación y Plazo de Conservación
+            document.add(new Paragraph("10. Revocación y Plazo de Conservación")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            document.add(new Paragraph(
+                    "El paciente podrá revocar libremente su consentimiento en cualquier momento, sin que ello afecte la licitud del tratamiento realizado con anterioridad a la revocación, conforme al artículo 7.3 del RGPD, que exige que la retirada del consentimiento sea tan sencilla como su otorgamiento.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginLeft(10)
+                    .setMarginBottom(5)
+            );
+            document.add(new Paragraph(
+                    "Los datos se conservarán únicamente durante el tiempo necesario para cumplir las finalidades sanitarias y para atender las obligaciones legales y de custodia establecidas en la normativa sectorial.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginLeft(10)
+                    .setMarginBottom(10)
+            );
 
             // 11. Medidas de seguridad
-            document.add(new Paragraph("11. Medidas de seguridad").setBold().setMarginTop(10));
+            document.add(new Paragraph("11. Medidas de seguridad")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
             document.add(new Paragraph(
-                    "El responsable garantiza la aplicación de medidas técnicas y organizativas apropiadas para proteger los datos frente a destrucción, pérdida, alteración, divulgación o acceso no autorizado, conforme al artículo 32 del RGPD."
-            ));
+                    "El responsable del tratamiento garantiza la aplicación de las medidas técnicas y organizativas apropiadas para proteger los datos personales frente a destrucción, pérdida, alteración, divulgación o acceso no autorizado, conforme al artículo 32 del RGPD y a las directrices establecidas por la Agencia Española de Protección de Datos.")
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setMarginLeft(10)
+                    .setMarginBottom(10)
+            );
 
             // 12. Firma y Fecha
-            document.add(new Paragraph("12. Firma y Fecha").setBold().setMarginTop(10));
-            document.add(new Paragraph("En prueba de conformidad y aceptación, las partes han firmado electrónicamente el presente documento mediante AutoFirma o Cliente móvil @firma."));
-            document.add(new Paragraph("Fecha de expedición de la autorización: " + fechaCorta).setMarginTop(5));
+            document.add(new Paragraph("12. Firma y Fecha")
+                    .setFont(bold)
+                    .setFontSize(12)
+            );
+            document.add(new Paragraph("• Profesional médico: firmado electrónicamente por el Dr. "
+                    + usuarioProfesional.getNombreCompleto()
+                    + " mediante AutoFirma, conforme a la definición de firma electrónica avanzada en el art. 26 del Reglamento (UE) 910/2014 (eIDAS).")
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Paciente: cofirma electrónica avanzada con la versión móvil @firma de AutoFirma.")
+                    .setMarginLeft(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+            document.add(new Paragraph("• Validez jurídica: ambas firmas cumplen los requisitos de seguridad y legalidad establecidos en la Ley 59/2003, de firma electrónica, y tienen plena eficacia probatoria.")
+                    .setMarginLeft(10)
+                    .setMarginBottom(10)
+                    .setFont(font)
+                    .setFontSize(10)
+            );
+
+            // Fecha de expedición con formato DD/MM/YYYY
+            String fechaExp = today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            document.add(new Paragraph("Fecha de expedición de la autorización: " + fechaExp)
+                    .setFont(font)
+                    .setFontSize(10)
+                    .setTextAlignment(TextAlignment.LEFT)
+                    .setMarginTop(5)
+            );
 
             document.close();
             return baos.toByteArray();
