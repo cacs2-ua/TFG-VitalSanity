@@ -1,13 +1,22 @@
 package vitalsanity.service.utils.autofirma;
 
 import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.events.Event;
+import com.itextpdf.kernel.events.IEventHandler;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.Rectangle;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.properties.AreaBreakType;
 import com.itextpdf.layout.properties.TextAlignment;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +76,29 @@ public class GenerarPdf {
             Document    document = new Document(pdfDoc);
             document.setFont(font);
 
+            // Tras crear PdfDocument pdfDoc = new PdfDocument(writer);
+            pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, new IEventHandler() {
+                @Override
+                public void handleEvent(Event event) {
+                    PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
+                    PdfPage page = docEvent.getPage();
+                    int pageNumber = docEvent.getDocument().getPageNumber(page);
+                    Rectangle pageSize = page.getPageSize();
+                    PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamAfter(), page.getResources(), docEvent.getDocument());
+                    // Aquí usamos sólo pdfCanvas y pageSize
+                    Canvas canvas = new Canvas(pdfCanvas, pageSize);
+                    canvas.setFont(font)
+                            .setFontSize(10)
+                            .showTextAligned(
+                                    String.valueOf(pageNumber),
+                                    pageSize.getRight() - 36,
+                                    pageSize.getBottom() + 15,
+                                    TextAlignment.RIGHT
+                            );
+                    canvas.close();
+                }
+            });
+
             // Línea de encabezado: ubicación y fecha en texto
             LocalDate today = LocalDate.now();
             String monthName = today.getMonth()
@@ -106,7 +138,7 @@ public class GenerarPdf {
                             "digitales (LOPDGDD). Se detallan las partes intervinientes, la finalidad del " +
                             "tratamiento, la base jurídica, el alcance de los derechos del paciente, el " +
                             "mecanismo de revocación, la identificación del responsable del tratamiento, " +
-                            "así como las firmas electrónica y cofirma mediante AutoFirma/@firma.")
+                            "así como las firmas electrónica y cofirma respectivamente mediante AutoFirma y su versión móvil (la aplicación de Cliente móvil @firma).")
                     .setFont(font)
                     .setFontSize(10)
                     .setMarginBottom(10)
@@ -258,7 +290,7 @@ public class GenerarPdf {
                     .setMarginLeft(10)
                     .add(new Text("• ").setFont(font).setFontSize(10))
                     .add(new Text("Encargado: ").setFont(bold).setFontSize(10))
-                    .add(new Text("VitalSanity S.A. (CIF A79667150), Calle Salud, nº 10, 28001 Madrid, correo: vital@sanity.es.").setFont(font).setFontSize(10))
+                    .add(new Text("VitalSanity S.A. (NIF A79667150), Calle Innovación, 123, nº 10, 28001 Madrid, España, correo: vital@sanity.es.").setFont(font).setFontSize(10))
                     .setMarginBottom(10)
             );
 
@@ -349,6 +381,8 @@ public class GenerarPdf {
                     .setFontSize(10)
                     .setMarginBottom(10)
             );
+
+            document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
             // 9. Derechos de las partes involucradas
             document.add(new Paragraph("9. Derechos de las partes involucradas")
@@ -448,14 +482,14 @@ public class GenerarPdf {
                     .setMarginLeft(10)
                     .add(new Text("• ").setFont(font).setFontSize(10))
                     .add(new Text("Profesional médico: ").setFont(bold).setFontSize(10))
-                    .add(new Text("firmado electrónicamente por el Dr. " + usuarioProfesional.getNombreCompleto() +
+                    .add(new Text("firmado electrónicamente por el profesional médico " + usuarioProfesional.getNombreCompleto() +
                             " mediante AutoFirma, conforme a la definición de firma electrónica avanzada en el art. 26 del Reglamento (UE) 910/2014 (eIDAS).").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
                     .add(new Text("• ").setFont(font).setFontSize(10))
                     .add(new Text("Paciente: ").setFont(bold).setFontSize(10))
-                    .add(new Text("co-firma electrónica avanzada con la versión móvil @firma de AutoFirma.").setFont(font).setFontSize(10))
+                    .add(new Text("cofirma electrónica avanzada con la versión móvil de AutoFirma (Cliente móvil @firma).").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
