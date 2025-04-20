@@ -102,11 +102,12 @@ public class ProfesionalMedicoController {
             SolicitudAutorizacionData solicitudAutorizacion = profesionalMedicoService.obtenerUltimaAutorizacionAsociadaAUnProfesionalMedicoYAUnPaciente(
                     idProfesional, idPaciente);
 
-            boolean denegada = true;
-            if (solicitudAutorizacion != null) {
-                denegada = solicitudAutorizacion.isDenegada();
+            boolean solicitada = false;
+            if (solicitudAutorizacion != null
+                && !solicitudAutorizacion.isDenegada()
+                && solicitudAutorizacion.isFirmada()) {
+                solicitada = true;
             }
-            boolean solicitada = !denegada;
             model.addAttribute("paciente", pacienteResponse);
             model.addAttribute("usuarioPaciente", usuarioPaciente);
             model.addAttribute("solicitada", solicitada);
