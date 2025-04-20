@@ -363,6 +363,7 @@ public class ProfesionalMedicoController {
 
         InformeData informe = new InformeData();
 
+        byte[] pdfBytes = new byte[0];
         if (informeId != null) {
             informe = informeService.editarInforme(
                     informeId,
@@ -372,6 +373,13 @@ public class ProfesionalMedicoController {
                     descripcion,
                     observaciones
             );
+
+            pdfBytes = generarPdf.generarPdfEdicionInforme(
+                    profesionalMedicoId,
+                    pacienteId,
+                    titulo,
+                    descripcion,
+                    observaciones);
         }
 
         else {
@@ -381,15 +389,14 @@ public class ProfesionalMedicoController {
                     titulo,
                     descripcion,
                     observaciones);
+
+            pdfBytes = generarPdf.generarPdfInforme(
+                    profesionalMedicoId,
+                    pacienteId,
+                    titulo,
+                    descripcion,
+                    observaciones);
         }
-
-
-        byte[] pdfBytes = generarPdf.generarPdfInforme(
-                profesionalMedicoId,
-                pacienteId,
-                titulo,
-                descripcion,
-                observaciones);
 
         String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
 
