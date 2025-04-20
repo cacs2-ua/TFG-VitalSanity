@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -48,6 +49,14 @@ public class SecurityConfig {
                 .securityMatcher(new AntPathRequestMatcher("/login/certificate"))
                 .addFilter(x509Filter)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                /*
+                Desactivamos la protección CSRF para el endpoint asociado a la autenticación por certificado digital.
+                Esto es necesario ya que, al estar trabajando con un certificado SSL autogenerado para HTTPS, el navegador por defecto
+                rechazará la petición de abrir el selector de certificados electrónicos. Este problema no estará presente en producción, ya que
+                en producción estaríamos trabajando con un certificado SSL de confianza asociado con un dominio específico, y gracias a esto,
+                en este caso el navegador no rechazaría la petición de abrir el selector de certificados electrónicos y por lo tanto no sería
+                necesario desactivar la protección CSRF para este endpoint concreto.
+                 */
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 
@@ -58,7 +67,54 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                /*
+                Solo para los endpoints que manejan AutoFirma (y su versión para móviles) desactivamos la protección CSRF.
+                Esto lo hacemos debido a que, al estar trabajando con un certificado SSL autogenerado para HTTPS, el navegador por defecto
+                rechazará el esquema personalizado afirma:// debido a la protección CSRF. Este problema no estará presente en producción ya que
+                en producción estaríamos trabajando con un certificado SSL sde confianza asociado con un dominio específico, y gracias a esto, como
+                bien se menciona el Manual Integrador de AutoFirma, en dicho caso los navegadores no rechazarían el esquema personalizado afirma://
+                y todo funcionaría correctamente sin necesidad de desactivar la protección CSRF para los endpoints que invoquen a AutoFirma.
+                 */
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+
+                                //FIRMA DE LA AUTORIZACIÓN POR EL PROFESIONAL MÉDICO
+                                new AntPathRequestMatcher(
+                                        "/api/profesional-medico/generar-pdf-autorizacion",
+                                        HttpMethod.POST.name()
+                                ),
+
+                                new AntPathRequestMatcher(
+                                        "/api/profesional-medico/pdf-autorizacion-firmada",
+                                        HttpMethod.POST.name()
+                                ),
+
+
+                                //COFIRMA DE LA AUTORIZACIÓN POR EL PACIENTE
+                                new AntPathRequestMatcher(
+                                        "/api/paciente/solicitud-autorizacion-firmada",
+                                        HttpMethod.POST.name()
+                                ),
+
+                                new AntPathRequestMatcher(
+                                        "/api/paciente/aws-pdf-autorizacion-cofirmada",
+                                        HttpMethod.POST.name()
+                                ),
+
+
+                                //FIRMA DE LOS INFORMES POR EL PROFESIONAL MÉDICO
+
+                                new AntPathRequestMatcher(
+                                        "/api/profesional-medico/generar-pdf-informe",
+                                        HttpMethod.POST.name()
+                                ),
+
+                                new AntPathRequestMatcher(
+                                        "/api/profesional-medico/pdf-informe-firmado",
+                                        HttpMethod.POST.name()
+                                )
+                        )
+                )
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .rememberMe(rememberMe -> rememberMe
