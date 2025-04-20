@@ -7,6 +7,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.TextAlignment;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,8 +84,7 @@ public class GenerarPdf {
                     .setTextAlignment(TextAlignment.RIGHT)
                     .setMarginBottom(10)
             );
-
-            // Título principal en negrita y centrado
+// Título principal
             document.add(new Paragraph("AUTORIZACIÓN DE ACCESO AL HISTORIAL MÉDICO CENTRALIZADO")
                     .setFont(bold)
                     .setFontSize(14)
@@ -122,68 +122,78 @@ public class GenerarPdf {
                     .setFont(bold)
                     .setMarginLeft(10)
             );
-            document.add(new Paragraph("• Nombre: " + usuarioProfesional.getNombreCompleto())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Nombre: ").setFont(bold))
+                    .add(new Text(usuarioProfesional.getNombreCompleto()))
             );
-            document.add(new Paragraph("• NIF/NIE: " + usuarioProfesional.getNifNie())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("NIF/NIE: ").setFont(bold))
+                    .add(new Text(usuarioProfesional.getNifNie()))
             );
-            document.add(new Paragraph("• Especialidad: " + profesional.getEspecialidadMedica().getNombre())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Especialidad: ").setFont(bold))
+                    .add(new Text(profesional.getEspecialidadMedica().getNombre()))
                     .setMarginBottom(5)
-                    .setFont(font)
-                    .setFontSize(10)
             );
             // Centro médico solicitante
             document.add(new Paragraph("Centro médico solicitante")
                     .setFont(bold)
                     .setMarginLeft(10)
             );
-            document.add(new Paragraph("• NIF: " + centro.getUsuario().getNifNie())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("NIF: ").setFont(bold))
+                    .add(new Text(centro.getUsuario().getNifNie()))
             );
-            document.add(new Paragraph("• Nombre: " + centro.getUsuario().getNombreCompleto())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Nombre: ").setFont(bold))
+                    .add(new Text(centro.getUsuario().getNombreCompleto()))
             );
-            document.add(new Paragraph("• Provincia: " + centro.getUsuario().getProvincia())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Provincia: ").setFont(bold))
+                    .add(new Text(centro.getUsuario().getProvincia()))
             );
-            document.add(new Paragraph("• Municipio: " + centro.getUsuario().getMunicipio())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Municipio: ").setFont(bold))
+                    .add(new Text(centro.getUsuario().getMunicipio()))
             );
-            document.add(new Paragraph("• Dirección: " + centro.getDireccion())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Dirección: ").setFont(bold))
+                    .add(new Text(centro.getDireccion()))
                     .setMarginBottom(5)
-                    .setFont(font)
-                    .setFontSize(10)
             );
             // Paciente autorizado
             document.add(new Paragraph("Paciente autorizado")
                     .setFont(bold)
                     .setMarginLeft(10)
             );
-            document.add(new Paragraph("• Nombre: " + usuarioPaciente.getNombreCompleto())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Nombre: ").setFont(bold))
+                    .add(new Text(usuarioPaciente.getNombreCompleto()))
             );
-            document.add(new Paragraph("• NIF/NIE: " + usuarioPaciente.getNifNie())
+            document.add(new Paragraph()
                     .setMarginLeft(20)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("NIF/NIE: ").setFont(bold))
+                    .add(new Text(usuarioPaciente.getNifNie()))
                     .setMarginBottom(10)
-                    .setFont(font)
-                    .setFontSize(10)
             );
 
             // 3. Objeto y Finalidad de la autorización
@@ -237,23 +247,19 @@ public class GenerarPdf {
                     .setFont(bold)
                     .setFontSize(12)
             );
-            document.add(new Paragraph("• Responsable: Centro Médico “"
-                    + centro.getUsuario().getNombreCompleto()
-                    + "” (CIF " + centro.getUsuario().getNifNie() + ").")
+            document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Responsable: ").setFont(bold))
+                    .add(new Text("Centro Médico “" + centro.getUsuario().getNombreCompleto()
+                            + "” (CIF " + centro.getUsuario().getNifNie() + ")."))
             );
-            document.add(new Paragraph("• Encargado: VitalSanity S.A. (CIF A79667150), Calle Salud, nº 10, 28001 Madrid, correo: vital@sanity.es.")
+            document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .setFont(font)
-                    .setFontSize(10)
-            );
-            document.add(new Paragraph("Ambas entidades mantienen sus correspondientes contratos de encargado de tratamiento, con las cláusulas y garantías exigidas por el art. 28 RGPD.")
-                    .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Encargado: ").setFont(bold))
+                    .add(new Text("VitalSanity S.A. (CIF A79667150), Calle Salud, nº 10, 28001 Madrid, correo: vital@sanity.es."))
                     .setMarginBottom(10)
-                    .setFont(font)
-                    .setFontSize(10)
             );
 
             // 5. Información específica de la autorización
@@ -261,16 +267,18 @@ public class GenerarPdf {
                     .setFont(bold)
                     .setFontSize(12)
             );
-            document.add(new Paragraph("• Motivo de la solicitud: " + motivo)
+            document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Motivo de la solicitud: ").setFont(bold))
+                    .add(new Text(motivo))
             );
-            document.add(new Paragraph("• Descripción de la solicitud: " + descripcion)
+            document.add(new Paragraph()
                     .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Descripción complementaria: ").setFont(bold))
+                    .add(new Text(descripcion))
                     .setMarginBottom(10)
-                    .setFont(font)
-                    .setFontSize(10)
             );
 
             // 6. Base Jurídica del Tratamiento
@@ -278,23 +286,30 @@ public class GenerarPdf {
                     .setFont(bold)
                     .setFontSize(12)
             );
-            String[] baseJuridica = {
-                    "Consentimiento informado: La legitimación para el tratamiento se basa en el consentimiento libre, específico, informado e inequívoco del paciente, tal como exige el artículo 6 de la LOPDGDD y el artículo 6.1.a) del RGPD.",
-                    "Datos de salud (categoría especial): Se trata de datos relativos a la salud, cuya recogida y tratamiento requieren consentimiento explícito conforme al artículo 9.2.a) del RGPD.",
-                    "Obligación de información: El responsable ha facilitado a la paciente toda la información prevista en el artículo 13 del RGPD en el momento de la obtención de sus datos.",
-                    "Deber de confidencialidad: El profesional y el centro están sujetos al deber de confidencialidad establecido en el artículo 5 de la LOPDGDD y en la Ley 41/2002, que protege la confidencialidad de los datos de salud."
-            };
-            for (String b : baseJuridica) {
-                document.add(new Paragraph("• " + b)
-                        .setMarginLeft(10)
-                        .setFont(font)
-                        .setFontSize(10)
-                );
-            }
-            document.add(new Paragraph("")  // espaciado
+            document.add(new Paragraph()
+                    .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Consentimiento informado: ").setFont(bold))
+                    .add(new Text("La legitimación para el tratamiento se basa en el consentimiento libre, específico, informado e inequívoco del paciente, tal como exige el artículo 6 de la LOPDGDD y el artículo 6.1.a) del RGPD."))
+            );
+            document.add(new Paragraph()
+                    .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Datos de salud (categoría especial): ").setFont(bold))
+                    .add(new Text("Se trata de datos relativos a la salud, cuya recogida y tratamiento requieren consentimiento explícito conforme al artículo 9.2.a) del RGPD."))
+            );
+            document.add(new Paragraph()
+                    .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Obligación de información: ").setFont(bold))
+                    .add(new Text("El responsable ha facilitado a la paciente toda la información prevista en el artículo 13 del RGPD en el momento de la obtención de sus datos."))
+            );
+            document.add(new Paragraph()
+                    .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Deber de confidencialidad: ").setFont(bold))
+                    .add(new Text("El profesional y el centro están sujetos al deber de confidencialidad establecido en el artículo 5 de la LOPDGDD y en la Ley 41/2002, que protege la confidencialidad de los datos de salud."))
                     .setMarginBottom(10)
-                    .setFont(font)
-                    .setFontSize(10)
             );
 
             // 7. Datos objeto de tratamiento
@@ -302,24 +317,24 @@ public class GenerarPdf {
                     .setFont(bold)
                     .setFontSize(12)
             );
-            String[] datosTratamiento = {
-                    "Informes médicos (con sus descripciones, observaciones, …).",
-                    "Documentación clínica (informe de urgencias, notas de evolución, prescripciones, …).",
-                    "Cualquier dato de salud recabado en el historial centralizado."
-            };
-            for (String d : datosTratamiento) {
-                document.add(new Paragraph("• " + d)
-                        .setMarginLeft(10)
-                        .setFont(font)
-                        .setFontSize(10)
-                );
-            }
-            document.add(new Paragraph(
-                    "Se hace especial mención a que se tratarán datos especialmente protegidos (relativos a la salud) conforme al artículo 9.1 h) del RGPD.")
+            document.add(new Paragraph()
                     .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Informes médicos").setFont(bold))
+                    .add(new Text(" (con sus descripciones, observaciones, …)."))
+            );
+            document.add(new Paragraph()
+                    .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Documentación clínica").setFont(bold))
+                    .add(new Text(" (informe de urgencias, notas de evolución, prescripciones, …)."))
+            );
+            document.add(new Paragraph()
+                    .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Cualquier dato de salud recabado").setFont(bold))
+                    .add(new Text(" en el historial centralizado."))
                     .setMarginBottom(10)
-                    .setFont(font)
-                    .setFontSize(10)
             );
 
             // 8. Principios aplicables
@@ -428,23 +443,25 @@ public class GenerarPdf {
                     .setFont(bold)
                     .setFontSize(12)
             );
-            document.add(new Paragraph("• Profesional médico: firmado electrónicamente por el Dr. "
-                    + usuarioProfesional.getNombreCompleto()
-                    + " mediante AutoFirma, conforme a la definición de firma electrónica avanzada en el art. 26 del Reglamento (UE) 910/2014 (eIDAS).")
+            document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Profesional médico: ").setFont(bold))
+                    .add(new Text("firmado electrónicamente por el Dr. " + usuarioProfesional.getNombreCompleto() +
+                            " mediante AutoFirma, conforme a la definición de firma electrónica avanzada en el art. 26 del Reglamento (UE) 910/2014 (eIDAS)."))
             );
-            document.add(new Paragraph("• Paciente: cofirma electrónica avanzada con la versión móvil @firma de AutoFirma.")
+            document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .setFont(font)
-                    .setFontSize(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Paciente: ").setFont(bold))
+                    .add(new Text("co-firma electrónica avanzada con la versión móvil @firma de AutoFirma."))
             );
-            document.add(new Paragraph("• Validez jurídica: ambas firmas cumplen los requisitos de seguridad y legalidad establecidos en la Ley 59/2003, de firma electrónica, y tienen plena eficacia probatoria.")
+            document.add(new Paragraph()
                     .setMarginLeft(10)
+                    .add(new Text("• ").setFont(font))
+                    .add(new Text("Validez jurídica: ").setFont(bold))
+                    .add(new Text("ambas firmas cumplen los requisitos de seguridad y legalidad establecidos en la Ley 59/2003, de firma electrónica, y tienen plena eficacia probatoria."))
                     .setMarginBottom(10)
-                    .setFont(font)
-                    .setFontSize(10)
             );
 
             // Fecha de expedición con formato DD/MM/YYYY
