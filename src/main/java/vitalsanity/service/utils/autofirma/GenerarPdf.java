@@ -124,21 +124,21 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Nombre: ").setFont(bold))
-                    .add(new Text(usuarioProfesional.getNombreCompleto()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Nombre: ").setFont(bold).setFontSize(10))
+                    .add(new Text(usuarioProfesional.getNombreCompleto()).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("NIF/NIE: ").setFont(bold))
-                    .add(new Text(usuarioProfesional.getNifNie()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Nº Del Documento de Identificación: ").setFont(bold).setFontSize(10))
+                    .add(new Text(usuarioProfesional.getNifNie()).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Especialidad: ").setFont(bold))
-                    .add(new Text(profesional.getEspecialidadMedica().getNombre()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Especialidad: ").setFont(bold).setFontSize(10))
+                    .add(new Text(profesional.getEspecialidadMedica().getNombre()).setFont(font).setFontSize(10))
                     .setMarginBottom(5)
             );
             // Centro médico solicitante
@@ -148,33 +148,33 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("NIF: ").setFont(bold))
-                    .add(new Text(centro.getUsuario().getNifNie()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("NIF: ").setFont(bold).setFontSize(10))
+                    .add(new Text(centro.getUsuario().getNifNie()).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Nombre: ").setFont(bold))
-                    .add(new Text(centro.getUsuario().getNombreCompleto()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Nombre: ").setFont(bold).setFontSize(10))
+                    .add(new Text(centro.getUsuario().getNombreCompleto()).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Provincia: ").setFont(bold))
-                    .add(new Text(centro.getUsuario().getProvincia()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Provincia: ").setFont(bold).setFontSize(10))
+                    .add(new Text(centro.getUsuario().getProvincia()).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Municipio: ").setFont(bold))
-                    .add(new Text(centro.getUsuario().getMunicipio()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Municipio: ").setFont(bold).setFontSize(10))
+                    .add(new Text(centro.getUsuario().getMunicipio()).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Dirección: ").setFont(bold))
-                    .add(new Text(centro.getDireccion()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Dirección: ").setFont(bold).setFontSize(10))
+                    .add(new Text(centro.getDireccion()).setFont(font).setFontSize(10))
                     .setMarginBottom(5)
             );
             // Paciente autorizado
@@ -184,15 +184,15 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Nombre: ").setFont(bold))
-                    .add(new Text(usuarioPaciente.getNombreCompleto()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Nombre: ").setFont(bold).setFontSize(10))
+                    .add(new Text(usuarioPaciente.getNombreCompleto()).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(20)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("NIF/NIE: ").setFont(bold))
-                    .add(new Text(usuarioPaciente.getNifNie()))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Nº Del Documento de Identificación: ").setFont(bold).setFontSize(10))
+                    .add(new Text(usuarioPaciente.getNifNie()).setFont(font).setFontSize(10))
                     .setMarginBottom(10)
             );
 
@@ -249,16 +249,16 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Responsable: ").setFont(bold))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Responsable: ").setFont(bold).setFontSize(10))
                     .add(new Text("Centro Médico “" + centro.getUsuario().getNombreCompleto()
-                            + "” (CIF " + centro.getUsuario().getNifNie() + ")."))
+                            + "” (NIF " + centro.getUsuario().getNifNie() + ").").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Encargado: ").setFont(bold))
-                    .add(new Text("VitalSanity S.A. (CIF A79667150), Calle Salud, nº 10, 28001 Madrid, correo: vital@sanity.es."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Encargado: ").setFont(bold).setFontSize(10))
+                    .add(new Text("VitalSanity S.A. (CIF A79667150), Calle Salud, nº 10, 28001 Madrid, correo: vital@sanity.es.").setFont(font).setFontSize(10))
                     .setMarginBottom(10)
             );
 
@@ -269,15 +269,15 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Motivo de la solicitud: ").setFont(bold))
-                    .add(new Text(motivo))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Motivo de la solicitud: ").setFont(bold).setFontSize(10))
+                    .add(new Text(motivo).setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Descripción complementaria: ").setFont(bold))
-                    .add(new Text(descripcion))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Descripción complementaria: ").setFont(bold).setFontSize(10))
+                    .add(new Text(descripcion).setFont(font).setFontSize(10))
                     .setMarginBottom(10)
             );
 
@@ -288,27 +288,28 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Consentimiento informado: ").setFont(bold))
-                    .add(new Text("La legitimación para el tratamiento se basa en el consentimiento libre, específico, informado e inequívoco del paciente, tal como exige el artículo 6 de la LOPDGDD y el artículo 6.1.a) del RGPD."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Consentimiento informado: ").setFont(bold).setFontSize(10))
+                    .add(new Text("La legitimación para el tratamiento se basa en el consentimiento libre, específico, informado e inequívoco del paciente, tal como exige el artículo 6 de la LOPDGDD y el artículo 6.1.a) del RGPD.").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Datos de salud (categoría especial): ").setFont(bold))
-                    .add(new Text("Se trata de datos relativos a la salud, cuya recogida y tratamiento requieren consentimiento explícito conforme al artículo 9.2.a) del RGPD."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Datos de salud (categoría especial): ").setFont(bold).setFontSize(10))
+                    .add(new Text("Se trata de datos relativos a la salud, cuya recogida y tratamiento requieren consentimiento explícito conforme al artículo 9.2.a) del RGPD.").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Obligación de información: ").setFont(bold))
-                    .add(new Text("El responsable ha facilitado a la paciente toda la información prevista en el artículo 13 del RGPD en el momento de la obtención de sus datos."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Obligación de información: ").setFont(bold).setFontSize(10))
+                    .add(new Text("El responsable ha facilitado a la paciente toda la información prevista en el artículo 13 del RGPD en el momento de la obtención de sus datos.").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Deber de confidencialidad: ").setFont(bold))
-                    .add(new Text("El profesional y el centro están sujetos al deber de confidencialidad establecido en el artículo 5 de la LOPDGDD y en la Ley 41/2002, que protege la confidencialidad de los datos de salud."))
+                    .add(new Text("• ").setFont(font).setFontSize(10)
+                    )
+                    .add(new Text("Deber de confidencialidad: ").setFont(bold).setFontSize(10))
+                    .add(new Text("El profesional y el centro están sujetos al deber de confidencialidad establecido en el artículo 5 de la LOPDGDD y en la Ley 41/2002, que protege la confidencialidad de los datos de salud.").setFont(font).setFontSize(10))
                     .setMarginBottom(10)
             );
 
@@ -319,21 +320,21 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Informes médicos").setFont(bold))
-                    .add(new Text(" (con sus descripciones, observaciones, …)."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Informes médicos").setFont(bold).setFontSize(10))
+                    .add(new Text(" (con sus descripciones, observaciones, …).").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Documentación clínica").setFont(bold))
-                    .add(new Text(" (informe de urgencias, notas de evolución, prescripciones, …)."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Documentación clínica").setFont(bold).setFontSize(10))
+                    .add(new Text(" (informe de urgencias, notas de evolución, prescripciones, …).").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Cualquier dato de salud recabado").setFont(bold))
-                    .add(new Text(" en el historial centralizado."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Cualquier dato de salud recabado").setFont(bold).setFontSize(10))
+                    .add(new Text(" en el historial centralizado.").setFont(font).setFontSize(10))
                     .setMarginBottom(10)
             );
 
@@ -445,30 +446,30 @@ public class GenerarPdf {
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Profesional médico: ").setFont(bold))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Profesional médico: ").setFont(bold).setFontSize(10))
                     .add(new Text("firmado electrónicamente por el Dr. " + usuarioProfesional.getNombreCompleto() +
-                            " mediante AutoFirma, conforme a la definición de firma electrónica avanzada en el art. 26 del Reglamento (UE) 910/2014 (eIDAS)."))
+                            " mediante AutoFirma, conforme a la definición de firma electrónica avanzada en el art. 26 del Reglamento (UE) 910/2014 (eIDAS).").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Paciente: ").setFont(bold))
-                    .add(new Text("co-firma electrónica avanzada con la versión móvil @firma de AutoFirma."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Paciente: ").setFont(bold).setFontSize(10))
+                    .add(new Text("co-firma electrónica avanzada con la versión móvil @firma de AutoFirma.").setFont(font).setFontSize(10))
             );
             document.add(new Paragraph()
                     .setMarginLeft(10)
-                    .add(new Text("• ").setFont(font))
-                    .add(new Text("Validez jurídica: ").setFont(bold))
-                    .add(new Text("ambas firmas cumplen los requisitos de seguridad y legalidad establecidos en la Ley 59/2003, de firma electrónica, y tienen plena eficacia probatoria."))
+                    .add(new Text("• ").setFont(font).setFontSize(10))
+                    .add(new Text("Validez jurídica: ").setFont(bold).setFontSize(10))
+                    .add(new Text("ambas firmas cumplen los requisitos de seguridad y legalidad establecidos en la Ley 59/2003, de firma electrónica, y tienen plena eficacia probatoria.").setFont(font).setFontSize(10))
                     .setMarginBottom(10)
             );
 
             // Fecha de expedición con formato DD/MM/YYYY
             String fechaExp = today.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            document.add(new Paragraph("Fecha de expedición de la autorización: " + fechaExp)
-                    .setFont(font)
-                    .setFontSize(10)
+            document.add(new Paragraph()
+                    .add(new Text("Fecha de expedición de la autorización: ").setFont(bold).setFontSize(10))
+                    .add(new Text(fechaExp).setFont(font).setFontSize(10))
                     .setTextAlignment(TextAlignment.LEFT)
                     .setMarginTop(5)
             );
