@@ -6,6 +6,10 @@
     <title>ERROR HTTP 500 - Ha ocurrido un problema en la aplicación</title>
     <div th:include="navbar :: head (titulo='ERROR HTTP 500 - Ha ocurrido un problema en la aplicación')"></div>
     <link rel="stylesheet" th:href="@{/css/custom/error/500.css}">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
 </head>
 <body>
 <div th:replace="navbar::menuBar"></div>
@@ -50,6 +54,13 @@
     </main>
 </div>
 <div th:replace="navbar::javascript"></div>
+
+
+<div th:replace="footer :: footer"></div>
+
+<script>
+    lucide.createIcons();
+</script>
 
 </body>
 </html>

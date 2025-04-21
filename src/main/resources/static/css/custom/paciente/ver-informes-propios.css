@@ -136,7 +136,7 @@
     border-radius: 1.25rem;
     padding: 0.5rem 0.9375rem;
     cursor: pointer;
-    width: 7rem;
+    width: 10rem;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.3s ease;
     display: inline-block;       /* Para que se comporte como un bloque similar a un botón */

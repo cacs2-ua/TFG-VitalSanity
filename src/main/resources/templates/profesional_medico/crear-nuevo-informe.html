@@ -7,6 +7,9 @@
   <div th:include="navbar :: head (titulo='Crear nuevo Informe')"></div>
   <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
   <link rel="stylesheet" th:href="@{/css/custom/profesional_medico/crear-nuevo-informe.css}">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
 
   <script th:inline="javascript">
     const contextPath = /*[[${contextPath}]]*/ '';
@@ -147,6 +150,12 @@
 
 
   <div th:replace="navbar::javascript"></div>
+
+  <div th:replace="footer :: footer"></div>
+
+  <script>
+    lucide.createIcons();
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
