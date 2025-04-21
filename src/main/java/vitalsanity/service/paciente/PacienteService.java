@@ -3,14 +3,12 @@ package vitalsanity.service.paciente;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
-import vitalsanity.model.Paciente;
-import vitalsanity.model.ProfesionalMedico;
-import vitalsanity.model.SolicitudAutorizacion;
-import vitalsanity.model.Usuario;
+import vitalsanity.model.*;
 import vitalsanity.repository.PacienteRepository;
 import vitalsanity.repository.ProfesionalMedicoRepository;
 import vitalsanity.repository.SolicitudAutorizacionRepository;
@@ -108,6 +106,13 @@ public class PacienteService {
         List<SolicitudAutorizacionData> solicitudesAutorizacionData = solicitudesAutorizacion.stream()
                 .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
                 .collect(Collectors.toList());
+
+        for (int i = 0; i < solicitudesAutorizacionData.size(); i++) {
+            ProfesionalMedico profesionalMedico = solicitudesAutorizacion.get(i).getProfesionalMedico();
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+            solicitudesAutorizacionData.get(i).setCentroMedicoUsuarioProfesional(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+        }
 
         return solicitudesAutorizacionData;
     }
