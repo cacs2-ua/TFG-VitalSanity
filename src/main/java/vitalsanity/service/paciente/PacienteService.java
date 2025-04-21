@@ -169,6 +169,13 @@ public class PacienteService {
                 .map(profesionalMedicoAutorizado -> modelMapper.map(profesionalMedicoAutorizado, ProfesionalMedicoData.class))
                 .collect(Collectors.toList());
 
+        for (int i = 0; i < profesionalesMedicosAutorizadosData.size(); i++) {
+            ProfesionalMedico profesionalMedico = profesionalMedicosAutorizados.get(i);
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+            profesionalesMedicosAutorizadosData.get(i).setCentroMedicoUsuarioProfesional(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+        }
+
         return  profesionalesMedicosAutorizadosData;
     }
 

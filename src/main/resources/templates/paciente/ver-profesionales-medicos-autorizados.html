@@ -22,9 +22,13 @@
       <!-- Report Cards -->
       <div th:each="profesionalMedico: ${profesionalesMedicosAutorizados}" class="report-card">
         <div class="report-doctor"><strong>Profesional Médico: </strong> <span th:text="${profesionalMedico.usuario.nombreCompleto}" class="report-doctor-name"></span></div>
+        <div class="report-detail"><strong>Especialidad del profesional médico: </strong> <span th:text="${profesionalMedico.especialidadMedica.nombre}"> </span> </div>
         <div class="report-detail"><strong>Nº del documento de identidad: </strong> <span th:text="${profesionalMedico.usuario.nifNie}"> </span> </div>
-        <div class="report-detail"><strong>Especialidad médica: </strong> <span th:text="${profesionalMedico.especialidadMedica.nombre}"> </span> </div>
-        <div class="report-detail"><strong>Dirección del centro médico: </strong> <span th:text="${profesionalMedico.centroMedico.direccion}"> </span> </div>
+        <div class="report-detail"><strong>Nombre del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.nombreCompleto}"></span> </div>
+        <div class="report-detail"><strong>NIF del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.nifNie}"></span> </div>
+        <div class="report-detail"><strong>Provincia del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.provincia}"></span> </div>
+        <div class="report-detail"><strong>Municipio del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.municipio}"></span> </div>
+        <div class="report-detail"><strong>Dirección del centro médico: </strong> <span th:text="${profesionalMedico.centroMedico.direccion}"></span> </div>
         <div class="button-container">
           <form method="get"
                 th:action="@{/api/paciente/informes}"
