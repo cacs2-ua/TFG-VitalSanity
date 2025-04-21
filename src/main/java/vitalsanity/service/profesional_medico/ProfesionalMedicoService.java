@@ -10,6 +10,7 @@ import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.DocumentoData;
+import vitalsanity.dto.profesional_medico.InformeData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.*;
@@ -225,7 +226,29 @@ public class ProfesionalMedicoService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<SolicitudAutorizacionData> obtenerSolicitudesAutorizacionPendientes(Long idProfesional) {
+        List<SolicitudAutorizacion> solicitudesAutorizaciones = solicitudAutorizacionRepository
+                .findAllWithAllFetchByProfesionalMedicoIdAndDenegadaFalseAndFirmadaTrueAndCofirmadaFalseOrderByFechaFirmaDesc(idProfesional);
 
+        List<SolicitudAutorizacionData> solicitudesAutorizacionesData = solicitudesAutorizaciones.stream()
+                .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
+                .collect(Collectors.toList());
 
+        for (int i = 0; i < solicitudesAutorizacionesData.size(); i++) {
+            ProfesionalMedico profesionalMedico = solicitudesAutorizaciones.get(i).getProfesionalMedico();
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+            solicitudesAutorizacionesData.get(i).setCentroMedicoUsuarioProfesional(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+
+            PacienteData pacienteData = solicitudesAutorizacionesData.get(i).getPaciente();
+
+            LocalDate fechaNacimiento = LocalDate.parse(pacienteData.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            pacienteData.setEdad(edad);
+        }
+
+        return solicitudesAutorizacionesData;
+    }
 
 }

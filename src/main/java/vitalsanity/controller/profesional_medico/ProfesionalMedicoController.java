@@ -610,6 +610,25 @@ public class ProfesionalMedicoController {
 
     }
 
+    @GetMapping("/api/profesional-medico/solicitudes-autorizacion-pendientes")
+    public String verSolicitudesAutorizacionPendientes(Model model) {
+
+        Long profesionalMedicoUsuarioId = getUsuarioLogeadoId();
+
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(profesionalMedicoUsuarioId);
+
+        Long profesionalId = Long.parseLong(profesionalMedicoData.getId());
+        boolean noHaySolicitudes = false;
+
+        List<SolicitudAutorizacionData> solicitudesAutorizacion = profesionalMedicoService.obtenerSolicitudesAutorizacionPendientes(profesionalId);
+        if (solicitudesAutorizacion.isEmpty()) {
+            noHaySolicitudes = true;
+        }
+        model.addAttribute("solicitudesAutorizacion", solicitudesAutorizacion);
+        model.addAttribute("noHaySolicitudes", noHaySolicitudes);
+        return "profesional_medico/ver-solicitudes-autorizacion-pendientes";
+    }
+
 }
 
 
