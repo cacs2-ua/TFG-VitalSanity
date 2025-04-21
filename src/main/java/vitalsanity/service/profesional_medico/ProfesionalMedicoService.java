@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -135,15 +136,24 @@ public class ProfesionalMedicoService {
     public DocumentoData guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
             Long idSolicitudAutorizacion,
             String nombre,
-            String s3_key,
             String tipo_archivo,
             Long tamanyo,
             LocalDateTime fechaSubida) {
 
         Documento documento = new Documento();
 
+        String uuid = "";
+
+        do {
+            uuid = UUID.randomUUID().toString();
+        } while(documentoRepository.existsByUuid(uuid));
+
+        documento.setUuid(uuid);
+
+        String s3Key = "autorizaciones/firmadas/" + uuid  + "_" + System.currentTimeMillis() + ".pdf";
+
         documento.setNombre(nombre);
-        documento.setS3_key(s3_key);
+        documento.setS3_key(s3Key);
         documento.setTipo_archivo(tipo_archivo);
         documento.setTamanyo(tamanyo);
         documento.setFechaSubida(fechaSubida);

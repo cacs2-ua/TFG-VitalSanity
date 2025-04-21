@@ -186,23 +186,20 @@ public class ProfesionalMedicoController {
             String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
 
             byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-            String key = "autorizaciones/firmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-            s3VitalSanityService.subirFicheroBytes(key, signedPdf);
-
             String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-            String s3_key = key;
             String tipoArchivo = "application/pdf";
             Long tamano = (long) signedPdf.length;
             LocalDateTime fechaSubida = LocalDateTime.now();
 
-            profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
+            DocumentoData documento = profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
                     idUltimaSolicitudCreadaDelProfesionalMedico,
                     nombreArchivo,
-                    s3_key,
                     tipoArchivo,
                     tamano,
                     fechaSubida
             );
+
+            s3VitalSanityService.subirFicheroBytes(documento.getS3_key(), signedPdf);
 
             String emailPaciente = usuarioPaciente.getEmail();
 

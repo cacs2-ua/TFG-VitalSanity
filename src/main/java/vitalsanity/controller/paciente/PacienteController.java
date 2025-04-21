@@ -132,14 +132,6 @@ public class PacienteController{
         UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
         String uuidUsuarioPaciente = usuarioPaciente.getUuid();
 
-        String s3Key = "autorizaciones/cofirmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-
-        byte[] cosignedPdfBytes = Base64.getDecoder().decode(cosignedPdfBase64);
-        s3VitalSanityService.subirFicheroBytes(s3Key, cosignedPdfBytes);
-
-
-
-
 
         // Actualizar Información de la Solicitud de Autorización en la base de datos
 
@@ -154,17 +146,19 @@ public class PacienteController{
         String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
         String tipoArchivo = "application/pdf";
 
+        byte[] cosignedPdfBytes = Base64.getDecoder().decode(cosignedPdfBase64);
         Long tamano = (long) cosignedPdfBytes.length;
         LocalDateTime fechaSubida = LocalDateTime.now();
 
-        profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
+        DocumentoData documento = profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
                 idSolicitudAutorizacion,
                 nombreArchivo,
-                s3Key,
                 tipoArchivo,
                 tamano,
                 fechaSubida
         );
+
+        s3VitalSanityService.subirFicheroBytes(documento.getS3_key(), cosignedPdfBytes);
 
         String subject = "Acceso autorizado al historial médico del paciente: '" + usuarioPaciente.getNombreCompleto() + "'";
 
@@ -174,12 +168,15 @@ public class PacienteController{
 
         // emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
 
-        return s3Key;
+        return documento.getUuid();
     }
 
     @GetMapping("/api/paciente/pdf-autorizacion-cofirmada")
-    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String s3Key,
+    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String uuid,
                                                          Model model) {
+        DocumentoData documento = documentoService.encontrarPorUuid(uuid);
+
+        String s3Key = documento.getS3_key();
 
         String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
                 s3Key,
