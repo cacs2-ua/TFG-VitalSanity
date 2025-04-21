@@ -14,6 +14,12 @@
         <version>3.4.0</version> <!-- Actualización de la versión -->
     </parent>
 
+    <properties>
+        <!-- ensures the compiler, resources plugin, etc. all use UTF‑8 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -117,6 +123,19 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <!-- read/filter everything as UTF-8 -->
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <!-- don’t even try to filter .properties files -->
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>properties</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
             <!-- Plugin de Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
