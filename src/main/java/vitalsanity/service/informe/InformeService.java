@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.profesional_medico.InformeData;
 import vitalsanity.model.*;
@@ -250,6 +251,65 @@ public class InformeService {
 
         return informesDataFiltrados.collect(Collectors.toList());
     }
+
+
+    @Transactional(readOnly = true)
+    public  List<InformeData> obtenerFiltradosTodosLosInformesPropiosDeUnPacienteQueHaDesautorizado (
+            Long pacienteId,
+            String informeIdentificadorPublico,
+            LocalDate fechaDesde,
+            LocalDate fechaHasta,
+            String profesionalMedicoId) {
+        List<Informe> informes = informeRepository.findAllByPacienteId(pacienteId);
+
+        List<InformeData> informesData = informes.stream()
+                .map(informe -> modelMapper.map(informe, InformeData.class))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < informesData.size(); i++) {
+            ProfesionalMedico profesionalMedico = informes.get(i).getProfesionalMedico();
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+
+            informesData.get(i).setCentroMedicoUsuario(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+        }
+
+        Stream<InformeData> informesDataFiltrados = informesData.stream();
+
+        informesDataFiltrados = informesDataFiltrados
+                .filter(informeData -> informeData.getProfesionalMedico().getId()
+                        .equals(profesionalMedicoId));
+
+        if (informeIdentificadorPublico != null && !informeIdentificadorPublico.trim().isEmpty()) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> informeData.getIdentificadorPublico().trim().toLowerCase(Locale.ROOT).startsWith(informeIdentificadorPublico.trim().toLowerCase(Locale.ROOT)));
+
+            // informesData = informesDataFiltrados.collect(Collectors.toList());
+        }
+
+        if (fechaDesde != null) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> {
+                        LocalDate creacion = informeData.getFechaCreacion().toLocalDate();
+                        return creacion.isAfter(fechaDesde) || creacion.isEqual(fechaDesde);
+                    });
+
+            // informesData = informesDataFiltrados.collect(Collectors.toList());
+        }
+
+        if (fechaHasta != null) {
+            informesDataFiltrados = informesDataFiltrados
+                    .filter(informeData -> {
+                        LocalDate creacion = informeData.getFechaCreacion().toLocalDate();
+                        return creacion.isBefore(fechaHasta) || creacion.isEqual(fechaHasta);
+                    });
+
+            // informesData = informesDataFiltrados.collect(Collectors.toList());
+        }
+
+        return informesDataFiltrados.collect(Collectors.toList());
+    }
+
 
 
     @Transactional(readOnly = true)

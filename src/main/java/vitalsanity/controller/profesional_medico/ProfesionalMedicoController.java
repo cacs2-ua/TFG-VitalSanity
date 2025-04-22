@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vitalsanity.authentication.ManagerUserSession;
+import vitalsanity.controller.exception.NotFoundException;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
@@ -515,6 +516,69 @@ public class ProfesionalMedicoController {
 
         return "profesional_medico/ver-informes-del-paciente";
     }
+
+
+    @GetMapping("/api/profesional-medico/pacientes-desautorizados/{pacienteId}/informes")
+    public String verInformesPropiosDeUnPacienteQueHaDesautorizado(@PathVariable(value="pacienteId") Long pacienteId,
+                                      @RequestParam(required = false) String informeIdentificadorPublico,
+                                      @RequestParam(required = false) LocalDate fechaDesde,
+                                      @RequestParam(required = false) LocalDate fechaHasta,
+                                      Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        String profesionalMedicoId = String.valueOf(
+                usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
+        );
+
+        if (pacienteId == null) {
+            throw new NotFoundException("Ha ocurrido algún error");
+        }
+
+        List<EspecialidadMedicaData> especialidadesMedicas = especialidadMedicaService.encontrarTodasLasEspecialidadesMedicas();
+
+        UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
+        String pacienteNombre = pacienteUsuario.getNombreCompleto();
+        String pacienteNifNie = pacienteUsuario.getNifNie();
+        List<InformeData> informes = informeService.
+                obtenerFiltradosTodosLosInformesPropiosDeUnPacienteQueHaDesautorizado(
+                        pacienteId,
+                        informeIdentificadorPublico,
+                        fechaDesde,
+                        fechaHasta,
+                        profesionalMedicoId);
+
+        boolean noHayInformes = false;
+        if (informes.isEmpty()) {
+            noHayInformes = true;
+        }
+
+        model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
+        model.addAttribute("especialidadesMedicas", especialidadesMedicas);
+        model.addAttribute("pacienteNombre", pacienteNombre);
+        model.addAttribute("pacienteNifNie", pacienteNifNie);
+        model.addAttribute("noHayInformes", noHayInformes);
+        model.addAttribute("informes", informes);
+
+
+        // FILTROS
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String fechaDesdeStr = (fechaDesde != null)
+                ? fechaDesde.format(fmt)
+                : "";
+
+        String fechaHastaStr = (fechaHasta != null)
+                ? fechaHasta.format(fmt)
+                : "";
+
+        model.addAttribute("pacienteId", pacienteId);
+        model.addAttribute("informeIdentificadorPublico", informeIdentificadorPublico);
+        model.addAttribute("fechaDesdeStr", fechaDesdeStr);
+        model.addAttribute("fechaHastaStr", fechaHastaStr);
+
+        return "profesional_medico/ver-informes-propios-de-un-paciente-que-ha-desautorizado";
+    }
+
 
     @GetMapping("/api/profesional-medico/pacientes/{pacienteId}/informes/{informeId}/editar")
     public String editarInforme(@PathVariable(value="pacienteId") Long pacienteId,

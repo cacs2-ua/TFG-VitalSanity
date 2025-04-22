@@ -55,10 +55,8 @@
           </form>
 
           <form method="get"
-                th:action="@{'/api/profesional-medico/pacientes/' + ${paciente.id} + '/informes'}"
+                th:action="@{'/api/profesional-medico/pacientes-desautorizados/' + ${paciente.id} + '/informes'}"
                 style="display: inline;">
-            <input type="hidden" name="profMedId"
-                   th:value="${profesionalMedicoId}" />
             <button class="button-view">Ver informes Propios</button>
           </form>
 
