@@ -106,17 +106,6 @@ public class InformeService {
 
         informe.setUuid(uuid);
 
-        // NUMERO RANDOM DE 10 CIFRAS
-
-        String identificadorPublico = "";
-
-        do {
-            long numero = (long)(Math.random() * 9000000000L) + 1000000000L;
-            identificadorPublico = "INF-" + String.valueOf(numero);
-        } while(informeRepository.existsByIdentificadorPublico(identificadorPublico));
-
-        informe.setIdentificadorPublico(identificadorPublico);
-
         informe.setTitulo(titulo);
         informe.setDescripcion(descripcion);
         informe.setObservaciones(observaciones);
