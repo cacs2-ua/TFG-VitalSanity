@@ -38,10 +38,10 @@
             <button class="button-view">Ver informes</button>
           </form>
 
-          <form method="post" th:action="@{/api/paciente/desautorizar-profesional-medico}">
-            <input type="hidden" name="id" th:value="${profesionalMedico.id}" />
-            <button type="submit" class="button-deauthorize">Desautorizar</button>
-          </form>
+          <button class="button-deauthorize"
+                  th:attr="data-profesional-id=${profesionalMedico.id}">
+            Desautorizar
+          </button>
         </div>
       </div>
 
@@ -51,6 +51,14 @@
 
     </div>
   </div>
+
+  <div id="popupOverlay" class="popup-overlay" style="display:none">
+    <div class="popup-window">
+      <button id="popupClose" class="popup-close">X</button>
+      <iframe class="popup-iframe" style="width:100%;height:100%;border:0"></iframe>
+    </div>
+  </div>
+
   <div th:replace="navbar::javascript"></div>
 
   <div th:replace="footer :: footer"></div>
@@ -58,5 +66,33 @@
   <script>
     lucide.createIcons();
   </script>
+
+  <script th:inline="javascript">
+    const contextPath = /*[[${contextPath}]]*/ '';
+  </script>
+
+  <script>
+    // abre el pop‑up
+    document.querySelectorAll('.button-deauthorize').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const id = btn.getAttribute('data-profesional-id');
+        const url = contextPath +
+                '/api/paciente/pop-up-desautorizar-profesional-medico?profesionalMedicoId=' +
+                id;
+        document.querySelector('.popup-iframe').src = url;
+        document.getElementById('popupOverlay').style.display = 'flex';
+      });
+    });
+
+    // cierra el pop‑up
+    document.getElementById('popupClose').addEventListener('click', () =>
+            document.getElementById('popupOverlay').style.display = 'none');
+
+    document.getElementById('popupOverlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget) e.stopPropagation();
+    });
+  </script>
+
 </body>
 </html>

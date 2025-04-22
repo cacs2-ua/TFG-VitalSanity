@@ -208,7 +208,8 @@ public class PacienteController{
     }
 
     @GetMapping("/api/paciente/profesionales-autorizados")
-    public String verProfesionalesMedicosAutorizados(Model model) {
+    public String verProfesionalesMedicosAutorizados(Model model,
+                                                     HttpServletRequest request) {
         Long idUsuarioPaciente = getUsuarioLogeadoId();
         PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
         List<ProfesionalMedicoData> profesionalesMedicosData = pacienteService.obtenerProfesionalesMedicosAutorizados(pacienteData.getId());
@@ -217,9 +218,17 @@ public class PacienteController{
             boolean noHayProfesionalesAutorizados = true;
             model.addAttribute("noHayProfesionalesAutorizados", noHayProfesionalesAutorizados);
         }
+        model.addAttribute("contextPath", request.getContextPath());
         model.addAttribute("profesionalesMedicosAutorizados", profesionalesMedicosData);
 
         return "paciente/ver-profesionales-medicos-autorizados";
+    }
+
+    @GetMapping("/api/paciente/pop-up-desautorizar-profesional-medico")
+    public String popUpDesautorizarProfesional(@RequestParam("profesionalMedicoId") Long profesionalMedicoId,
+                                               Model model) {
+        model.addAttribute("profesionalMedicoId", profesionalMedicoId);
+        return "paciente/pop-up-desautorizar-profesional-medico";
     }
 
     @PostMapping("/api/paciente/desautorizar-profesional-medico")

@@ -231,6 +231,11 @@
     height: 100%;
 }
 
+.popup-window.denegar {
+    height: 50%; /* o el valor personalizado que quieras */
+    max-height: 30rem; /* opcional */
+}
+
 .no-authorization-requests {
     color: #0236c8;
     font-size: 16.5px;
@@ -238,12 +243,6 @@
     margin-bottom: 30px;
     font-weight: bold;
 }
-
-.popup-window.denegar {
-    height: 50%; /* o el valor personalizado que quieras */
-    max-height: 30rem; /* opcional */
-}
-
 
 /* Responsive styles */
 @media (max-width: 48rem) { /* 48rem = 768px assuming 16px base */
