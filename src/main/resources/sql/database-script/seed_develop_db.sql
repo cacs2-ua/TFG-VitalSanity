@@ -1,3 +1,4 @@
+DELETE FROM parametros;
 DELETE FROM documentos;
 DELETE FROM solicitudes_autorizacion;
 DELETE FROM informes;
@@ -9,6 +10,10 @@ DELETE FROM centros_medicos;
 DELETE FROM pacientes;
 DELETE FROM usuarios;
 DELETE FROM tipos_usuario;
+
+
+INSERT INTO public.parametros (id, nombre, valor) VALUES (1, 'politica-de-privacidad', 'politica-de-privacidad/5bf733c9-7e2a-45fe-9e0e-c004b5ad4494.pdf');
+
 
 
 INSERT INTO public.tipos_usuario (id, tipo) VALUES (1, 'administrador');
@@ -242,6 +247,7 @@ INSERT INTO public.pacientes_profesionales_medicos_desautorizados (fk_paciente, 
 
 /* Autorizaciones */
 
+SELECT setval('public.parametros_id_seq', COALESCE((SELECT MAX(id) FROM public.parametros), 0) + 1, false);
 SELECT setval('public.documentos_id_seq', COALESCE((SELECT MAX(id) FROM public.documentos), 0) + 1, false);
 SELECT setval('public.solicitudes_autorizacion_id_seq', COALESCE((SELECT MAX(id) FROM public.solicitudes_autorizacion), 0) + 1, false);
 SELECT setval('public.informes_id_seq', COALESCE((SELECT MAX(id) FROM public.informes), 0) + 1, false);
