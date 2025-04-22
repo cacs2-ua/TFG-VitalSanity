@@ -63,10 +63,14 @@ public class InformeService {
 
         informe.setUuid(uuid);
 
-        // NUMERO RANDOM DE 11 CIFRAS
+        // NUMERO RANDOM DE 10 CIFRAS
 
-        long numero = (long)(Math.random() * 9000000000L) + 1000000000L;
-        String identificadorPublico = "INF-" + String.valueOf(numero);
+        String identificadorPublico = "";
+
+        do {
+            long numero = (long)(Math.random() * 9000000000L) + 1000000000L;
+            identificadorPublico = "INF-" + String.valueOf(numero);
+        } while(informeRepository.existsByIdentificadorPublico(identificadorPublico));
 
         informe.setIdentificadorPublico(identificadorPublico);
 
@@ -102,10 +106,14 @@ public class InformeService {
 
         informe.setUuid(uuid);
 
-        // NUMERO RANDOM DE 11 CIFRAS
+        // NUMERO RANDOM DE 10 CIFRAS
 
-        long numero = (long)(Math.random() * 9000000000L) + 1000000000L;
-        String identificadorPublico = "INF-" + String.valueOf(numero);
+        String identificadorPublico = "";
+
+        do {
+            long numero = (long)(Math.random() * 9000000000L) + 1000000000L;
+            identificadorPublico = "INF-" + String.valueOf(numero);
+        } while(informeRepository.existsByIdentificadorPublico(identificadorPublico));
 
         informe.setIdentificadorPublico(identificadorPublico);
 
