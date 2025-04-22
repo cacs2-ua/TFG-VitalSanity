@@ -58,13 +58,21 @@ html, body {
     content: "*";
     color: white;
 }
+
 .form-input, .form-textarea {
     width: 100%;
     padding: 0.5rem;
     border-radius: 0.25rem;
     border: none;
     background-color: #F5F3FF;
+    color: #000000;
 }
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #888888;            /* o el gris que prefieras */
+}
+
 .form-textarea {
     min-height: 5rem;
     resize: vertical;

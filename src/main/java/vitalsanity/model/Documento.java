@@ -23,6 +23,7 @@ public class Documento implements Serializable {
     @NotNull
     private String nombre;
 
+    @Column(unique = true)
     private String uuid;
 
     @NotNull

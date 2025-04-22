@@ -64,17 +64,6 @@ function subirAutorizacionFirmada(signedPdfBase64) {
     })
         .then(response => response.text())
         .then(uuid => {
-            // Guardamos el ID del PDF firmado (para cofirma posterior)
-            globalSignedId = uuid;
-
-            // Mostramos el enlace de descarga
-            const resultadoDiv = document.getElementById("signed-pdf-link");
-            const link = document.createElement("a");
-            link.href = "/vital-sanity/api/profesional-medico/pdf-autorizacion/" + uuid;
-            link.target = "_blank";
-            link.innerText = "Descargar PDF FIRMADO";
-            resultadoDiv.innerHTML = "";
-            resultadoDiv.appendChild(link);
 
             hideLoading();
 
@@ -169,12 +158,12 @@ function subirAutorizacionCofirmada(idSolicitud, cosignedPdfBase64) {
         body: formData
     })
         .then(response => response.text())
-        .then(s3Key => {
+        .then(uuid => {
 
             hideLoading();
 
             setTimeout(() => {
-                window.parent.location.href = `/vital-sanity/api/paciente/pdf-autorizacion-cofirmada?s3Key=${s3Key}`;
+                window.parent.location.href = `/vital-sanity/api/paciente/pdf-autorizacion-cofirmada?uuid=${uuid}`;
             }, 250);
 
         })
@@ -287,8 +276,8 @@ window.addEventListener("load", () => {
     if (AutoScript.isAndroid() || AutoScript.isIOS()) {
         AutoScript.setForceWSMode(true);
         AutoScript.setServlets(
-            "https://192.168.247.218/vital-sanity/afirma-signature-storage/StorageService",
-            "https://192.168.247.218/vital-sanity/afirma-signature-retriever/RetrieveService"
+            "https://192.168.37.218/vital-sanity/afirma-signature-storage/StorageService",
+            "https://192.168.37.218/vital-sanity/afirma-signature-retriever/RetrieveService"
         );
     }
     // Cargamos la app de autofirma

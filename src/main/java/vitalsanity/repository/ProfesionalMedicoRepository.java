@@ -16,7 +16,27 @@ public interface ProfesionalMedicoRepository extends JpaRepository<ProfesionalMe
     Optional<ProfesionalMedico> findByUsuarioId(Long usuarioId);
 
     Optional<ProfesionalMedico> findBySolicitudesAutorizacion_Id(Long id);
-    List<ProfesionalMedico> findByPacientesQueHanAutorizado_IdOrderByIdAsc(Long pacienteId);
+
+
+
+    @Query("""
+  SELECT DISTINCT pm
+    FROM ProfesionalMedico pm
+    JOIN FETCH pm.pacientesQueHanAutorizado p
+    JOIN FETCH p.usuario pu
+    JOIN FETCH pm.usuario pmu
+    JOIN FETCH pm.especialidadMedica em
+    JOIN FETCH pm.centroMedico cm
+    JOIN FETCH cm.usuario cmu
+   WHERE p.id = :pacienteId
+   ORDER BY pm.id ASC
+""")
+    List<ProfesionalMedico> findByPacientesQueHanAutorizado_IdOrderByIdAsc(
+            @Param("pacienteId") Long pacienteId
+    );
+
+
+
     List<ProfesionalMedico> findByPacientesQueHanDesautorizado_IdOrderByIdAsc(Long pacienteId);
 
 

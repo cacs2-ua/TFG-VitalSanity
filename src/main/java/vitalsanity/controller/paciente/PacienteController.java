@@ -132,14 +132,6 @@ public class PacienteController{
         UsuarioData usuarioPaciente = usuarioService.findById(idUsuarioPaciente);
         String uuidUsuarioPaciente = usuarioPaciente.getUuid();
 
-        String s3Key = "autorizaciones/cofirmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-
-        byte[] cosignedPdfBytes = Base64.getDecoder().decode(cosignedPdfBase64);
-        s3VitalSanityService.subirFicheroBytes(s3Key, cosignedPdfBytes);
-
-
-
-
 
         // Actualizar Información de la Solicitud de Autorización en la base de datos
 
@@ -154,32 +146,40 @@ public class PacienteController{
         String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
         String tipoArchivo = "application/pdf";
 
+        byte[] cosignedPdfBytes = Base64.getDecoder().decode(cosignedPdfBase64);
         Long tamano = (long) cosignedPdfBytes.length;
         LocalDateTime fechaSubida = LocalDateTime.now();
 
-        profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
+        DocumentoData documento = profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
                 idSolicitudAutorizacion,
                 nombreArchivo,
-                s3Key,
                 tipoArchivo,
                 tamano,
                 fechaSubida
         );
 
+        s3VitalSanityService.subirFicheroBytes(documento.getS3_key(), cosignedPdfBytes);
+
         String subject = "Acceso autorizado al historial médico del paciente: '" + usuarioPaciente.getNombreCompleto() + "'";
 
         String text = "El paciente: '" + usuarioPaciente.getNombreCompleto() + "' con NIF/NIE: '"
                 + usuarioPaciente.getNifNie() + "' le ha autorizado el acceso para acceder a su historial médico centralizado. "
-                + "A partir de ahora podrá acceder al historial médico del paciente desde la pestaña 'Pacientes que han autorizado'.  ";
+                + "A partir de ahora, usted podrá acceder al historial médico del paciente desde la pestaña 'Pacientes que han autorizado'. " +
+                "Asimismo, podrás agregar nuevos informes y documentos médicos al historial clínico del paciente, así como poder ver " +
+                "informes y documentos médicos de otros profesionales autorizados" +
+                "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 
-        // emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
+        emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
 
-        return s3Key;
+        return documento.getUuid();
     }
 
     @GetMapping("/api/paciente/pdf-autorizacion-cofirmada")
-    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String s3Key,
+    public String descargarPdfAutorizacionCofirmadaDeAws(@RequestParam String uuid,
                                                          Model model) {
+        DocumentoData documento = documentoService.encontrarPorUuid(uuid);
+
+        String s3Key = documento.getS3_key();
 
         String urlPrefirmada = s3VitalSanityService.generarUrlPrefirmada(
                 s3Key,
@@ -211,7 +211,8 @@ public class PacienteController{
     }
 
     @GetMapping("/api/paciente/profesionales-autorizados")
-    public String verProfesionalesMedicosAutorizados(Model model) {
+    public String verProfesionalesMedicosAutorizados(Model model,
+                                                     HttpServletRequest request) {
         Long idUsuarioPaciente = getUsuarioLogeadoId();
         PacienteData pacienteData = pacienteService.encontrarPorIdUsuario(idUsuarioPaciente);
         List<ProfesionalMedicoData> profesionalesMedicosData = pacienteService.obtenerProfesionalesMedicosAutorizados(pacienteData.getId());
@@ -220,9 +221,17 @@ public class PacienteController{
             boolean noHayProfesionalesAutorizados = true;
             model.addAttribute("noHayProfesionalesAutorizados", noHayProfesionalesAutorizados);
         }
+        model.addAttribute("contextPath", request.getContextPath());
         model.addAttribute("profesionalesMedicosAutorizados", profesionalesMedicosData);
 
         return "paciente/ver-profesionales-medicos-autorizados";
+    }
+
+    @GetMapping("/api/paciente/pop-up-desautorizar-profesional-medico")
+    public String popUpDesautorizarProfesional(@RequestParam("profesionalMedicoId") Long profesionalMedicoId,
+                                               Model model) {
+        model.addAttribute("profesionalMedicoId", profesionalMedicoId);
+        return "paciente/pop-up-desautorizar-profesional-medico";
     }
 
     @PostMapping("/api/paciente/desautorizar-profesional-medico")

@@ -1,5 +1,8 @@
 package vitalsanity.dto.profesional_medico;
 
+import vitalsanity.dto.centro_medico.CentroMedicoData;
+import vitalsanity.dto.general_user.UsuarioData;
+import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.model.Documento;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,13 @@ public class SolicitudAutorizacionData {
     private LocalDateTime fechaFirma;
     private LocalDateTime fechaCofirma;
     private boolean denegada;
+
+    private PacienteData paciente;
+
+    private  ProfesionalMedicoData profesionalMedico;
+
+    private UsuarioData centroMedicoUsuarioProfesional;
+
 
     Set<Documento> documentos = new HashSet<>();
 
@@ -164,6 +174,30 @@ public class SolicitudAutorizacionData {
 
     public void setDocumentos(Set<Documento> documentos) {
         this.documentos = documentos;
+    }
+
+    public PacienteData getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(PacienteData paciente) {
+        this.paciente = paciente;
+    }
+
+    public ProfesionalMedicoData getProfesionalMedico() {
+        return profesionalMedico;
+    }
+
+    public void setProfesionalMedico(ProfesionalMedicoData profesionalMedico) {
+        this.profesionalMedico = profesionalMedico;
+    }
+
+    public UsuarioData getCentroMedicoUsuarioProfesional() {
+        return centroMedicoUsuarioProfesional;
+    }
+
+    public void setCentroMedicoUsuarioProfesional(UsuarioData centroMedicoUsuarioProfesional) {
+        this.centroMedicoUsuarioProfesional = centroMedicoUsuarioProfesional;
     }
 
     @Override

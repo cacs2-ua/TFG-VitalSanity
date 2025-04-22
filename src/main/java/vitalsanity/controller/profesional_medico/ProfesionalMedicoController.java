@@ -102,11 +102,12 @@ public class ProfesionalMedicoController {
             SolicitudAutorizacionData solicitudAutorizacion = profesionalMedicoService.obtenerUltimaAutorizacionAsociadaAUnProfesionalMedicoYAUnPaciente(
                     idProfesional, idPaciente);
 
-            boolean denegada = true;
-            if (solicitudAutorizacion != null) {
-                denegada = solicitudAutorizacion.isDenegada();
+            boolean solicitada = false;
+            if (solicitudAutorizacion != null
+                && !solicitudAutorizacion.isDenegada()
+                && solicitudAutorizacion.isFirmada()) {
+                solicitada = true;
             }
-            boolean solicitada = !denegada;
             model.addAttribute("paciente", pacienteResponse);
             model.addAttribute("usuarioPaciente", usuarioPaciente);
             model.addAttribute("solicitada", solicitada);
@@ -134,9 +135,6 @@ public class ProfesionalMedicoController {
         return "profesional_medico/solicitar-autorizacion";
     }
 
-
-    // Repositorio en memoria para guardar PDFs (firmados o cofirmados)
-    private final Map<String, byte[]> signedRepository = new ConcurrentHashMap<>();
 
     @PostMapping("/api/profesional-medico/generar-pdf-autorizacion")
     @ResponseBody
@@ -185,23 +183,20 @@ public class ProfesionalMedicoController {
             String uuidUsuarioProfesionalMedico = usuarioProfesionalMedico.getUuid();
 
             byte[] signedPdf = Base64.getDecoder().decode(signedPdfBase64);
-            String key = "autorizaciones/firmadas/" + uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-            s3VitalSanityService.subirFicheroBytes(key, signedPdf);
-
             String nombreArchivo = uuidUsuarioProfesionalMedico + "_" + uuidUsuarioPaciente  + "_" + System.currentTimeMillis() + ".pdf";
-            String s3_key = key;
             String tipoArchivo = "application/pdf";
             Long tamano = (long) signedPdf.length;
             LocalDateTime fechaSubida = LocalDateTime.now();
 
-            profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
+            DocumentoData documento = profesionalMedicoService.guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
                     idUltimaSolicitudCreadaDelProfesionalMedico,
                     nombreArchivo,
-                    s3_key,
                     tipoArchivo,
                     tamano,
                     fechaSubida
             );
+
+            s3VitalSanityService.subirFicheroBytes(documento.getS3_key(), signedPdf);
 
             String emailPaciente = usuarioPaciente.getEmail();
 
@@ -217,34 +212,17 @@ public class ProfesionalMedicoController {
 
             String subject = "Solicitud de autorización por parte del profesional médico: " + nombreProfesionalMedico;
 
-            String text = "El profesional médico: '" + nombreProfesionalMedico + "' con NIF/NIE: '"
+            String text = "Estimad@ :" + usuarioPaciente.getNombreCompleto() +". El profesional médico: '" + nombreProfesionalMedico + "' con NIF/NIE: '"
                     + nifNieProfesionalMedico + "' le ha solicitado autorización para acceder a su historial clínico desde el centro médico: '"
                     + nombreCentroMedico + "' . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
                     + " Una vez haya revisado la solicitud, usted podrá autorizar o denegar el acceso a su historial médico. "
                     + "Si usted autoriza el acceso al profesional médico, dicho profesional médico podrá acceder a su historial clínico centralizado, "
                     + "lo cual podría ayudar a agilizar el proceso de diagnóstico y tratamiento, mejorando así su atención médica y la calidad de su servicio. "
-                    + "Le recordamos que cualquier tratamiento de datos está sujeto a la ley de protección de datos vigente. ";
+                    + "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes. ";
 
-            // emailService.send(emailPaciente, subject, text);
+            emailService.send(emailPaciente, subject, text);
 
-            String uuid = UUID.randomUUID().toString();
-            signedRepository.put(uuid, signedPdf);
-            return uuid;
-    }
-
-    @GetMapping("/api/profesional-medico/pdf-autorizacion/{id}")
-    public ResponseEntity<byte[]> descargarPdfAutorizacionFirmadaLocal(@PathVariable("id") String id) {
-
-        byte[] data = signedRepository.get(id);
-        if (data == null) {
-            throw new RuntimeException("No se encontró la firma con id=" + id);
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "documento-firmado.pdf");
-
-        return new ResponseEntity<>(data, headers, HttpStatus.OK);
+            return documento.getUuid();
     }
 
     @GetMapping("/api/profesional-medico/pdf-autorizacion-firmada")
@@ -362,6 +340,7 @@ public class ProfesionalMedicoController {
 
         InformeData informe = new InformeData();
 
+        byte[] pdfBytes = new byte[0];
         if (informeId != null) {
             informe = informeService.editarInforme(
                     informeId,
@@ -371,6 +350,13 @@ public class ProfesionalMedicoController {
                     descripcion,
                     observaciones
             );
+
+            pdfBytes = generarPdf.generarPdfEdicionInforme(
+                    profesionalMedicoId,
+                    pacienteId,
+                    titulo,
+                    descripcion,
+                    observaciones);
         }
 
         else {
@@ -380,15 +366,14 @@ public class ProfesionalMedicoController {
                     titulo,
                     descripcion,
                     observaciones);
+
+            pdfBytes = generarPdf.generarPdfInforme(
+                    profesionalMedicoId,
+                    pacienteId,
+                    titulo,
+                    descripcion,
+                    observaciones);
         }
-
-
-        byte[] pdfBytes = generarPdf.generarPdfInforme(
-                profesionalMedicoId,
-                pacienteId,
-                titulo,
-                descripcion,
-                observaciones);
 
         String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
 
@@ -427,13 +412,19 @@ public class ProfesionalMedicoController {
 
         s3VitalSanityService.subirFicheroBytes(s3Key, informeFirmadoBytes);
 
-        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
-        String email = usuarioProfesionalMedico.getEmail();
-        String subject = "Informe subido con exito";
-        String text = "Estimad@: " + usuarioProfesionalMedico.getNombreCompleto() + ". Su informe con título: "
-                + informeData.getTitulo() + " ha sido subido con éxito.";
+        Long pacienteId = informeData.getPaciente().getId();
 
-        // emailService.send(email, subject, text);
+        UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
+
+        UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
+        String email = pacienteUsuario.getEmail();
+        String subject = "Nuevo informe subido con éxito";
+        String text = "Estimad@: " + pacienteUsuario.getNombreCompleto() + ". El profesional médico: '" + usuarioProfesionalMedico.getNombreCompleto() + "' " +
+                "con Nº de documento de identidad: '" + usuarioProfesionalMedico.getNifNie() + "' ha subido a su historial médico centralizado un nuevo informe con título: '"
+                + informeData.getTitulo() + "'. Podrá acceder a toda la información completa de dicho informe desde la pestaña 'Mis informes'. " +
+                "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
+
+        emailService.send(email, subject, text);
 
         return uuid;
     }
@@ -600,6 +591,25 @@ public class ProfesionalMedicoController {
                 + informeId
                 + "/ver-detalles";
 
+    }
+
+    @GetMapping("/api/profesional-medico/solicitudes-autorizacion-pendientes")
+    public String verSolicitudesAutorizacionPendientes(Model model) {
+
+        Long profesionalMedicoUsuarioId = getUsuarioLogeadoId();
+
+        ProfesionalMedicoData profesionalMedicoData = profesionalMedicoService.encontrarPorIdUsuario(profesionalMedicoUsuarioId);
+
+        Long profesionalId = Long.parseLong(profesionalMedicoData.getId());
+        boolean noHaySolicitudes = false;
+
+        List<SolicitudAutorizacionData> solicitudesAutorizacion = profesionalMedicoService.obtenerSolicitudesAutorizacionPendientes(profesionalId);
+        if (solicitudesAutorizacion.isEmpty()) {
+            noHaySolicitudes = true;
+        }
+        model.addAttribute("solicitudesAutorizacion", solicitudesAutorizacion);
+        model.addAttribute("noHaySolicitudes", noHaySolicitudes);
+        return "profesional_medico/ver-solicitudes-autorizacion-pendientes";
     }
 
 }

@@ -14,6 +14,7 @@ public class DocumentoData {
     private Long tamanyo;
     private LocalDateTime fechaSubida;
     private String urlPrefirmada;
+    private String uuid;
 
 
     public Long getId() {
@@ -66,6 +67,14 @@ public class DocumentoData {
 
     public String getUrlPrefirmada() {
         return urlPrefirmada;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public void setUrlPrefirmada(String urlPrefirmada) {

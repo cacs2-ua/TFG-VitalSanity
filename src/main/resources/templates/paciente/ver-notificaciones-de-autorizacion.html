@@ -12,6 +12,9 @@
     const contextPath = /*[[${contextPath}]]*/ '';
   </script>
 
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
 </head>
 <body>
   <div th:replace="navbar::menuBar"></div>
@@ -22,11 +25,17 @@
 
       <!-- Report Cards -->
       <div th:each="solicitudAutorizacion: ${solicitudesAutorizacion}" class="report-card">
-        <div class="report-id"><strong>Nombre del profesional Médico: </strong> <span th:text="${solicitudAutorizacion.nombreProfesionalMedico}" class="report-number"></span></div>
-        <div class="report-detail"><strong>Nº de documento de identidad: </strong> <span th:text="${solicitudAutorizacion.nifNieProfesionalMedico}"></span> </div>
-        <div class="report-detail"><strong>Nombre del centro médico: </strong> <span th:text="${solicitudAutorizacion.nombreCentroMedico}"></span> </div>
-        <div class="report-detail"><strong>Motivo: </strong> <span th:text="${solicitudAutorizacion.motivo}"> </span> </div>
-        <div class="report-detail"><strong>Descripción:</strong> <span th:text="${solicitudAutorizacion.descripcion}"></span> </div>
+        <div class="report-id"><strong>Nombre del profesional Médico: </strong> <span th:text="${solicitudAutorizacion.profesionalMedico.usuario.nombreCompleto}" class="report-number"></span></div>
+        <div class="report-detail"><strong>Especialidad del profesional Médico: </strong> <span th:text="${solicitudAutorizacion.profesionalMedico.especialidadMedica.nombre}"></span></div>
+        <div class="report-detail"><strong>Nº de documento de identidad del profesional médico: </strong> <span th:text="${solicitudAutorizacion.profesionalMedico.usuario.nifNie}"></span> </div>
+        <div class="report-detail"><strong>Motivo de la solicitud: </strong> <span th:text="${solicitudAutorizacion.motivo}"> </span> </div>
+        <div class="report-detail"><strong>Descripción de la solicitud:</strong> <span th:text="${solicitudAutorizacion.descripcion}"></span> </div>
+        <div class="report-detail"><strong>Fecha de creación de la solicitud:</strong> <span th:text="${solicitudAutorizacion.fechaCreacion}"></span> </div>
+        <div class="report-detail"><strong>Nombre del centro médico: </strong> <span th:text="${solicitudAutorizacion.centroMedicoUsuarioProfesional.nombreCompleto}"></span> </div>
+        <div class="report-detail"><strong>NIF del centro médico: </strong> <span th:text="${solicitudAutorizacion.centroMedicoUsuarioProfesional.nifNie}"></span> </div>
+        <div class="report-detail"><strong>Provincia del centro médico: </strong> <span th:text="${solicitudAutorizacion.centroMedicoUsuarioProfesional.provincia}"></span> </div>
+        <div class="report-detail"><strong>Municipio del centro médico: </strong> <span th:text="${solicitudAutorizacion.centroMedicoUsuarioProfesional.municipio}"></span> </div>
+        <div class="report-detail"><strong>Dirección del centro médico: </strong> <span th:text="${solicitudAutorizacion.profesionalMedico.centroMedico.direccion}"></span> </div>
         <div class="button-container">
           <button class="button-authorize" th:attr="data-solicitud-id=${solicitudAutorizacion.id}">
             Autorizar
@@ -55,6 +64,12 @@
   </div>
 
   <div th:replace="navbar::javascript"></div>
+
+  <div th:replace="footer :: footer"></div>
+
+  <script>
+    lucide.createIcons();
+  </script>
 
   <!-- ===== JAVASCRIPT FOR POP-UP (NEW) ===== -->
   <script>

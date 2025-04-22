@@ -12,6 +12,8 @@ public interface InformeRepository extends JpaRepository<Informe, Long> {
 
     boolean existsByUuid(String uuid);
 
+    boolean existsByIdentificadorPublico(String identificadorPublico);
+
     Optional<Informe> findByUuid(String uuid);
 
     /**
