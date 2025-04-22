@@ -136,9 +136,6 @@ public class ProfesionalMedicoController {
     }
 
 
-    // Repositorio en memoria para guardar PDFs (firmados o cofirmados)
-    private final Map<String, byte[]> signedRepository = new ConcurrentHashMap<>();
-
     @PostMapping("/api/profesional-medico/generar-pdf-autorizacion")
     @ResponseBody
     public String generarPdfAutorizacionYAlmacenarSolicitudDeAutorizacionEnBaseDeDatos(
@@ -225,24 +222,7 @@ public class ProfesionalMedicoController {
 
             // emailService.send(emailPaciente, subject, text);
 
-            String uuid = UUID.randomUUID().toString();
-            signedRepository.put(uuid, signedPdf);
-            return uuid;
-    }
-
-    @GetMapping("/api/profesional-medico/pdf-autorizacion/{id}")
-    public ResponseEntity<byte[]> descargarPdfAutorizacionFirmadaLocal(@PathVariable("id") String id) {
-
-        byte[] data = signedRepository.get(id);
-        if (data == null) {
-            throw new RuntimeException("No se encontró la firma con id=" + id);
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "documento-firmado.pdf");
-
-        return new ResponseEntity<>(data, headers, HttpStatus.OK);
+            return documento.getUuid();
     }
 
     @GetMapping("/api/profesional-medico/pdf-autorizacion-firmada")
