@@ -156,7 +156,7 @@
     border-radius: 1.25rem; /* Changed from 20px */
     padding: 0.5rem 0.9375rem; /* Changed from 8px 15px */
     cursor: pointer;
-    width: 10rem;
+    width: 9.25rem;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
@@ -173,7 +173,7 @@
     border-radius: 1.25rem; /* Changed from 20px */
     padding: 0.5rem 0.9375rem; /* Changed from 8px 15px */
     cursor: pointer;
-    width: 10rem;
+    width: 9.25rem;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }

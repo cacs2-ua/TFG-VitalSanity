@@ -10,6 +10,7 @@ import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.guest_user.LoginData;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.service.general_user.UsuarioService;
+import vitalsanity.service.utils.EmailService;
 
 @Controller
 public class LoginController {
@@ -19,6 +20,9 @@ public class LoginController {
 
     @Autowired
     private ManagerUserSession managerUserSession;
+
+    @Autowired
+    private EmailService emailService;
 
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
@@ -49,6 +53,12 @@ public class LoginController {
     @PostMapping("/login")
     public String loginSubmit(@ModelAttribute LoginData loginData, Model model) {
         Long idUsuario = getUsuarioLogeadoId();
+
+        if (loginData.getContrasenya() == null || loginData.getContrasenya().length() < 8) {
+            model.addAttribute("error", "Ha habido algún error al iniciar sesion");
+            return "guest_user/login-form";
+        }
+
         UsuarioService.LoginStatus loginStatus = usuarioService.login(
                 loginData.getEmail(),
                 loginData.getContrasenya()
@@ -88,7 +98,7 @@ public class LoginController {
             model.addAttribute("error", "No puedes iniciar sesion. Tu usuario esta deshabilitado");
             return "guest_user/login-form";
         } else {
-            model.addAttribute("error", "Ha habido algun error al iniciar sesion");
+            model.addAttribute("error", "Ha habido algún error al iniciar sesión");
             return "guest_user/login-form";
         }
     }

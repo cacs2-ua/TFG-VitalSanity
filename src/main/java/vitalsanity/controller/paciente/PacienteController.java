@@ -169,7 +169,7 @@ public class PacienteController{
                 "informes y documentos médicos de otros profesionales autorizados" +
                 "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 
-        // emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
+        emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
 
         return documento.getUuid();
     }
