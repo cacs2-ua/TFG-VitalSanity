@@ -164,7 +164,10 @@ public class PacienteController{
 
         String text = "El paciente: '" + usuarioPaciente.getNombreCompleto() + "' con NIF/NIE: '"
                 + usuarioPaciente.getNifNie() + "' le ha autorizado el acceso para acceder a su historial médico centralizado. "
-                + "A partir de ahora podrá acceder al historial médico del paciente desde la pestaña 'Pacientes que han autorizado'.  ";
+                + "A partir de ahora, usted podrá acceder al historial médico del paciente desde la pestaña 'Pacientes que han autorizado'. " +
+                "Asimismo, podrás agregar nuevos informes y documentos médicos al historial clínico del paciente, así como poder ver " +
+                "informes y documentos médicos de otros profesionales autorizados" +
+                "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 
         // emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
 

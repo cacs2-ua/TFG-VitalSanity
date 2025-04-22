@@ -212,13 +212,13 @@ public class ProfesionalMedicoController {
 
             String subject = "Solicitud de autorización por parte del profesional médico: " + nombreProfesionalMedico;
 
-            String text = "El profesional médico: '" + nombreProfesionalMedico + "' con NIF/NIE: '"
+            String text = "Estimad@ :" + usuarioPaciente.getNombreCompleto() +". El profesional médico: '" + nombreProfesionalMedico + "' con NIF/NIE: '"
                     + nifNieProfesionalMedico + "' le ha solicitado autorización para acceder a su historial clínico desde el centro médico: '"
                     + nombreCentroMedico + "' . Puede ver esta solicitud dentro del apartado de 'Solicitudes de autorización'.  "
                     + " Una vez haya revisado la solicitud, usted podrá autorizar o denegar el acceso a su historial médico. "
                     + "Si usted autoriza el acceso al profesional médico, dicho profesional médico podrá acceder a su historial clínico centralizado, "
                     + "lo cual podría ayudar a agilizar el proceso de diagnóstico y tratamiento, mejorando así su atención médica y la calidad de su servicio. "
-                    + "Le recordamos que cualquier tratamiento de datos está sujeto a la ley de protección de datos vigente. ";
+                    + "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes. ";
 
             // emailService.send(emailPaciente, subject, text);
 
@@ -412,11 +412,17 @@ public class ProfesionalMedicoController {
 
         s3VitalSanityService.subirFicheroBytes(s3Key, informeFirmadoBytes);
 
+        Long pacienteId = informeData.getPaciente().getId();
+
+        UsuarioData pacienteUsuario = usuarioService.encontrarPorIdPaciente(pacienteId);
+
         UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
-        String email = usuarioProfesionalMedico.getEmail();
-        String subject = "Informe subido con exito";
-        String text = "Estimad@: " + usuarioProfesionalMedico.getNombreCompleto() + ". Su informe con título: "
-                + informeData.getTitulo() + " ha sido subido con éxito.";
+        String email = pacienteUsuario.getEmail();
+        String subject = "Nuevo informe subido con éxito";
+        String text = "Estimad@: " + pacienteUsuario.getNombreCompleto() + ". El profesional médico: '" + usuarioProfesionalMedico.getNombreCompleto() + "' " +
+                "con Nº de documento de identidad: '" + usuarioProfesionalMedico.getNifNie() + "' ha subido a su historial médico centralizado un nuevo informe con título: '"
+                + informeData.getTitulo() + "'. Podrá acceder a toda la información completa de dicho informe desde la pestaña 'Mis informes'. " +
+                "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 
         // emailService.send(email, subject, text);
 
