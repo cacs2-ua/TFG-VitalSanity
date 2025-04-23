@@ -30,7 +30,7 @@ public class LoginController {
 
     @GetMapping("/")
     public String home(Model model) {
-        return "redirect:/login";
+        return "redirect:/api/general/home";
     }
 
     @GetMapping("/login")

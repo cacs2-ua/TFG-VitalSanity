@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de registro</title>
-    <div th:include="navbar :: head (titulo='Formulario de registro')"></div>
+    <title>Regístrate como paciente</title>
+    <div th:include="navbar :: head (titulo='Regístrate como paciente')"></div>
     <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
     <link rel="stylesheet" th:href="@{/css/custom/guest_user/registro-form.css}">
 
@@ -16,7 +16,7 @@
 <div th:replace="navbar::menuBar"></div>
 <div class="page-container">
     <div class="login-container">
-        <h1 class="form-title">Formulario de registro</h1>
+        <h1 class="form-title">Regístrate como paciente</h1>
         <form th:action="@{/registro}" th:object="${registroData}" method="post">
             <div class="form-group">
                 <label class="form-label" for="nombreCompleto">Nombre completo*</label>

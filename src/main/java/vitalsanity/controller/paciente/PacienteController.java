@@ -342,10 +342,8 @@ public class PacienteController{
                                            Model model) {
 
         UsuarioData usuario = usuarioService.findById(idPaciente);
-        // Llama a la capa de servicio para actualizar los datos de residencia y setear primerAcceso a false
         UsuarioData updatedUsuario = usuarioService.actualizarDatosResidencia(idPaciente, residenciaData);
-        // Redirige a alguna página (por ejemplo, al dashboard del paciente)
-        return "redirect:/api/paciente/" + usuario.getId() + "/informes";
+        return "redirect:/api/paciente/informes";
     }
 
 }
