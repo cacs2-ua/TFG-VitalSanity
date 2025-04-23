@@ -18,7 +18,6 @@
       <!-- Modified header with separate styling for label and DNI -->
       <h2 class="header"><strong>Profesionales médicos autorizados</strong></h2>
 
-
       <!-- Report Cards -->
       <div th:each="profesionalMedico: ${profesionalesMedicosAutorizados}" class="report-card">
         <div class="report-doctor"><strong>Profesional Médico: </strong> <span th:text="${profesionalMedico.usuario.nombreCompleto}" class="report-doctor-name"></span></div>
