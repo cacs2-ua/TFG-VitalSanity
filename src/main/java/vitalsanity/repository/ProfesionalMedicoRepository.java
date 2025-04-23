@@ -17,7 +17,7 @@ public interface ProfesionalMedicoRepository extends JpaRepository<ProfesionalMe
 
     Optional<ProfesionalMedico> findBySolicitudesAutorizacion_Id(Long id);
 
-
+    boolean existsByNafAndCcc(String naf, String ccc);
 
     @Query("""
   SELECT DISTINCT pm

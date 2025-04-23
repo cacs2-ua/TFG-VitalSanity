@@ -13,10 +13,7 @@ import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.guest_user.RegistroData;
 import vitalsanity.dto.paciente.ResidenciaData;
 import vitalsanity.model.*;
-import vitalsanity.repository.EspecialidadMedicaRepository;
-import vitalsanity.repository.PacienteRepository;
-import vitalsanity.repository.TipoUsuarioRepository;
-import vitalsanity.repository.UsuarioRepository;
+import vitalsanity.repository.*;
 import vitalsanity.service.utils.EmailService;
 
 import java.io.BufferedReader;
@@ -39,6 +36,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ProfesionalMedicoRepository profesionalMedicoRepository;
 
     @Autowired
     private EspecialidadMedicaRepository especialidadMedicaRepository;
@@ -255,12 +255,18 @@ public class UsuarioService {
                 if (columnas.length < 14) {
                     throw new IllegalArgumentException("Formato de fichero CSV incorrecto");
                 }
+                String email            = columnas[13].trim();
+                String naf              = columnas[4].trim();
+                String ccc              = columnas[5].trim();
+
+                if (usuarioRepository.existsByEmail(email) || profesionalMedicoRepository.existsByNafAndCcc(naf, centroMedico.getCcc())) {
+                    continue;
+                }
+
                 String nombreCompleto   = columnas[0].trim();
                 String especialidadMedica = columnas[1].trim();
                 String fechaNacimiento  = columnas[2].trim();
                 String genero           = columnas[3].trim();
-                String naf              = columnas[4].trim();
-                String ccc              = columnas[5].trim();
                 String nifNie           = columnas[6].trim();
                 String movil            = columnas[7].trim();
                 String iban             = columnas[8].trim();
@@ -268,7 +274,6 @@ public class UsuarioService {
                 String provincia        = columnas[10].trim();
                 String municipio        = columnas[11].trim();
                 String codigoPostal     = columnas[12].trim();
-                String email            = columnas[13].trim();
 
                 // Generar contrasena segura
                 String contrasenaGenerada = generateSecurePassword(12);
@@ -325,10 +330,15 @@ public class UsuarioService {
                 // Guardar usuario (se guarda el profesionalMedico por cascada)
                 Usuario savedUsuario = usuarioRepository.save(usuario);
 
-                // Enviar email con la contrasena generada
-                emailService.send(email, "Registro Profesional Medico",
-                        "Se ha registrado como profesional medico. Su contrasena de acceso es: " + contrasenaGenerada +
-                                ". Al iniciar sesion por primera vez, debera cambiarla.");
+                // Enviar email con la contrasenya generada
+                new Thread(() -> {
+                    emailService.send(
+                            email,
+                            "Registro Profesional Medico",
+                            "Se ha registrado como profesional medico. Su contraseña de acceso es: " + contrasenaGenerada +
+                                    ".Al iniciar sesión por primera vez, Se le pedirá cambiar dicha contraseña por una que elija usted."
+                    );
+                }).start();
 
                 UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);
                 registrados.add(usuarioData);
