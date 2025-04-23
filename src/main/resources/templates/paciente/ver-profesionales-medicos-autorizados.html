@@ -7,6 +7,9 @@
   <div th:include="navbar :: head (titulo='Ver profesionales médicos autorizados')"></div>
   <link rel="stylesheet" th:href="@{/css/custom/global/global.css}">
   <link rel="stylesheet" th:href="@{/css/custom/paciente/ver-profesionales-medicos-autorizados.css}">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <div th:replace="navbar::menuBar"></div>
@@ -19,15 +22,26 @@
       <!-- Report Cards -->
       <div th:each="profesionalMedico: ${profesionalesMedicosAutorizados}" class="report-card">
         <div class="report-doctor"><strong>Profesional Médico: </strong> <span th:text="${profesionalMedico.usuario.nombreCompleto}" class="report-doctor-name"></span></div>
+        <div class="report-detail"><strong>Especialidad del profesional médico: </strong> <span th:text="${profesionalMedico.especialidadMedica.nombre}"> </span> </div>
         <div class="report-detail"><strong>Nº del documento de identidad: </strong> <span th:text="${profesionalMedico.usuario.nifNie}"> </span> </div>
-        <div class="report-detail"><strong>Especialidad médica: </strong> <span th:text="${profesionalMedico.especialidadMedica.nombre}"> </span> </div>
-        <div class="report-detail"><strong>Dirección del centro médico: </strong> <span th:text="${profesionalMedico.centroMedico.direccion}"> </span> </div>
+        <div class="report-detail"><strong>Nombre del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.nombreCompleto}"></span> </div>
+        <div class="report-detail"><strong>NIF del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.nifNie}"></span> </div>
+        <div class="report-detail"><strong>Provincia del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.provincia}"></span> </div>
+        <div class="report-detail"><strong>Municipio del centro médico: </strong> <span th:text="${profesionalMedico.centroMedicoUsuarioProfesional.municipio}"></span> </div>
+        <div class="report-detail"><strong>Dirección del centro médico: </strong> <span th:text="${profesionalMedico.centroMedico.direccion}"></span> </div>
         <div class="button-container">
-          <button class="button-view">Ver informes</button>
-          <form method="post" th:action="@{/api/paciente/desautorizar-profesional-medico}">
-            <input type="hidden" name="id" th:value="${profesionalMedico.id}" />
-            <button type="submit" class="button-deauthorize">Desautorizar</button>
+          <form method="get"
+                th:action="@{/api/paciente/informes}"
+                style="display: inline;">
+            <input type="hidden" name="profesionalMedicoId"
+                   th:value="${profesionalMedico.id}" />
+            <button class="button-view">Ver informes</button>
           </form>
+
+          <button class="button-deauthorize"
+                  th:attr="data-profesional-id=${profesionalMedico.id}">
+            Desautorizar
+          </button>
         </div>
       </div>
 
@@ -37,6 +51,48 @@
 
     </div>
   </div>
+
+  <div id="popupOverlay" class="popup-overlay" style="display:none">
+    <div class="popup-window">
+      <button id="popupClose" class="popup-close">X</button>
+      <iframe class="popup-iframe" style="width:100%;height:100%;border:0"></iframe>
+    </div>
+  </div>
+
   <div th:replace="navbar::javascript"></div>
+
+  <div th:replace="footer :: footer"></div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+  <script th:inline="javascript">
+    const contextPath = /*[[${contextPath}]]*/ '';
+  </script>
+
+  <script>
+    // abre el pop‑up
+    document.querySelectorAll('.button-deauthorize').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const id = btn.getAttribute('data-profesional-id');
+        const url = contextPath +
+                '/api/paciente/pop-up-desautorizar-profesional-medico?profesionalMedicoId=' +
+                id;
+        document.querySelector('.popup-iframe').src = url;
+        document.getElementById('popupOverlay').style.display = 'flex';
+      });
+    });
+
+    // cierra el pop‑up
+    document.getElementById('popupClose').addEventListener('click', () =>
+            document.getElementById('popupOverlay').style.display = 'none');
+
+    document.getElementById('popupOverlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget) e.stopPropagation();
+    });
+  </script>
+
 </body>
 </html>

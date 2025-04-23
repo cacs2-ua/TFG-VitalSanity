@@ -27,6 +27,9 @@ public class ProfesionalMedicoData {
 
     private CentroMedicoData centroMedico;
 
+    private UsuarioData centroMedicoUsuarioProfesional;
+
+
     //getters y setters
 
     public String getId() {
@@ -107,6 +110,14 @@ public class ProfesionalMedicoData {
 
     public void setCentroMedico(CentroMedicoData centroMedico) {
         this.centroMedico = centroMedico;
+    }
+
+    public UsuarioData getCentroMedicoUsuarioProfesional() {
+        return centroMedicoUsuarioProfesional;
+    }
+
+    public void setCentroMedicoUsuarioProfesional(UsuarioData centroMedicoUsuarioProfesional) {
+        this.centroMedicoUsuarioProfesional = centroMedicoUsuarioProfesional;
     }
 
     @Override

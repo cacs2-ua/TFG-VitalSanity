@@ -1,3 +1,7 @@
+html, body {
+    background-color: #DBD5FF;
+}
+
 .body {
     background-color: #DBD5FF;
     color: #000000;
@@ -51,6 +55,12 @@
     border-radius: 0.25rem;
     border: none;
     background-color: #F5F3FF;
+    color: #000000;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #888888;            /* o el gris que prefieras */
 }
 
 .form-textarea {

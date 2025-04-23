@@ -136,7 +136,7 @@
     border-radius: 1.25rem;
     padding: 0.5rem 0.9375rem;
     cursor: pointer;
-    width: 7rem;
+    width: 9.25rem;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.3s ease;
     display: inline-block;       /* Para que se comporte como un bloque similar a un botón */
@@ -147,6 +147,14 @@
 .button-view:hover {
     background-color: #7AA2F0;
     transform: scale(1.05);
+}
+
+.no-authorization-requests {
+    color: #0236c8;
+    font-size: 16.5px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
 }
 
 /* Responsive styles */

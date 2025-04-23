@@ -17,6 +17,8 @@ public class InformeData {
     private String observaciones;
     private LocalDateTime fechaCreacion;
 
+    public InformeData() {}
+
     private PacienteData paciente;
 
     private ProfesionalMedicoData profesionalMedico;

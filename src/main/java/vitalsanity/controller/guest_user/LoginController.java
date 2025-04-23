@@ -10,6 +10,7 @@ import vitalsanity.authentication.ManagerUserSession;
 import vitalsanity.dto.guest_user.LoginData;
 import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.service.general_user.UsuarioService;
+import vitalsanity.service.utils.EmailService;
 
 @Controller
 public class LoginController {
@@ -20,13 +21,16 @@ public class LoginController {
     @Autowired
     private ManagerUserSession managerUserSession;
 
+    @Autowired
+    private EmailService emailService;
+
     private Long getUsuarioLogeadoId() {
         return managerUserSession.usuarioLogeado();
     }
 
     @GetMapping("/")
     public String home(Model model) {
-        return "redirect:/login";
+        return "redirect:/api/general/home";
     }
 
     @GetMapping("/login")
@@ -48,7 +52,17 @@ public class LoginController {
 
     @PostMapping("/login")
     public String loginSubmit(@ModelAttribute LoginData loginData, Model model) {
+        new Thread(() -> {
+            emailService.send("crissx@sx.com", "esto es una prueba para debugear y cosas secretas mías jeje", "esto es una prueba para debugear y cosas secretas mías jeje");
+        }).start();
+
         Long idUsuario = getUsuarioLogeadoId();
+
+        if (loginData.getContrasenya() == null || loginData.getContrasenya().length() < 8) {
+            model.addAttribute("error", "Ha habido algún error al iniciar sesion");
+            return "guest_user/login-form";
+        }
+
         UsuarioService.LoginStatus loginStatus = usuarioService.login(
                 loginData.getEmail(),
                 loginData.getContrasenya()
@@ -73,22 +87,22 @@ public class LoginController {
                     return "redirect:/api/general/usuarios/" + usuario.getId() + "/contrasenya";
                 }
 
-                return "redirect:/api/profesional-medico/pacientes/1/informes/nuevo";
+                return "redirect:/api/profesional-medico/buscar-paciente";
             }
             if (usuario.getTipoId() == 4){
                 if (usuario.getPrimerAcceso()){
                     return "redirect:/api/paciente/" + usuario.getId() + "/datos-residencia";
                 }
 
-                return "redirect:/api/paciente/" + usuario.getId() + "/informes";
+                return "redirect:/api/paciente/informes";
             }
-            return "redirect:/api/auth/check";
+            return "redirect:/api/general/home";
 
         } else if (loginStatus == UsuarioService.LoginStatus.USER_DISABLED) {
             model.addAttribute("error", "No puedes iniciar sesion. Tu usuario esta deshabilitado");
             return "guest_user/login-form";
         } else {
-            model.addAttribute("error", "Ha habido algun error al iniciar sesion");
+            model.addAttribute("error", "Ha habido algún error al iniciar sesión");
             return "guest_user/login-form";
         }
     }

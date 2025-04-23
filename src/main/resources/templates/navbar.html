@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head (titulo)">
     <meta charset="UTF-8" />
     <!-- Meta viewport for proper mobile behavior -->
@@ -33,9 +33,6 @@
             <ul class="custom-nav-list">
                 <!-- Guest User -->
                 <li class="custom-nav-item" th:if="${usuario == null}">
-                    <a class="custom-nav-link" th:href="@{/api/general/home}" onclick="highlightLink(this)">Home</a>
-                </li>
-                <li class="custom-nav-item" th:if="${usuario == null}">
                     <a class="custom-nav-link" th:href="@{/login}" onclick="highlightLink(this)">Iniciar Sesion</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario == null}">
@@ -58,11 +55,14 @@
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/pacientes-que-han-autorizado'}" onclick="highlightLink(this)">Pacientes que han autorizado</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
+                    <a class="custom-nav-link" th:href="@{'/api/profesional-medico/solicitudes-autorizacion-pendientes'}" onclick="highlightLink(this)">Solicitudes de autorización pendientes</a>
+                </li>
+                <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 3 and usuario.primerAcceso == false}">
                     <a class="custom-nav-link" th:href="@{'/api/profesional-medico/pacientes-que-han-desautorizado'}" onclick="highlightLink(this)">Pacientes que han desautorizado</a>
                 </li>
                 <!-- Patient User -->
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
-                    <a class="custom-nav-link" th:href="@{'/api/paciente/' + ${usuario.id} + '/informes'}" onclick="highlightLink(this)">Mis informes</a>
+                    <a class="custom-nav-link" th:href="@{'/api/paciente/informes'}" onclick="highlightLink(this)">Mis informes</a>
                 </li>
                 <li class="custom-nav-item" th:if="${usuario != null and usuario.tipoId == 4}">
                     <a class="custom-nav-link" th:href="@{'/api/paciente/profesionales-autorizados'}" onclick="highlightLink(this)">Profesionales autorizados</a>

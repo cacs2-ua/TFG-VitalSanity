@@ -10,6 +10,7 @@ import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.DocumentoData;
+import vitalsanity.dto.profesional_medico.InformeData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
 import vitalsanity.model.*;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -134,15 +136,24 @@ public class ProfesionalMedicoService {
     public DocumentoData guardarEnBdInformacionSobreElDocumentoAsociadoALaSolicitudDeAutorizacion(
             Long idSolicitudAutorizacion,
             String nombre,
-            String s3_key,
             String tipo_archivo,
             Long tamanyo,
             LocalDateTime fechaSubida) {
 
         Documento documento = new Documento();
 
+        String uuid = "";
+
+        do {
+            uuid = UUID.randomUUID().toString();
+        } while(documentoRepository.existsByUuid(uuid));
+
+        documento.setUuid(uuid);
+
+        String s3Key = "autorizaciones/firmadas/" + uuid  + "_" + System.currentTimeMillis() + ".pdf";
+
         documento.setNombre(nombre);
-        documento.setS3_key(s3_key);
+        documento.setS3_key(s3Key);
         documento.setTipo_archivo(tipo_archivo);
         documento.setTamanyo(tamanyo);
         documento.setFechaSubida(fechaSubida);
@@ -225,7 +236,29 @@ public class ProfesionalMedicoService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<SolicitudAutorizacionData> obtenerSolicitudesAutorizacionPendientes(Long idProfesional) {
+        List<SolicitudAutorizacion> solicitudesAutorizaciones = solicitudAutorizacionRepository
+                .findAllWithAllFetchByProfesionalMedicoIdAndDenegadaFalseAndFirmadaTrueAndCofirmadaFalseOrderByFechaFirmaDesc(idProfesional);
 
+        List<SolicitudAutorizacionData> solicitudesAutorizacionesData = solicitudesAutorizaciones.stream()
+                .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
+                .collect(Collectors.toList());
 
+        for (int i = 0; i < solicitudesAutorizacionesData.size(); i++) {
+            ProfesionalMedico profesionalMedico = solicitudesAutorizaciones.get(i).getProfesionalMedico();
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+            solicitudesAutorizacionesData.get(i).setCentroMedicoUsuarioProfesional(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+
+            PacienteData pacienteData = solicitudesAutorizacionesData.get(i).getPaciente();
+
+            LocalDate fechaNacimiento = LocalDate.parse(pacienteData.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            pacienteData.setEdad(edad);
+        }
+
+        return solicitudesAutorizacionesData;
+    }
 
 }

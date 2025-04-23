@@ -3,14 +3,12 @@ package vitalsanity.service.paciente;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vitalsanity.dto.general_user.UsuarioData;
 import vitalsanity.dto.paciente.BuscarPacienteResponse;
 import vitalsanity.dto.paciente.PacienteData;
 import vitalsanity.dto.profesional_medico.ProfesionalMedicoData;
 import vitalsanity.dto.profesional_medico.SolicitudAutorizacionData;
-import vitalsanity.model.Paciente;
-import vitalsanity.model.ProfesionalMedico;
-import vitalsanity.model.SolicitudAutorizacion;
-import vitalsanity.model.Usuario;
+import vitalsanity.model.*;
 import vitalsanity.repository.PacienteRepository;
 import vitalsanity.repository.ProfesionalMedicoRepository;
 import vitalsanity.repository.SolicitudAutorizacionRepository;
@@ -20,8 +18,10 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.transaction.annotation.Transactional;
 import vitalsanity.service.profesional_medico.ProfesionalMedicoService;
@@ -107,6 +107,13 @@ public class PacienteService {
                 .map(solicitudAutorizacion -> modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class))
                 .collect(Collectors.toList());
 
+        for (int i = 0; i < solicitudesAutorizacionData.size(); i++) {
+            ProfesionalMedico profesionalMedico = solicitudesAutorizacion.get(i).getProfesionalMedico();
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+            solicitudesAutorizacionData.get(i).setCentroMedicoUsuarioProfesional(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+        }
+
         return solicitudesAutorizacionData;
     }
 
@@ -162,6 +169,13 @@ public class PacienteService {
                 .map(profesionalMedicoAutorizado -> modelMapper.map(profesionalMedicoAutorizado, ProfesionalMedicoData.class))
                 .collect(Collectors.toList());
 
+        for (int i = 0; i < profesionalesMedicosAutorizadosData.size(); i++) {
+            ProfesionalMedico profesionalMedico = profesionalMedicosAutorizados.get(i);
+            CentroMedico centroMedico = profesionalMedico.getCentroMedico();
+            Usuario centroMedicoUsuario = centroMedico.getUsuario();
+            profesionalesMedicosAutorizadosData.get(i).setCentroMedicoUsuarioProfesional(modelMapper.map(centroMedicoUsuario, UsuarioData.class));
+        }
+
         return  profesionalesMedicosAutorizadosData;
     }
 
@@ -169,6 +183,96 @@ public class PacienteService {
     public SolicitudAutorizacionData obtenerUltimaSolicitudAutorizacionValida(Long idProfesionalMedico, Long idPaciente) {
         SolicitudAutorizacion solicitudAutorizacion = solicitudAutorizacionRepository.findTopByProfesionalMedicoIdAndPacienteIdAndDenegadaFalse(idProfesionalMedico, idPaciente).orElse(null);
         return  modelMapper.map(solicitudAutorizacion, SolicitudAutorizacionData.class);
+    }
+
+    @Transactional(readOnly = true)
+    public  List<PacienteData> obtenerFiltradosPacientesQueHanAutorizado (
+            Long profesionalMedicoId,
+            String pacienteNombre,
+            String nifNiePaciente,
+            Integer edadMinima,
+            Integer edadMaxima) {
+
+        List<Paciente> pacientes = pacienteRepository.findByProfesionalesMedicosAutorizados_IdOrderByIdAsc(profesionalMedicoId);
+
+        List<PacienteData> pacientesData = pacientes.stream()
+                .map(paciente -> modelMapper.map(paciente, PacienteData.class))
+                .collect(Collectors.toList());
+
+        for (PacienteData paciente : pacientesData) {
+            LocalDate fechaNacimiento = LocalDate.parse(paciente.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            paciente.setEdad(edad);
+        }
+
+        Stream<PacienteData> pacientesDataFiltrados = pacientesData.stream();
+
+        if (pacienteNombre != null && !pacienteNombre.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNombreCompleto().trim().toLowerCase(Locale.ROOT).startsWith(pacienteNombre.trim().toLowerCase(Locale.ROOT)));
+        }
+
+        if (nifNiePaciente != null && !nifNiePaciente.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNifNie().trim().equalsIgnoreCase(nifNiePaciente.trim()));
+        }
+
+        if (edadMinima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() >= edadMinima);
+        }
+
+        if (edadMaxima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() <= edadMaxima);
+        }
+
+        return pacientesDataFiltrados.collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public  List<PacienteData> obtenerFiltradosPacientesQueHanDesautorizado (
+            Long profesionalMedicoId,
+            String pacienteNombre,
+            String nifNiePaciente,
+            Integer edadMinima,
+            Integer edadMaxima) {
+
+        List<Paciente> pacientes = pacienteRepository.findByProfesionalesMedicosDesautorizados_IdOrderByIdAsc(profesionalMedicoId);
+
+        List<PacienteData> pacientesData = pacientes.stream()
+                .map(paciente -> modelMapper.map(paciente, PacienteData.class))
+                .collect(Collectors.toList());
+
+        for (PacienteData paciente : pacientesData) {
+            LocalDate fechaNacimiento = LocalDate.parse(paciente.getFechaNacimiento(), DateTimeFormatter.ISO_LOCAL_DATE);
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            paciente.setEdad(edad);
+        }
+
+        Stream<PacienteData> pacientesDataFiltrados = pacientesData.stream();
+
+        if (pacienteNombre != null && !pacienteNombre.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNombreCompleto().trim().toLowerCase(Locale.ROOT).startsWith(pacienteNombre.trim().toLowerCase(Locale.ROOT)));
+        }
+
+        if (nifNiePaciente != null && !nifNiePaciente.trim().isEmpty()) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getUsuario().getNifNie().trim().equalsIgnoreCase(nifNiePaciente.trim()));
+        }
+
+        if (edadMinima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() >= edadMinima);
+        }
+
+        if (edadMaxima != null) {
+            pacientesDataFiltrados = pacientesDataFiltrados
+                    .filter(pacienteData -> pacienteData.getEdad() <= edadMaxima);
+        }
+
+        return pacientesDataFiltrados.collect(Collectors.toList());
     }
 
 }
