@@ -169,7 +169,9 @@ public class PacienteController{
                 "informes y documentos médicos de otros profesionales autorizados" +
                 "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 
-        emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
+        new Thread(() -> {
+            emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
+        }).start();
 
         return documento.getUuid();
     }
@@ -342,10 +344,8 @@ public class PacienteController{
                                            Model model) {
 
         UsuarioData usuario = usuarioService.findById(idPaciente);
-        // Llama a la capa de servicio para actualizar los datos de residencia y setear primerAcceso a false
         UsuarioData updatedUsuario = usuarioService.actualizarDatosResidencia(idPaciente, residenciaData);
-        // Redirige a alguna página (por ejemplo, al dashboard del paciente)
-        return "redirect:/api/paciente/" + usuario.getId() + "/informes";
+        return "redirect:/api/paciente/informes";
     }
 
 }

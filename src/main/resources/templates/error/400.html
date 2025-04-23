@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERROR HTTP 404 - Página no encontrada</title>
-    <div th:include="navbar :: head (titulo='ERROR HTTP 404 - Página no encontrada')"></div>
-    <link rel="stylesheet" th:href="@{/css/custom/error/404.css}">
+    <title>ERROR HTTP 400 - URL mal formada</title>
+    <div th:include="navbar :: head (titulo='ERROR HTTP 400 - URL mal formada')"></div>
+    <link rel="stylesheet" th:href="@{/css/custom/error/500.css}">
 
 </head>
 <body>
@@ -31,15 +31,23 @@
                 <text x="114" y="75" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Roboto, Arial" font-size="1.9rem" fill="#fff" dominant-baseline="middle"></text>
             </g>
         </svg>
-        <div class="codigo-404">HTTP 404</div>
+        <div class="codigo-404">HTTP 400</div>
         <h1 class="titulo-404">¡Oops! Ha ocurrido un error inesperado</h1>
-        <div class="subtitulo">Parece que alguien necesita una receta nueva...<br>La página buscada no existe o fue trasladada.</div>
+        <div class="subtitulo">Parece que necesitamos una receta nueva...
+            <br>
+            <br>
+
+            Nuestro equipo técnico se encuentra trabajando arduamente para solucionar el problema.
+            <br>
+            <br>
+            ¡Gracias por su paciencia!
+        </div>
         <form th:action="@{/api/general/home}" method="get">
             <button type="submit" class="boton-volver">
                 Volver a la página de inicio
             </button>
         </form>
-        <span class="pista">¿Buscabas alguna información específica? Si lo deseas puedes volver a la página de inicio y contactar con nuestro soporte técnico.</span>
+        <span class="pista">Si el problema persiste, puede contactar directamente con el soporte téncico desde la página de incio.</span>
     </main>
 </div>
 <div th:replace="navbar::javascript"></div>

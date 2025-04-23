@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERROR HTTP 404 - Página no encontrada</title>
-    <div th:include="navbar :: head (titulo='ERROR HTTP 404 - Página no encontrada')"></div>
+    <title>ERROR HTTP 403 - Acceso no autorizado</title>
+    <div th:include="navbar :: head (titulo='ERROR HTTP 403 - Acceso no autorizado')"></div>
     <link rel="stylesheet" th:href="@{/css/custom/error/404.css}">
 
 </head>
@@ -31,9 +31,9 @@
                 <text x="114" y="75" text-anchor="middle" font-weight="bold" font-family="Segoe UI, Roboto, Arial" font-size="1.9rem" fill="#fff" dominant-baseline="middle"></text>
             </g>
         </svg>
-        <div class="codigo-404">HTTP 404</div>
-        <h1 class="titulo-404">¡Oops! Ha ocurrido un error inesperado</h1>
-        <div class="subtitulo">Parece que alguien necesita una receta nueva...<br>La página buscada no existe o fue trasladada.</div>
+        <div class="codigo-404">HTTP 403</div>
+        <h1 class="titulo-404">¡Oops! Acceso no autorizado</h1>
+        <div class="subtitulo">Parece que alguien necesita una receta nueva...<br>No tienes acceso para acceder a este recurso.</div>
         <form th:action="@{/api/general/home}" method="get">
             <button type="submit" class="boton-volver">
                 Volver a la página de inicio

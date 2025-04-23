@@ -12,7 +12,7 @@ public class HomeController {
     private ManagerUserSession managerUserSession;
 
     @GetMapping("/api/general/home")
-    public String dashboardComercio(Model model) {
+    public String home(Model model) {
         return "general_user/home";
     }
 }
