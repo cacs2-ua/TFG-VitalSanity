@@ -203,10 +203,11 @@ public class UsuarioService {
         // Guardar usuario (centroMedico se guarda por cascada)
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
-        // Enviar email con la contrasenya generada
-        emailService.send(data.getEmail(), "Registro Centro Medico",
-                "Se ha registrado su centro medico. Su contrasenya de acceso es: " + generatedPassword +
-                        ". Cuando inicie sesion por primera vez, debera cambiarla por una nueva.");
+        new Thread(() -> {
+            emailService.send(data.getEmail(), "Registro Centro Medico",
+                    "Se ha registrado su centro medico. Su contrasenya de acceso es: " + generatedPassword +
+                            ". Cuando inicie sesion por primera vez, debera cambiarla por una nueva.");
+        }).start();
 
         // Mapear a UsuarioData y retornar
         UsuarioData usuarioData = modelMapper.map(savedUsuario, UsuarioData.class);

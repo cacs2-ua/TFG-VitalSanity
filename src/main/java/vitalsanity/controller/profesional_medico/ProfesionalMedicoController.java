@@ -221,7 +221,9 @@ public class ProfesionalMedicoController {
                     + "lo cual podría ayudar a agilizar el proceso de diagnóstico y tratamiento, mejorando así su atención médica y la calidad de su servicio. "
                     + "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes. ";
 
-            emailService.send(emailPaciente, subject, text);
+            new Thread(() -> {
+                emailService.send(emailPaciente, subject, text);
+            }).start();
 
             return documento.getUuid();
     }
@@ -425,7 +427,9 @@ public class ProfesionalMedicoController {
                 + informeData.getTitulo() + "'. Podrá acceder a toda la información completa de dicho informe desde la pestaña 'Mis informes'. " +
                 "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 
-        emailService.send(email, subject, text);
+        new Thread(() -> {
+            emailService.send(email, subject, text);
+        }).start();
 
         return uuid;
     }

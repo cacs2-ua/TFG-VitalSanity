@@ -54,9 +54,10 @@ public class RegistroController {
         session.setAttribute("registroData", registroData);
         session.setAttribute("codigoConfirmacion", codigoConfirmacion);
 
-        // Enviar email de confirmacion (se usa Mailtrap) usando el nuevo metodo send
-        emailService.send(registroData.getEmail(), "Registration Confirmation Code",
-                "Your registration confirmation code is: " + codigoConfirmacion);
+        new Thread(() -> {
+            emailService.send(registroData.getEmail(), "Registration Confirmation Code",
+                    "Your registration confirmation code is: " + codigoConfirmacion);
+        }).start();
 
         // Redirigir al formulario de codigo de confirmacion
         return "redirect:/registro/codigo-confirmacion-form";
