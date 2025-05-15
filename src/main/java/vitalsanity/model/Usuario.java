@@ -39,7 +39,6 @@ public class Usuario implements Serializable {
     @NotNull
     private boolean primerAcceso = true;
 
-
     @NotNull
     private String nifNie;
 

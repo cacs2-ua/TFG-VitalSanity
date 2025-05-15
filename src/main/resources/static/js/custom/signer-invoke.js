@@ -280,6 +280,6 @@ window.addEventListener("load", () => {
             "https://localhost/vital-sanity/afirma-signature-retriever/RetrieveService"
         );
     }
-    // Cargamos la app de autofirma
+
     AutoScript.cargarAppAfirma();
 });

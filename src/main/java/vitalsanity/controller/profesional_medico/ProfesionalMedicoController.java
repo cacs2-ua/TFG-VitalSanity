@@ -627,6 +627,31 @@ public class ProfesionalMedicoController {
         return "profesional_medico/ver-detalles-informe";
     }
 
+    @GetMapping("/api/profesional-medico/pacientes-que-han-desautorizado/informes/{informeId}/ver-detalles")
+    public String verDetallesInformePacienteQueHaDesautorizado(@PathVariable(value="informeId") Long informeId,
+                                             Model model) {
+        Long idUsuarioProfesionalMedico = getUsuarioLogeadoId();
+        String profesionalMedicoId = String.valueOf(
+                usuarioService.obtenerIdProfesionalMedicoAPartirDeIdDelUsuario(idUsuarioProfesionalMedico)
+        );
+        InformeData informe = informeService.encontrarInformeFullGraphPorId(informeId);
+
+        List <DocumentoData> documentos = documentoService.obtenerDocumentosAsociadosAUnInforme(informeId);
+
+        boolean noHayDocumentos = false;
+
+        if (documentos.isEmpty()) {
+            noHayDocumentos = true;
+        }
+
+        model.addAttribute("profesionalMedicoAutenticadoId", profesionalMedicoId);
+        model.addAttribute("informeId", informeId );
+        model.addAttribute("informe", informe);
+        model.addAttribute("documentos", documentos);
+        model.addAttribute("noHayDocumentos", noHayDocumentos);
+        return "profesional_medico/ver-detalles-informe-paciente-que-ha-desautorizado";
+    }
+
     @PostMapping("/api/profesional-medico/pacientes/informes/{informeId}/subir-documentos")
     public String subirDocumentos(@PathVariable(value="informeId") Long informeId,
                                     @RequestParam("documentos") MultipartFile[] documentos,
