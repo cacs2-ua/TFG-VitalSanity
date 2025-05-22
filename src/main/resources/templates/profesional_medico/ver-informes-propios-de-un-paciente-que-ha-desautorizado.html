@@ -55,10 +55,7 @@
         <div class="report-detail"><strong>NIF del centro médico:</strong> <span th:text="${informe.centroMedicoUsuario.nifNie}"> </span></div>
         <div class="report-detail"><strong>Dirección del centro médico:</strong> <span th:text="${informe.profesionalMedico.centroMedico.direccion}"> </span></div>
         <div class="button-container">
-          <form method="get" th:if="${profesionalMedicoAutenticadoId == informe.profesionalMedico.id}" th:action="@{'/api/profesional-medico/pacientes/' + ${pacienteId} + '/informes/' + ${informe.id} + '/editar'}" style="display: inline;">
-            <button type="submit" class="button-edit">Editar</button>
-          </form>
-          <form method="get" th:action="@{'/api/profesional-medico/pacientes/informes/' + ${informe.id} + '/ver-detalles'}" style="display: inline;">
+          <form method="get" th:action="@{'/api/profesional-medico/pacientes-que-han-desautorizado/informes/' + ${informe.id} + '/ver-detalles'}" style="display: inline;">
             <button type="submit" class="button-view">Ver Detalles</button>
           </form>
         </div>

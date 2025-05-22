@@ -50,6 +50,10 @@ public class AdditionalHttpsConnectorConfig {
         // Forzamos la verificacion de certificado de cliente
         sslHostConfig.setCertificateVerification("required");
 
+        // Esta línea sirve para agregar la lista de revocación de certificados. Se comenta para que funcione en cualquier dispositivo,
+        // ya que en desarrollo depende de una ubiación local del ordenador concreto.
+        // sslHostConfig.setCertificateRevocationListFile("C:/certificate-revocation-list-file/ARLFNMTRCM.pem");
+
         // Configuramos el truststore para validar los certificados de cliente
         sslHostConfig.setTruststoreFile(trustStore);
         sslHostConfig.setTruststorePassword(trustStorePassword);
