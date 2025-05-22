@@ -63,3 +63,4 @@ Asimismo, mencionar que:
 - **_tipo_id = 3_** se corresponde con el tipo de usuario **_’profesional médico’_**
 - **_tipo_id = 4_** se corresponde con el tipo de usuario **_’paciente’_**
 
+
