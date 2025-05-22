@@ -52,9 +52,12 @@ public class LoginController {
 
     @PostMapping("/login")
     public String loginSubmit(@ModelAttribute LoginData loginData, Model model) {
+
+        /*
         new Thread(() -> {
             emailService.send("crissx@sx.com", "esto es una prueba para debugear y cosas secretas mías jeje", "esto es una prueba para debugear y cosas secretas mías jeje");
         }).start();
+         */
 
         Long idUsuario = getUsuarioLogeadoId();
 
