@@ -17,8 +17,8 @@ COPY --from=builder /app/target/*.jar app.jar
 
 RUN chown -R appuser:appgroup /app
 
-EXPOSE 8058
+EXPOSE 11443
 
 USER appuser
 
-CMD ["java", "-jar", "app.jar", "--spring.profiles.active=docker"]
+CMD ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
