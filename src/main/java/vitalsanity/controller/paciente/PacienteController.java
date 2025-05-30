@@ -160,6 +160,8 @@ public class PacienteController{
 
         s3VitalSanityService.subirFicheroBytes(documento.getS3_key(), cosignedPdfBytes);
 
+        String to = usuarioProfesionalMedico.getEmail();
+
         String subject = "Acceso autorizado al historial médico del paciente: '" + usuarioPaciente.getNombreCompleto() + "'";
 
         String text = "El paciente: '" + usuarioPaciente.getNombreCompleto() + "' con NIF/NIE: '"
@@ -170,7 +172,7 @@ public class PacienteController{
                 "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 
         new Thread(() -> {
-            emailService.send(usuarioProfesionalMedico.getEmail(), subject, text);
+            emailService.send(to, subject, text);
         }).start();
 
         return documento.getUuid();
@@ -209,6 +211,21 @@ public class PacienteController{
 
         pacienteService.marcarSolicitudAutorizacionComoDenegada(idSolicitudAutorizacion);
 
+        UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(pacienteId);
+        UsuarioData usuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(profesionalMedicoId);
+
+        String to = usuarioProfesionalMedico.getEmail();
+
+        String subject = "Solicitud de acceso denegada al historial médico del paciente: '" + usuarioPaciente.getNombreCompleto() + "'";
+
+        String text = "El paciente: '" + usuarioPaciente.getNombreCompleto() + "' con NIF/NIE: '"
+                + usuarioPaciente.getNifNie() + "' ha denegado su solicitud de acceso a su historial médico centralizado. "
+                + "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
+
+        new Thread(() -> {
+            emailService.send(to, subject, text);
+        }).start();
+
         return "paciente/denegacion-exitosa";
     }
 
@@ -245,6 +262,24 @@ public class PacienteController{
         SolicitudAutorizacionData solicitudAutorizacionData = pacienteService.obtenerUltimaSolicitudAutorizacionValida(idProfesionalMedico,idPaciente);
         pacienteService.marcarSolicitudAutorizacionComoDenegada(solicitudAutorizacionData.getId());
         pacienteService.agregarProfesionalMedicoDesautorizado(idPaciente, idProfesionalMedico);
+
+        UsuarioData usuarioPaciente = usuarioService.encontrarPorIdPaciente(idPaciente);
+        UsuarioData usuarioProfesionalMedico = usuarioService.encontrarPorIdProfesionalMedico(idProfesionalMedico);
+
+        String to = usuarioProfesionalMedico.getEmail();
+
+        String subject = "Acceso desautorizado al historial médico del paciente: '" + usuarioPaciente.getNombreCompleto() + "'";
+
+        String text = "El paciente: '" + usuarioPaciente.getNombreCompleto() + "' con NIF/NIE: '"
+                + usuarioPaciente.getNifNie() + "' ha desautorizado el acceso a su historial médico centralizado. "
+                + "A partir de ahora, usted no podrá ni agregar nueva información clínica ni acceder a los informes ni a los documentos médicos agregados por otros profesionales dentro del historial del paciente. " +
+                "No obstante, usted seguirá teniendo acceso a los informes y documentos médicos que usted haya agregado " +
+                "con anterioridad al historial médico del paciente. " +
+                 "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
+
+        new Thread(() -> {
+            emailService.send(to, subject, text);
+        }).start();
 
         return "redirect:/api/paciente/profesionales-autorizados";
     }
@@ -327,10 +362,6 @@ public class PacienteController{
         model.addAttribute("noHayDocumentos", noHayDocumentos);
         return "paciente/ver-detalles-informe";
     }
-
-
-
-
 
     @GetMapping("/api/paciente/{idPaciente}/datos-residencia")
     public String datosResidenciaForm(@PathVariable("idPaciente") Long idPaciente, Model model) {

@@ -111,7 +111,7 @@
         <h2 class="files-title">Documentos previamente adjuntados</h2>
 
         <div th:each="documento: ${documentos}" >
-          <a th:href="${documento.urlPrefirmada}" th:text="${documento.nombre}" class="file-link"></a>
+          <a th:href="${documento.urlPrefirmada}" th:text="${documento.nombre}" target="_blank" class="file-link"></a>
         </div>
         <br>
       </div>

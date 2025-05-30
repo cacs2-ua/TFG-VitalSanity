@@ -422,8 +422,8 @@ public class ProfesionalMedicoController {
         UsuarioData usuarioProfesionalMedico = usuarioService.findById(idUsuarioProfesionalMedico);
         String email = pacienteUsuario.getEmail();
         String subject = "Nuevo informe subido con éxito";
-        String text = "Estimad@: " + pacienteUsuario.getNombreCompleto() + ". El profesional médico: '" + usuarioProfesionalMedico.getNombreCompleto() + "' " +
-                "con Nº de documento de identidad: '" + usuarioProfesionalMedico.getNifNie() + "' ha subido a su historial médico centralizado un nuevo informe con título: '"
+        String text = "Estimad@: '" + pacienteUsuario.getNombreCompleto() + "'. El profesional médico: '" + usuarioProfesionalMedico.getNombreCompleto() + "' " +
+                "con Nº de documento de identidad: '" + usuarioProfesionalMedico.getNifNie() + "' ha subido a su historial médico centralizado un informe con título: '"
                 + informeData.getTitulo() + "'. Podrá acceder a toda la información completa de dicho informe desde la pestaña 'Mis informes'. " +
                 "Le recordamos que cualquier tratamiento de datos está sujeto a las leyes de protección de datos vigentes.";
 

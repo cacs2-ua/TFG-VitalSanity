@@ -41,22 +41,32 @@ public class S3VitalSanityService {
     }
 
     public void subirFichero(String key, MultipartFile file) throws IOException {
-        // Se indica el cifrado SSE-KMS, pero sin especificar la clave (se usará la configuración predeterminada del bucket)
+        /* He comentado la línea del cifrado AWS_KMS debido a que me estaban cargando costes adicionales de AWS.
+           Como ya se ha explicado en la memoria del TFG, el uso de KMS sí que resultaría interesante
+           ya que permite un control más granular sobre las claves de cifrado y su gestión, ofreciendo una mayor personalización.
+           Pero para evitar más sablazos inesperados de AWS, he optado por sustituir AWS_KMS por AES256,
+         */
         PutObjectRequest putRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
-                .serverSideEncryption(ServerSideEncryption.AWS_KMS)
+                //.serverSideEncryption(ServerSideEncryption.AWS_KMS)
+                .serverSideEncryption(ServerSideEncryption.AES256)
                 .build();
 
         s3Client.putObject(putRequest, RequestBody.fromBytes(file.getBytes()));
     }
 
     public void subirFicheroBytes(String key, byte[] fileContent) throws IOException {
-        // Se indica el cifrado SSE-KMS, pero sin especificar la clave (se usará la configuración predeterminada del bucket)
+        /* He comentado la línea del cifrado AWS_KMS debido a que me estaban cargando costes adicionales de AWS.
+           Como ya se ha explicado en la memoria del TFG, el uso de KMS sí que resultaría interesante
+           ya que permite un control más granular sobre las claves de cifrado y su gestión, ofreciendo una mayor personalización.
+           Pero para evitar más sablazos inesperados de AWS, he optado por sustituir AWS_KMS por AES256,
+         */
         PutObjectRequest putRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
-                .serverSideEncryption(ServerSideEncryption.AWS_KMS)
+                //.serverSideEncryption(ServerSideEncryption.AWS_KMS)
+                .serverSideEncryption(ServerSideEncryption.AES256)
                 .build();
 
         s3Client.putObject(putRequest, RequestBody.fromBytes(fileContent));
