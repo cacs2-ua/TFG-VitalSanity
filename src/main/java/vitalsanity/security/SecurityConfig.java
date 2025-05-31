@@ -49,15 +49,6 @@ public class SecurityConfig {
                 .securityMatcher(new AntPathRequestMatcher("/login/certificate"))
                 .addFilter(x509Filter)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                /*
-                Desactivamos la protección CSRF para el endpoint asociado a la autenticación por certificado digital.
-                Esto es necesario ya que, al estar trabajando con un certificado SSL autogenerado para HTTPS, el navegador por defecto
-                rechazará la petición de abrir el selector de certificados electrónicos. Este problema no estará presente en producción, ya que
-                en producción estaríamos trabajando con un certificado SSL de confianza asociado con un dominio específico, y gracias a esto,
-                en este caso el navegador no rechazaría la petición de abrir el selector de certificados electrónicos y por lo tanto no sería
-                necesario desactivar la protección CSRF para este endpoint concreto.
-                 */
-                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 
         return http.build();
