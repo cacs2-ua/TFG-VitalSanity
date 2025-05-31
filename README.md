@@ -4,13 +4,21 @@
 
 ### Puedes acceder a la **URL** de producción a través este [**<u>enlace</u>**](https://vitalsanity.net:11443/vital-sanity).
 
-
-Para la puesta en producción se ha utilizado **AWS**, aprovechando las tecnologías y herramientas mencionadas en la memoria.
-Además de las tecnologías que se explican en la memoria, también se ha empleado **Amazon RDS** para la configuración de la base de datos **PostgreSQL** en producción y **AWS Elastic Beanstalk** para desplegar la aplicación de forma **sencilla** y **escalable**.
+Para la puesta en producción se ha utilizado **AWS**, aprovechando las tecnologías y herramientas **explicadas** en la **memoria** y que ya habían sido **configuradas**
+durante el **desarrollo** de la aplicación (**Amazon S3**, **IAM**, **políticas de seguridad**, **región de los buckets de desarrollo y producción**, ...).
+Destacar que se ha empleado **Amazon RDS** para la configuración de la base de datos **PostgreSQL** en producción y **AWS Elastic Beanstalk** para desplegar la aplicación de forma **sencilla** y **escalable**.
 
 Asimismo, como en todo despliegue en **producción**, se ha configurado un **dominio** y se ha utilizado un certificado **SSL** de confianza.
 
-Destacar que el objetivo principal de la puesta en producción ha sido, por un lado, el ir un paso más en el **ciclo del desarrollo de Software** para **VitalSanity** y, por otro lado, el facilitar la comprobación de las funcionalidades de la aplicación a cualquier persona que desee acceder a ella. Asimismo, mencionar que la [**<u>URL</u>**](https://vitalsanity.net:11443/vital-sanity) de producción se utilizará el día de la **defensa** del **TFG** para poder mostrar las funcionalidades de la aplicación de forma **sencilla** y **natural**.
+Además, como se comentó en la memoria dentro del capítulo de **_'Implementación'_**, en producción se ha prescindido de **Mailtrap**.
+En su lugar, se han cambiado las credenciales asociadas al servidor **SMTP** de la aplicación para que los emails sean enviados por una cuenta de **Gmail real** (**vitalsanitysx@gmail.com**).
+De esta forma, todos los usuarios de la aplicación pueden verdaderamente recibir y visualizar desde su cuenta de correo los **emails** enviados por la aplicación.
+
+Para reflejar todos estos cambios de forma independiente a la versión de desarrollo, todas estas configuraciones se han establecido dentro de un nuevo perfil de **Spring Boot** denominado '**_prod_**' (fichero **_application-prod.properties_**).
+
+Destacar que el objetivo principal de la puesta en producción ha sido, por un lado, el ir un paso más en el **ciclo del desarrollo de Software** para **VitalSanity** y, por otro lado,
+el facilitar la comprobación de las funcionalidades de la aplicación a cualquier persona que desee acceder a ella. Asimismo, mencionar que la [**<u>URL</u>**](https://vitalsanity.net:11443/vital-sanity) de **producción** se utilizará el día de la **defensa** del **TFG** para poder mostrar
+las funcionalidades de la aplicación de forma **sencilla** y **natural**.
 
 ## 🍃 Datos para probar la aplicación
 
