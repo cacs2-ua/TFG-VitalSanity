@@ -8,6 +8,8 @@
 Para la puesta en producción se ha utilizado **AWS**, aprovechando las tecnologías y herramientas mencionadas en la memoria.
 Además de las tecnologías que se explican en la memoria, también se ha empleado **Amazon RDS** para la configuración de la base de datos **PostgreSQL** en producción y **AWS Elastic Beanstalk** para desplegar la aplicación de forma **sencilla** y **escalable**.
 
+Asimismo, como en todo despliegue en **producción**, se ha configurado un **dominio** y se ha utilizado un certificado **SSL** de confianza.
+
 Destacar que el objetivo principal de la puesta en producción ha sido, por un lado, el ir un paso más en el **ciclo del desarrollo de Software** para **VitalSanity** y, por otro lado, el facilitar la comprobación de las funcionalidades de la aplicación a cualquier persona que desee acceder a ella. Asimismo, mencionar que la [**<u>URL</u>**](https://www.vitalsanity.net:11443/vital-sanity) de producción se utilizará el día de la **defensa** del **TFG** para poder mostrar las funcionalidades de la aplicación de forma **sencilla** y **natural**.
 
 ## 🍃 Datos para probar la aplicación
