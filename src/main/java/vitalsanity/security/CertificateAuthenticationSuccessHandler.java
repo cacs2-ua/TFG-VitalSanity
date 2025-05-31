@@ -40,7 +40,7 @@ public class CertificateAuthenticationSuccessHandler implements AuthenticationSu
                 return;
             }
             if (tipoId == 2) {
-                response.sendRedirect("https://vitalsanity.net:11443/vital-sanity/centro-medico/profesionales-medicos");
+                response.sendRedirect("https://vitalsanity.net:11443/vital-sanity/api/centro-medico/profesionales-medicos");
                 return;
             }
             if (tipoId == 3) {
