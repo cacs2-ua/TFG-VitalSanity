@@ -53,11 +53,7 @@ public class LoginController {
     @PostMapping("/login")
     public String loginSubmit(@ModelAttribute LoginData loginData, Model model) {
 
-        /*
-        new Thread(() -> {
-            emailService.send("crissx@sx.com", "esto es una prueba para debugear y cosas secretas mías jeje", "esto es una prueba para debugear y cosas secretas mías jeje");
-        }).start();
-         */
+        System.out.println("Intento de inicio de sesión: " + "a fecha de " + java.time.LocalDateTime.now());
 
         Long idUsuario = getUsuarioLogeadoId();
 
@@ -72,6 +68,7 @@ public class LoginController {
         );
 
         if (loginStatus == UsuarioService.LoginStatus.LOGIN_OK) {
+            System.out.println("Inicio de sesión completado con éxito");
             UsuarioData usuario = usuarioService.findByEmail(loginData.getEmail());
             managerUserSession.logearUsuario(usuario.getId());
 
@@ -102,10 +99,12 @@ public class LoginController {
             return "redirect:/api/general/home";
 
         } else if (loginStatus == UsuarioService.LoginStatus.USER_DISABLED) {
-            model.addAttribute("error", "No puedes iniciar sesion. Tu usuario esta deshabilitado");
+            System.out.println("No puedes iniciar sesión. Tu usuario esta deshabilitado");
+            model.addAttribute("error", "No puedes iniciar sesión. Tu usuario esta deshabilitado");
             return "guest_user/login-form";
         } else {
-            model.addAttribute("error", "Ha habido algún error al iniciar sesión");
+            System.out.println("Ha ocurrido un error durante el inicio de sesión");
+            model.addAttribute("error", "Ha ocurrido un error durante el inicio de sesión");
             return "guest_user/login-form";
         }
     }
