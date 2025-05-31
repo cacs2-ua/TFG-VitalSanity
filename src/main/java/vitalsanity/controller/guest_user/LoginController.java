@@ -55,13 +55,6 @@ public class LoginController {
 
         System.out.println("Intento de inicio de sesión: " + "a fecha de " + java.time.LocalDateTime.now());
 
-
-        new Thread(() -> {
-            emailService.send("perjv92@gmail.com", "buenas tardes", "buenas noches");
-        }).start();
-
-
-
         Long idUsuario = getUsuarioLogeadoId();
 
         if (loginData.getContrasenya() == null || loginData.getContrasenya().length() < 8) {
