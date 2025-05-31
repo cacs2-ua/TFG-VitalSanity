@@ -41,7 +41,7 @@ public class AdditionalHttpsConnectorConfig {
         Connector connector = new Connector(Http11NioProtocol.class.getName());
         connector.setScheme("https");
         connector.setSecure(true);
-        connector.setPort(11444);
+        connector.setPort(8059);
 
         Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
         protocol.setSSLEnabled(true);
