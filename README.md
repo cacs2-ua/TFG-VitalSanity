@@ -37,9 +37,10 @@ Por último, mencionar que **la autenticación con certificado digital** admite 
 Para probar la aplicación, se han creado una serie de **usuarios de prueba** junto con otros datos de ejemplo (como documentos, informes médicos, solicitudes de autorización, ...).
 
 Estos son los usuarios de prueba (la contraseña para todos ellos es **vitalsanity123** y se puede iniciar sesión con **email** y **contraseña**. Además, para cada usuario se incluye también su **NIF/NIE**):
-
+- 
 - **sergio-castillo-blanco@example.com** (**Tipo de usuario:** Paciente)
 - **carmen-ruiz-herrera@example.com** (**Tipo de usuario:** Paciente)
+- **lucas-sanchez-dominguez@example.es** (**Tipo de usuario:** Profesional médico)
 - **juan.perez@example.com** (**Tipo de usuario:** Profesional médico)
 - **maria.lopez@example.com** (**Tipo de usuario:** Profesional médico)
 - **carlos.garcia@example.com** (**Tipo de usuario:** Profesional médico)
