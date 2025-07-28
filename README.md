@@ -38,18 +38,18 @@ Para probar la aplicación, se han creado una serie de **usuarios de prueba** ju
 
 Estos son los usuarios de prueba (la contraseña para todos ellos es **vitalsanity123** y se puede iniciar sesión con **email** y **contraseña**. Además, para cada usuario se incluye también su **NIF/NIE**):
 
-- **sergio-castillo-blanco@gmail.com** (**Tipo de usuario:** Paciente) (**NIF:** 60704841K)
-- **carmen-ruiz-herrera@gmail.com** (**Tipo de usuario:** Paciente) (**NIF:** 87952828T)
-- **juan.perez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 63297648S)
-- **maria.lopez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 87654321X)
-- **carlos.garcia@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 11223344Y)
-- **monica.garcia@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 12345678Z)
-- **manuel.gimenez@example.com** (**Tipo de usuario:** Profesional médico) (**NIE:** X0655490J)
-- **laura.hernandez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 48733805W)
-- **pablo.rodriguez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 45908922W)
-- **admin@gmail.com** (**Tipo de usuario:** Administrador) (**NIF:** 54083179J)
-- **quiron-puertollano@example.es** (**Tipo de usuario:** Centro médico) (**NIF:** B99877292)
-- **adeslas-alicante@example.es** (**Tipo de usuario:** Centro médico) (**NIF:** A37843505)
+- **sergio-castillo-blanco@example.com** (**Tipo de usuario:** Paciente)
+- **carmen-ruiz-herrera@example.com** (**Tipo de usuario:** Paciente)
+- **juan.perez@example.com** (**Tipo de usuario:** Profesional médico)
+- **maria.lopez@example.com** (**Tipo de usuario:** Profesional médico)
+- **carlos.garcia@example.com** (**Tipo de usuario:** Profesional médico)
+- **monica.garcia@example.com** (**Tipo de usuario:** Profesional médico)
+- **manuel.gimenez@example.com** (**Tipo de usuario:** Profesional médico)
+- **laura.hernandez@example.com** (**Tipo de usuario:** Profesional médico)
+- **pablo.rodriguez@example.com** (**Tipo de usuario:** Profesional médico)
+- **admin@example.com** (**Tipo de usuario:** Administrador)
+- **purple-health@example.es** (**Tipo de usuario:** Centro médico)
+- **blue-health@example.es** (**Tipo de usuario:** Centro médico)
 
 Destacar que arriba se han mencionado únicamente los **datos principales** para cada usuario
 (como es evidente, existen **más** datos asociados a un usuario: el número de teléfono, la provincia, la localidad, ...).
