@@ -38,19 +38,19 @@ Para probar la aplicación, se han creado una serie de **usuarios de prueba** ju
 
 Estos son los usuarios de prueba (la contraseña para todos ellos es **vitalsanity123** y se puede iniciar sesión con **email** y **contraseña**. Además, para cada usuario se incluye también su **NIF/NIE**):
 - 
-- **sergio-castillo-blanco@example.com** (**Tipo de usuario:** Paciente)
-- **carmen-ruiz-herrera@example.com** (**Tipo de usuario:** Paciente)
-- **lucas-sanchez-dominguez@example.es** (**Tipo de usuario:** Profesional médico)
-- **juan.perez@example.com** (**Tipo de usuario:** Profesional médico)
-- **maria.lopez@example.com** (**Tipo de usuario:** Profesional médico)
-- **carlos.garcia@example.com** (**Tipo de usuario:** Profesional médico)
-- **monica.garcia@example.com** (**Tipo de usuario:** Profesional médico)
-- **manuel.gimenez@example.com** (**Tipo de usuario:** Profesional médico)
-- **laura.hernandez@example.com** (**Tipo de usuario:** Profesional médico)
-- **pablo.rodriguez@example.com** (**Tipo de usuario:** Profesional médico)
-- **admin@example.com** (**Tipo de usuario:** Administrador)
-- **purple-health@example.es** (**Tipo de usuario:** Centro médico)
-- **blue-health@example.es** (**Tipo de usuario:** Centro médico)
+- **sergio-castillo-blanco@example.com** (**Tipo de usuario:** Paciente) (**NIF/NIE:** NIF-EXAMPLE3)
+- **carmen-ruiz-herrera@example.com** (**Tipo de usuario:** Paciente) (**NIF/NIE:** NIF-EXAMPLE5)
+- **lucas-sanchez-dominguez@example.es** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIF-EXAMPLE4)
+- **juan.perez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIF-EXAMPLE7)
+- **maria.lopez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIF-EXAMPLE8)
+- **carlos.garcia@example.com** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIE-EXAMPLE1)
+- **monica.garcia@example.com** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIE-EXAMPLE2)
+- **manuel.gimenez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIE-EXAMPLE3)
+- **laura.hernandez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIF-EXAMPLE9)
+- **pablo.rodriguez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF/NIE:** NIF-EXAMPLE10)
+- **admin@example.com** (**Tipo de usuario:** Administrador) (**NIF/NIE:** NIF-EXAMPLE1)
+- **purple-health@example.es** (**Tipo de usuario:** Centro médico) (**NIF/NIE:** NIF-EXAMPLE2)
+- **blue-health@example.es** (**Tipo de usuario:** Centro médico) (**NIF/NIE:** NIF-EXAMPLE6)
 
 Destacar que arriba se han mencionado únicamente los **datos principales** para cada usuario
 (como es evidente, existen **más** datos asociados a un usuario: el número de teléfono, la provincia, la localidad, ...).
