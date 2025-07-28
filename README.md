@@ -40,7 +40,6 @@ Estos son los usuarios de prueba (la contraseña para todos ellos es **vitalsani
 
 - **sergio-castillo-blanco@gmail.com** (**Tipo de usuario:** Paciente) (**NIF:** 60704841K)
 - **carmen-ruiz-herrera@gmail.com** (**Tipo de usuario:** Paciente) (**NIF:** 87952828T)
-- **cacs2@alu.ua.es** (**Tipo de usuario:** Profesional médico) (**NIF:** 05988721G)
 - **juan.perez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 63297648S)
 - **maria.lopez@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 87654321X)
 - **carlos.garcia@example.com** (**Tipo de usuario:** Profesional médico) (**NIF:** 11223344Y)
@@ -55,7 +54,7 @@ Estos son los usuarios de prueba (la contraseña para todos ellos es **vitalsani
 Destacar que arriba se han mencionado únicamente los **datos principales** para cada usuario
 (como es evidente, existen **más** datos asociados a un usuario: el número de teléfono, la provincia, la localidad, ...).
 
-Se vuelve a hacer énfasis en que todos estos datos son **ficticios** (salvo "cacs2@alu.ua.es" que soy yo mismo, usuario que he creado para poder probar el inicio de sesión con mis propios certificados digitales).
+Se vuelve a hacer énfasis en que todos estos datos son **ficticios**
 
 En caso de querer probar la aplicación en local, se pueden insertar manualmente todos estos datos de prueba ejecutando el fichero de **seeders** **_resources/sql/database-script/seed_develop_db.sql_** (esto se explica a continuación).
 
